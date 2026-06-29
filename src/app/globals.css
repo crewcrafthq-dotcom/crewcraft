@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Crewcraft V3 Clean (§8). Base is beige + navy. The trade accent lives in CSS
+ * variables (R G B channels) so Tailwind's `accent` color resolves to the
+ * contractor's trade color. :root carries a sensible default (HVAC orange) for
+ * pre-login screens; [data-trade] wrappers override it (see lib/trades.ts).
+ */
+:root {
+  --accent: 232 114 42;
+  --accent-fg: 255 255 255;
+  --accent-deep: 194 87 26;
+  --accent-soft: 247 226 210;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-cream text-navy antialiased;
+    font-feature-settings: 'kern';
+  }
+  /* Big, comfortable tap targets on phones (§ mobile-first). */
+  input,
+  select,
+  textarea,
+  button {
+    font-family: inherit;
+  }
+}
+
+@layer components {
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-navy-soft;
+  }
+}
