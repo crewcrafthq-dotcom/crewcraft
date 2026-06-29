@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Check, CheckCircle2, Copy, Download, Mail, Undo2, XCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/Button';
 import { StatusBadge } from '@/components/StatusBadge';
@@ -26,6 +27,7 @@ export function ShareActions({
 }: Props) {
   const router = useRouter();
   const [busy, setBusy] = useState<null | 'copy' | 'download' | 'send'>(null);
+  const [copied, setCopied] = useState(false);
   const [note, setNote] = useState<string | null>(null);
   const [localStatus, setLocalStatus] = useState<EstimateStatus>(status);
 
@@ -37,9 +39,10 @@ export function ShareActions({
     setNote(null);
     try {
       await navigator.clipboard.writeText(publicUrl);
-      setNote('Link copied.');
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch {
-      setNote('Copy failed — long-press to copy the link.');
+      setNote('Copy failed — long-press the link to copy it.');
     } finally {
       setBusy(null);
     }
@@ -97,32 +100,38 @@ export function ShareActions({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <span className="font-semibold">Send it</span>
+        <span className="font-semibold text-navy">Send it</span>
         <StatusBadge status={localStatus} />
       </div>
 
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
         <Button variant="secondary" onClick={copyLink} disabled={busy !== null}>
-          Copy link
+          {copied ? <Check className="text-emerald-600" /> : <Copy />}
+          {copied ? 'Copied' : 'Copy link'}
         </Button>
         <Button variant="secondary" onClick={download} disabled={busy !== null}>
+          <Download />
           {busy === 'download' ? 'Saving…' : 'Download PDF'}
         </Button>
         <Button onClick={send} disabled={busy !== null} className="col-span-2 sm:col-span-1">
-          {busy === 'send' ? 'Sending…' : 'Email to customer'}
+          <Mail />
+          {busy === 'send' ? 'Sending…' : 'Email it'}
         </Button>
       </div>
 
-      <div>
+      <div className="border-t border-line pt-4">
         <p className="mb-2 text-sm text-navy-soft">Mark this estimate:</p>
         <div className="flex flex-wrap gap-2">
           <Button variant="secondary" size="sm" onClick={() => changeStatus('accepted')}>
+            <CheckCircle2 className="text-emerald-600" />
             Accepted
           </Button>
           <Button variant="secondary" size="sm" onClick={() => changeStatus('declined')}>
+            <XCircle className="text-red-500" />
             Declined
           </Button>
           <Button variant="ghost" size="sm" onClick={() => changeStatus('draft')}>
+            <Undo2 />
             Back to draft
           </Button>
         </div>

@@ -1,24 +1,32 @@
 import Link from 'next/link';
+import { Plus } from 'lucide-react';
 
+import { AccountMenu } from '@/components/AccountMenu';
+import { Brand } from '@/components/Brand';
+import { NavLinks } from '@/components/NavLinks';
 import { buttonClasses } from '@/components/ui/Button';
-import { SignOutButton } from '@/components/SignOutButton';
 
-export function AppHeader() {
+export function AppHeader({ businessName }: { businessName: string }) {
   return (
-    <header className="sticky top-0 z-10 border-b border-line bg-cream/85 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-5">
-        <Link href="/dashboard" className="text-lg font-bold tracking-tight">
-          Crewcraft
-        </Link>
-        <nav className="flex items-center gap-1">
-          <Link href="/estimates/new" className={buttonClasses('primary', 'sm')}>
-            New estimate
+    <header className="sticky top-0 z-20 border-b border-line/70 bg-cream/80 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-3 px-4 sm:px-6">
+        <div className="flex items-center gap-5">
+          <Link href="/dashboard" aria-label="Crewcraft home">
+            <Brand />
           </Link>
-          <Link href="/settings" className={buttonClasses('ghost', 'sm')}>
-            Settings
+          <NavLinks />
+        </div>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/estimates/new"
+            aria-label="New estimate"
+            className={buttonClasses('primary', 'sm')}
+          >
+            <Plus />
+            <span className="hidden sm:inline">New estimate</span>
           </Link>
-          <SignOutButton />
-        </nav>
+          <AccountMenu name={businessName} />
+        </div>
       </div>
     </header>
   );

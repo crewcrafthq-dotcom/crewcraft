@@ -27,7 +27,7 @@ export default async function EstimatePage({ params }: { params: { id: string } 
   estimate.line_items = (estimate.line_items ?? []).sort((a, b) => a.sort_order - b.sort_order);
 
   return (
-    <AppShell trade={business.trade}>
+    <AppShell trade={business.trade} businessName={business.name} width="narrow">
       <EstimateEditor business={business} estimate={estimate} />
     </AppShell>
   );

@@ -1,12 +1,12 @@
 import { cn } from '@/lib/cn';
 import type { EstimateStatus } from '@/lib/types';
 
-const STATUS: Record<EstimateStatus, { label: string; className: string }> = {
-  draft: { label: 'Draft', className: 'bg-cream-deep text-navy-soft' },
-  sent: { label: 'Sent', className: 'bg-navy/10 text-navy' },
-  viewed: { label: 'Viewed', className: 'bg-accent-soft text-accent-deep' },
-  accepted: { label: 'Accepted', className: 'bg-green-100 text-green-800' },
-  declined: { label: 'Declined', className: 'bg-red-100 text-red-700' },
+const STATUS: Record<EstimateStatus, { label: string; className: string; dot: string }> = {
+  draft: { label: 'Draft', className: 'bg-cream-deep text-navy-soft', dot: 'bg-navy-muted' },
+  sent: { label: 'Sent', className: 'bg-sky-50 text-sky-700', dot: 'bg-sky-500' },
+  viewed: { label: 'Viewed', className: 'bg-accent-soft text-accent-deep', dot: 'bg-accent' },
+  accepted: { label: 'Accepted', className: 'bg-emerald-50 text-emerald-700', dot: 'bg-emerald-500' },
+  declined: { label: 'Declined', className: 'bg-red-50 text-red-600', dot: 'bg-red-500' },
 };
 
 export function StatusBadge({ status }: { status: EstimateStatus }) {
@@ -14,10 +14,11 @@ export function StatusBadge({ status }: { status: EstimateStatus }) {
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold',
+        'inline-flex flex-none items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold',
         s.className,
       )}
     >
+      <span className={cn('h-1.5 w-1.5 rounded-full', s.dot)} />
       {s.label}
     </span>
   );

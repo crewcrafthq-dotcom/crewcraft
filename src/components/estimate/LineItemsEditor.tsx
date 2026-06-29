@@ -1,10 +1,11 @@
 'use client';
 
+import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react';
+
 import { Input, Select } from '@/components/ui/Field';
 import { Button } from '@/components/ui/Button';
-import { lineTotal } from '@/lib/estimates';
+import { CATEGORY_LABELS, lineTotal } from '@/lib/estimates';
 import { money } from '@/lib/format';
-import { CATEGORY_LABELS } from '@/lib/estimates';
 import type { LineItemCategory } from '@/lib/types';
 import { newRow, type EditorRow } from './types';
 
@@ -12,6 +13,10 @@ interface Props {
   rows: EditorRow[];
   onChange: (rows: EditorRow[]) => void;
 }
+
+const iconBtn =
+  'grid h-8 w-8 place-items-center rounded-lg text-navy-muted transition cursor-pointer ' +
+  'hover:bg-cream-deep disabled:cursor-default disabled:opacity-30';
 
 export function LineItemsEditor({ rows, onChange }: Props) {
   const update = (key: string, patch: Partial<EditorRow>) =>
@@ -31,102 +36,108 @@ export function LineItemsEditor({ rows, onChange }: Props) {
 
   return (
     <div>
-      <div className="space-y-3">
-        {rows.map((row, i) => (
-          <div key={row.key} className="rounded-xl border border-line bg-cream-card p-3">
-            <div className="flex items-start gap-2">
-              <Input
-                aria-label="Description"
-                placeholder="What's the line?"
-                value={row.description}
-                onChange={(e) => update(row.key, { description: e.target.value })}
-                className="flex-1"
-              />
-              <button
-                type="button"
-                onClick={() => remove(row.key)}
-                aria-label="Delete line"
-                className="mt-1 flex h-9 w-9 flex-none items-center justify-center rounded-lg text-navy-muted hover:bg-cream-deep hover:text-red-600"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              <Select
-                aria-label="Category"
-                value={row.category}
-                onChange={(e) =>
-                  update(row.key, { category: e.target.value as LineItemCategory })
-                }
-                className="h-9 w-28 text-sm"
-              >
-                {(Object.keys(CATEGORY_LABELS) as LineItemCategory[]).map((c) => (
-                  <option key={c} value={c}>
-                    {CATEGORY_LABELS[c]}
-                  </option>
-                ))}
-              </Select>
-              <Input
-                aria-label="Quantity"
-                inputMode="decimal"
-                value={row.quantity}
-                onChange={(e) => update(row.key, { quantity: e.target.value })}
-                className="h-9 w-16 text-sm"
-                placeholder="Qty"
-              />
-              <Input
-                aria-label="Unit"
-                value={row.unit}
-                onChange={(e) => update(row.key, { unit: e.target.value })}
-                className="h-9 w-16 text-sm"
-                placeholder="unit"
-              />
-              <div className="flex items-center">
-                <span className="text-navy-muted">$</span>
+      {rows.length === 0 ? (
+        <p className="rounded-xl border border-dashed border-line bg-cream-sunken px-4 py-6 text-center text-sm text-navy-muted">
+          No line items yet. Build them from the job above, or add them by hand.
+        </p>
+      ) : (
+        <div className="space-y-3">
+          {rows.map((row, i) => (
+            <div key={row.key} className="rounded-xl border border-line bg-cream-sunken p-3">
+              <div className="flex items-start gap-2">
                 <Input
-                  aria-label="Unit price"
-                  inputMode="decimal"
-                  value={row.unitPrice}
-                  onChange={(e) => update(row.key, { unitPrice: e.target.value })}
-                  className="h-9 w-24 text-sm"
-                  placeholder="0.00"
+                  aria-label="Description"
+                  placeholder="What's the line?"
+                  value={row.description}
+                  onChange={(e) => update(row.key, { description: e.target.value })}
+                  className="flex-1 bg-cream-card"
                 />
+                <button
+                  type="button"
+                  onClick={() => remove(row.key)}
+                  aria-label="Delete line"
+                  className={iconBtn + ' mt-1.5 hover:text-red-600'}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
               </div>
-              <span className="ml-auto text-sm font-semibold">
-                {money(lineTotal(Number(row.quantity) || 0, Number(row.unitPrice) || 0))}
-              </span>
-              <div className="flex">
-                <button
-                  type="button"
-                  onClick={() => move(i, -1)}
-                  aria-label="Move up"
-                  disabled={i === 0}
-                  className="flex h-8 w-7 items-center justify-center rounded text-navy-muted hover:bg-cream-deep disabled:opacity-30"
+
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <Select
+                  aria-label="Category"
+                  value={row.category}
+                  onChange={(e) => update(row.key, { category: e.target.value as LineItemCategory })}
+                  className="h-9 w-28 bg-cream-card text-sm"
                 >
-                  ↑
-                </button>
-                <button
-                  type="button"
-                  onClick={() => move(i, 1)}
-                  aria-label="Move down"
-                  disabled={i === rows.length - 1}
-                  className="flex h-8 w-7 items-center justify-center rounded text-navy-muted hover:bg-cream-deep disabled:opacity-30"
-                >
-                  ↓
-                </button>
+                  {(Object.keys(CATEGORY_LABELS) as LineItemCategory[]).map((c) => (
+                    <option key={c} value={c}>
+                      {CATEGORY_LABELS[c]}
+                    </option>
+                  ))}
+                </Select>
+                <Input
+                  aria-label="Quantity"
+                  inputMode="decimal"
+                  value={row.quantity}
+                  onChange={(e) => update(row.key, { quantity: e.target.value })}
+                  className="h-9 w-16 bg-cream-card text-sm"
+                  placeholder="Qty"
+                />
+                <Input
+                  aria-label="Unit"
+                  value={row.unit}
+                  onChange={(e) => update(row.key, { unit: e.target.value })}
+                  className="h-9 w-16 bg-cream-card text-sm"
+                  placeholder="unit"
+                />
+                <div className="flex items-center rounded-xl border border-line bg-cream-card pl-2.5 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/15">
+                  <span className="text-navy-muted">$</span>
+                  <Input
+                    aria-label="Unit price"
+                    inputMode="decimal"
+                    value={row.unitPrice}
+                    onChange={(e) => update(row.key, { unitPrice: e.target.value })}
+                    className="h-9 w-20 border-0 bg-transparent pl-1 text-sm focus:ring-0"
+                    placeholder="0.00"
+                  />
+                </div>
+                <span className="ml-auto text-sm font-semibold text-navy">
+                  {money(lineTotal(Number(row.quantity) || 0, Number(row.unitPrice) || 0))}
+                </span>
+                <div className="flex">
+                  <button
+                    type="button"
+                    onClick={() => move(i, -1)}
+                    aria-label="Move up"
+                    disabled={i === 0}
+                    className={iconBtn}
+                  >
+                    <ChevronUp className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => move(i, 1)}
+                    aria-label="Move down"
+                    disabled={i === rows.length - 1}
+                    className={iconBtn}
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       <div className="mt-3 flex gap-2">
         <Button type="button" variant="secondary" size="sm" onClick={() => add('labor')}>
-          + Labor
+          <Plus />
+          Labor
         </Button>
         <Button type="button" variant="secondary" size="sm" onClick={() => add('materials')}>
-          + Materials
+          <Plus />
+          Materials
         </Button>
       </div>
     </div>

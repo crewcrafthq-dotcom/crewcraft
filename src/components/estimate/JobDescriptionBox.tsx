@@ -1,5 +1,7 @@
 'use client';
 
+import { Mic, Sparkles } from 'lucide-react';
+
 import { Button } from '@/components/ui/Button';
 import { Textarea } from '@/components/ui/Field';
 
@@ -21,6 +23,7 @@ export function JobDescriptionBox({ value, onChange, onBuild, loading, error }: 
           value={value}
           onChange={(e) => onChange(e.target.value)}
           rows={4}
+          className="pr-12"
         />
         {/*
           Voice input is the headline v2 feature (§2). This is the clean seam —
@@ -32,14 +35,15 @@ export function JobDescriptionBox({ value, onChange, onBuild, loading, error }: 
           disabled
           title="Voice input — coming soon"
           aria-label="Voice input (coming soon)"
-          className="absolute bottom-2 right-2 flex h-9 w-9 items-center justify-center rounded-lg text-navy-muted opacity-50"
+          className="absolute bottom-2.5 right-2.5 grid h-9 w-9 place-items-center rounded-lg text-navy-muted opacity-50"
         >
-          🎤
+          <Mic className="h-[18px] w-[18px]" />
         </button>
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-3">
         <Button type="button" onClick={onBuild} disabled={loading || !value.trim()}>
+          <Sparkles className={loading ? 'animate-pulse' : ''} />
           {loading ? 'Building…' : 'Build line items'}
         </Button>
         <span className="text-sm text-navy-muted">
@@ -47,7 +51,7 @@ export function JobDescriptionBox({ value, onChange, onBuild, loading, error }: 
         </span>
       </div>
 
-      {error ? <p className="mt-2 text-sm text-red-700">{error}</p> : null}
+      {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
     </div>
   );
 }

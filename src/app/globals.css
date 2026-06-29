@@ -3,10 +3,11 @@
 @tailwind utilities;
 
 /*
- * Crewcraft V3 Clean (§8). Base is beige + navy. The trade accent lives in CSS
- * variables (R G B channels) so Tailwind's `accent` color resolves to the
- * contractor's trade color. :root carries a sensible default (HVAC orange) for
- * pre-login screens; [data-trade] wrappers override it (see lib/trades.ts).
+ * Crewcraft design system. Warm beige canvas + navy ink, lifted with white
+ * surfaces and depth. The trade accent lives in CSS variables (R G B channels)
+ * so Tailwind's `accent` colors resolve to the contractor's trade color.
+ * :root carries a default (HVAC orange) for pre-login screens; [data-trade]
+ * wrappers override it (see lib/trades.ts).
  */
 :root {
   --accent: 232 114 42;
@@ -20,10 +21,20 @@
     -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-cream text-navy antialiased;
-    font-feature-settings: 'kern';
+    @apply text-navy antialiased;
+    background-color: #f1eadf;
+    /* gentle warm light for depth — subtle, not busy */
+    background-image:
+      radial-gradient(1100px 560px at 100% -8%, rgba(255, 255, 255, 0.7), transparent 60%),
+      radial-gradient(900px 520px at -10% 8%, rgba(255, 255, 255, 0.45), transparent 55%);
+    background-attachment: fixed;
+    font-feature-settings: 'kern', 'ss01';
   }
-  /* Big, comfortable tap targets on phones (§ mobile-first). */
+  /* Visible keyboard focus everywhere. */
+  :focus-visible {
+    @apply outline-none;
+  }
+  /* Comfortable phone tap targets. */
   input,
   select,
   textarea,
@@ -35,5 +46,23 @@
 @layer components {
   .field-label {
     @apply mb-1.5 block text-sm font-medium text-navy-soft;
+  }
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-wider text-navy-muted;
+  }
+  /* hover-lift for interactive cards */
+  .card-interactive {
+    @apply transition duration-200 ease-out-soft hover:-translate-y-0.5 hover:shadow-lift;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

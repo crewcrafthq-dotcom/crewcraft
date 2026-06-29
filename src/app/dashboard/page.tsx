@@ -1,17 +1,18 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { ArrowRight, CalendarClock, FileText, Receipt, Users2 } from 'lucide-react';
 
 import { AppShell } from '@/components/AppShell';
-import { StatusBadge } from '@/components/StatusBadge';
-import { Card } from '@/components/ui/Card';
-import { buttonClasses } from '@/components/ui/Button';
 import { getSession } from '@/lib/auth';
-import { FREE_ESTIMATE_LIMIT, isPaidStatus } from '@/lib/config';
-import { money, shortDate } from '@/lib/format';
 import { createClient } from '@/lib/supabase/server';
-import type { Estimate } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
+
+const SOON = [
+  { name: 'Invoices', desc: 'Turn an accepted estimate into an invoice and get paid.', icon: Receipt },
+  { name: 'Scheduling', desc: 'Book the job and keep your week straight.', icon: CalendarClock },
+  { name: 'Customers', desc: 'Every customer and job in one place.', icon: Users2 },
+];
 
 export default async function DashboardPage() {
   const { user, business } = await getSession();
@@ -19,67 +20,78 @@ export default async function DashboardPage() {
   if (!business) redirect('/onboarding');
 
   const supabase = createClient();
-  const { data } = await supabase
+  const { count } = await supabase
     .from('estimates')
-    .select('id, customer_name, total, status, created_at, updated_at')
-    .eq('user_id', user.id)
-    .order('updated_at', { ascending: false });
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', user.id);
+  const estimateCount = count ?? 0;
 
-  const estimates = (data ?? []) as Pick<
-    Estimate,
-    'id' | 'customer_name' | 'total' | 'status' | 'created_at' | 'updated_at'
-  >[];
-
-  const paid = isPaidStatus(business.subscription_status);
-  const remaining = Math.max(0, FREE_ESTIMATE_LIMIT - estimates.length);
+  const firstName = business.name.split(' ')[0];
 
   return (
-    <AppShell trade={business.trade}>
-      <div className="mb-5 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Estimates</h1>
+    <AppShell trade={business.trade} businessName={business.name}>
+      <header className="mb-8">
+        <p className="eyebrow">Your workspace</p>
+        <h1 className="mt-1 text-display-sm font-bold text-navy">Welcome back, {firstName}.</h1>
+        <p className="mt-1.5 text-navy-soft">Pick a tool to get to work.</p>
+      </header>
+
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-navy-muted">Your apps</h2>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Live app */}
+        <Link
+          href="/estimates"
+          className="group block animate-fade-up rounded-2xl border border-line bg-cream-card p-5 shadow-card card-interactive"
+        >
+          <div className="flex items-start justify-between">
+            <span className="grid h-12 w-12 place-items-center rounded-xl bg-accent text-accent-fg shadow-accent">
+              <FileText className="h-6 w-6" />
+            </span>
+            <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent-deep">
+              Live
+            </span>
+          </div>
+          <h3 className="mt-4 text-lg font-bold text-navy">Estimate Builder</h3>
+          <p className="mt-1 text-sm text-navy-soft">
+            Turn a plain-English job into a clean, branded estimate in under a minute.
+          </p>
+          <div className="mt-4 flex items-center justify-between border-t border-line pt-3 text-sm">
+            <span className="text-navy-muted">
+              {estimateCount} {estimateCount === 1 ? 'estimate' : 'estimates'}
+            </span>
+            <span className="inline-flex items-center gap-1 font-semibold text-accent-deep">
+              Open
+              <ArrowRight className="h-4 w-4 transition duration-150 group-hover:translate-x-0.5" />
+            </span>
+          </div>
+        </Link>
+
+        {/* Roadmap */}
+        {SOON.map((app) => {
+          const Icon = app.icon;
+          return (
+            <div
+              key={app.name}
+              className="rounded-2xl border border-dashed border-line bg-cream-card/50 p-5"
+            >
+              <div className="flex items-start justify-between">
+                <span className="grid h-12 w-12 place-items-center rounded-xl bg-cream-deep text-navy-muted">
+                  <Icon className="h-6 w-6" />
+                </span>
+                <span className="rounded-full bg-cream-deep px-2.5 py-1 text-xs font-semibold text-navy-muted">
+                  Soon
+                </span>
+              </div>
+              <h3 className="mt-4 text-lg font-bold text-navy-soft">{app.name}</h3>
+              <p className="mt-1 text-sm text-navy-muted">{app.desc}</p>
+            </div>
+          );
+        })}
       </div>
 
-      {!paid ? (
-        <Card className="mb-5 flex items-center justify-between gap-4 p-4">
-          <p className="text-sm text-navy-soft">
-            {remaining > 0
-              ? `${remaining} of ${FREE_ESTIMATE_LIMIT} free estimates left.`
-              : 'You’ve used your 3 free estimates.'}
-          </p>
-          <Link href="/billing" className={buttonClasses('primary', 'sm')}>
-            Go Pro
-          </Link>
-        </Card>
-      ) : null}
-
-      {estimates.length === 0 ? (
-        <Card className="p-10 text-center">
-          <h2 className="text-lg font-semibold">No estimates yet</h2>
-          <p className="mt-1 text-navy-soft">Start your first one — it takes a minute.</p>
-          <Link href="/estimates/new" className={buttonClasses('primary', 'md') + ' mt-5'}>
-            New estimate
-          </Link>
-        </Card>
-      ) : (
-        <Card className="divide-y divide-line overflow-hidden">
-          {estimates.map((e) => (
-            <Link
-              key={e.id}
-              href={`/estimates/${e.id}`}
-              className="flex items-center justify-between gap-3 px-4 py-3.5 transition hover:bg-cream-deep"
-            >
-              <div className="min-w-0">
-                <p className="truncate font-semibold">{e.customer_name || 'Untitled estimate'}</p>
-                <p className="text-sm text-navy-muted">{shortDate(e.created_at)}</p>
-              </div>
-              <div className="flex flex-none items-center gap-3">
-                <span className="font-semibold">{money(e.total)}</span>
-                <StatusBadge status={e.status} />
-              </div>
-            </Link>
-          ))}
-        </Card>
-      )}
+      <p className="mt-6 text-sm text-navy-muted">
+        More tools are on the way — built for the trades, not for spreadsheets.
+      </p>
     </AppShell>
   );
 }

@@ -3,6 +3,17 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import {
+  ArrowLeft,
+  Calculator,
+  ClipboardList,
+  Copy,
+  ListTree,
+  Save,
+  Trash2,
+  User,
+  Wand2,
+} from 'lucide-react';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -160,14 +171,20 @@ export function EstimateEditor({
   return (
     <div className="pb-28">
       <div className="mb-4 flex items-center justify-between">
-        <Link href="/dashboard" className="text-sm font-medium text-navy-soft hover:underline">
-          ← Estimates
+        <Link
+          href="/estimates"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-navy-soft transition hover:text-navy"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Estimates
         </Link>
         <div className="flex gap-1">
           <Button variant="ghost" size="sm" onClick={onDuplicate}>
+            <Copy />
             Duplicate
           </Button>
           <Button variant="danger" size="sm" onClick={onDelete}>
+            <Trash2 />
             Delete
           </Button>
         </div>
@@ -176,7 +193,7 @@ export function EstimateEditor({
       <div className="space-y-5">
         {/* customer */}
         <Card className="p-5">
-          <h2 className="mb-4 font-semibold">Customer</h2>
+          <SectionTitle icon={User}>Customer</SectionTitle>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Name">
               <Input value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Customer name" />
@@ -195,7 +212,7 @@ export function EstimateEditor({
 
         {/* job description → AI */}
         <Card className="p-5">
-          <h2 className="mb-3 font-semibold">The job</h2>
+          <SectionTitle icon={Wand2}>The job</SectionTitle>
           <JobDescriptionBox
             value={jobDescription}
             onChange={setJobDescription}
@@ -219,8 +236,10 @@ export function EstimateEditor({
 
         {/* assumptions to confirm — above line items */}
         {assumptions.length > 0 ? (
-          <Card className="border-accent/40 p-5">
-            <h2 className="mb-2 font-semibold text-accent-deep">Assumptions to confirm</h2>
+          <Card className="border-accent/40 bg-accent-soft/30 p-5">
+            <SectionTitle icon={ClipboardList} accent>
+              Assumptions to confirm
+            </SectionTitle>
             <ul className="space-y-1.5 text-sm text-navy-soft">
               {assumptions.map((a, i) => (
                 <li key={i} className="flex gap-2">
@@ -234,13 +253,13 @@ export function EstimateEditor({
 
         {/* line items */}
         <Card className="p-5">
-          <h2 className="mb-3 font-semibold">Line items</h2>
+          <SectionTitle icon={ListTree}>Line items</SectionTitle>
           <LineItemsEditor rows={rows} onChange={setRows} />
         </Card>
 
         {/* totals */}
         <Card className="p-5">
-          <h2 className="mb-3 font-semibold">Totals</h2>
+          <SectionTitle icon={Calculator}>Totals</SectionTitle>
           <TotalsPanel
             totals={totals}
             taxRate={taxRate}
@@ -275,20 +294,42 @@ export function EstimateEditor({
       </div>
 
       {/* sticky save bar */}
-      <div className="fixed inset-x-0 bottom-0 border-t border-line bg-cream/95 backdrop-blur">
-        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-5 py-3">
+      <div className="fixed inset-x-0 bottom-0 z-10 border-t border-line bg-cream/90 backdrop-blur-md">
+        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="text-sm">
             <span className="text-navy-muted">Total</span>{' '}
-            <span className="font-bold">{money(totals.total)}</span>
-            {saveError ? <span className="ml-3 text-red-700">{saveError}</span> : null}
-            {saved ? <span className="ml-3 text-accent-deep">Saved</span> : null}
+            <span className="text-base font-bold text-navy">{money(totals.total)}</span>
+            {saveError ? <span className="ml-3 text-red-600">{saveError}</span> : null}
+            {saved ? <span className="ml-3 font-medium text-emerald-600">Saved</span> : null}
           </div>
           <Button onClick={saveNow} disabled={saving}>
+            <Save />
             {saving ? 'Saving…' : 'Save draft'}
           </Button>
         </div>
       </div>
     </div>
+  );
+}
+
+function SectionTitle({
+  icon: Icon,
+  accent,
+  children,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  accent?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <h2
+      className={
+        'mb-4 flex items-center gap-2 font-semibold ' + (accent ? 'text-accent-deep' : 'text-navy')
+      }
+    >
+      <Icon className={'h-[18px] w-[18px] ' + (accent ? 'text-accent-deep' : 'text-navy-muted')} />
+      {children}
+    </h2>
   );
 }
 
