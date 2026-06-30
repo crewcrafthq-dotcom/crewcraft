@@ -6,6 +6,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { createClient } from '@supabase/supabase-js';
+import Stripe from 'stripe';
 
 const GREEN = '\x1b[32m';
 const RED = '\x1b[31m';
@@ -90,6 +91,60 @@ async function checkSupabase() {
   }
 }
 
-checkSupabase()
-  .catch((e) => console.log('  ' + no(`check failed: ${e?.message ?? e}`)))
+async function checkStripe() {
+  console.log('\nLive Stripe check');
+  const key = env.STRIPE_SECRET_KEY;
+  if (!key) {
+    console.log('  ' + dim('skipped — no STRIPE_SECRET_KEY (the paywall is optional).'));
+    return;
+  }
+  const mode = key.startsWith('sk_live') ? 'LIVE' : key.startsWith('sk_test') ? 'test' : 'unknown';
+  console.log('  ' + dim(`secret key mode: ${mode}`));
+
+  const stripe = new Stripe(key);
+  const prices: [string, string][] = [
+    ['Pro monthly', env.STRIPE_PRICE_PRO_MONTHLY],
+    ['Pro annual', env.STRIPE_PRICE_PRO_ANNUAL],
+    ['Founding', env.STRIPE_PRICE_FOUNDING],
+  ];
+
+  for (const [label, id] of prices) {
+    if (!id) {
+      console.log('  ' + no(`${label}: price id missing`));
+      continue;
+    }
+    try {
+      const p = await stripe.prices.retrieve(id);
+      const amt = p.unit_amount != null ? `$${(p.unit_amount / 100).toFixed(2)}` : '—';
+      const interval = p.recurring?.interval ? `/${p.recurring.interval}` : '';
+      if (p.active && p.recurring) {
+        console.log('  ' + ok(`${label}: ${amt}${interval}`));
+      } else {
+        console.log(
+          '  ' +
+            no(
+              `${label}: ${amt}${interval} — ${!p.recurring ? 'not a recurring price (subscriptions need recurring)' : 'inactive'}`,
+            ),
+        );
+      }
+    } catch (e: unknown) {
+      console.log('  ' + no(`${label}: ${(e as Error)?.message ?? String(e)}`));
+    }
+  }
+
+  console.log(
+    '  ' +
+      dim(
+        'webhook: secret present. Run `stripe listen --forward-to localhost:3000/api/stripe/webhook` while testing.',
+      ),
+  );
+}
+
+async function main() {
+  await checkSupabase();
+  await checkStripe();
+}
+
+main()
+  .catch((e) => console.log('  ' + no(`check failed: ${(e as Error)?.message ?? String(e)}`)))
   .finally(() => console.log(''));

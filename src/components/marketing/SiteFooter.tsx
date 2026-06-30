@@ -1,0 +1,65 @@
+import Link from 'next/link';
+import { ToolbeltLockup } from './ToolbeltLockup';
+
+const PRODUCT = [
+  { label: 'Toolbelt Estimates', href: '#demo' },
+  { label: 'Pricing', href: '#pricing' },
+  { label: 'Log in', href: '/login' },
+];
+const TRADES = ['HVAC', 'Plumbing', 'Electrical', 'Roofing'];
+const COMPANY = [
+  { label: 'Contact', href: 'mailto:hello@crewcraft.ai' },
+  { label: 'Privacy', href: '#' },
+  { label: 'Terms', href: '#' },
+];
+
+export function SiteFooter() {
+  return (
+    <footer className="border-t border-line bg-cream-sunken">
+      <div className="mx-auto max-w-6xl px-5 py-12 sm:px-6">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="sm:col-span-2 lg:col-span-1">
+            <ToolbeltLockup />
+            <p className="mt-3 max-w-xs text-sm text-navy-soft">
+              The contractor’s set of tools for killing after-hours paperwork.
+            </p>
+            <p className="mt-3 text-sm font-semibold text-navy-muted">From the Crewcraft crew.</p>
+          </div>
+
+          <FooterCol title="Product" items={PRODUCT} />
+          <div>
+            <h3 className="text-sm font-semibold text-navy">Built for</h3>
+            <ul className="mt-3 space-y-2 text-sm text-navy-soft">
+              {TRADES.map((t) => (
+                <li key={t}>{t}</li>
+              ))}
+            </ul>
+          </div>
+          <FooterCol title="Company" items={COMPANY} />
+        </div>
+
+        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-line pt-6 text-sm text-navy-muted sm:flex-row">
+          <p>© {new Date().getFullYear()} Toolbelt, by Crewcraft</p>
+          <p>Built for the trades.</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function FooterCol({ title, items }: { title: string; items: { label: string; href: string }[] }) {
+  return (
+    <div>
+      <h3 className="text-sm font-semibold text-navy">{title}</h3>
+      <ul className="mt-3 space-y-2 text-sm">
+        {items.map((it) => (
+          <li key={it.label}>
+            <Link href={it.href} className="text-navy-soft transition hover:text-navy">
+              {it.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}

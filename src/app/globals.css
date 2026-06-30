@@ -56,6 +56,20 @@
   }
 }
 
+/* Hero before→after transform loop */
+@keyframes baBefore {
+  0%, 38% { opacity: 1; }
+  48%, 92% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes baAfter {
+  0%, 38% { opacity: 0; transform: translateY(14px) scale(0.985); }
+  50%, 92% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(14px) scale(0.985); }
+}
+.anim-before { animation: baBefore 9s ease-in-out infinite; }
+.anim-after { animation: baAfter 9s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -65,4 +79,7 @@
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+  /* Show only the finished estimate for reduced-motion users. */
+  .anim-before { display: none; }
+  .anim-after { animation: none !important; opacity: 1; transform: none; }
 }

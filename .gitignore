@@ -29,8 +29,8 @@ yarn-error.log*
 # vercel
 .vercel
 
-# local Claude Code settings
-.claude/settings.local.json
+# Claude Code working dir (skills, local settings) — not project source
+.claude/
 
 # typescript
 *.tsbuildinfo

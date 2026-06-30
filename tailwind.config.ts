@@ -21,6 +21,7 @@ const config: Config = {
           DEFAULT: '#16263A', // primary ink
           soft: '#48586B', // secondary text
           muted: '#6B7482', // tertiary / meta (4.5:1 on white)
+          deep: '#0E1A2B', // the single dark spotlight band
         },
         line: '#E8DFD1', // hairline divider
         accent: {
