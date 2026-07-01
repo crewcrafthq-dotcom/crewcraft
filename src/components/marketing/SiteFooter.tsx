@@ -1,8 +1,9 @@
 import Link from 'next/link';
+import { DemoTextLink } from './DemoModal';
 import { ToolbeltLockup } from './ToolbeltLockup';
 
 const PRODUCT = [
-  { label: 'Toolbelt Estimates', href: '#demo' },
+  { label: 'Watch the demo', href: '#demo' },
   { label: 'Pricing', href: '#pricing' },
   { label: 'Log in', href: '/login' },
 ];
@@ -52,13 +53,21 @@ function FooterCol({ title, items }: { title: string; items: { label: string; hr
     <div>
       <h3 className="text-sm font-semibold text-mist">{title}</h3>
       <ul className="mt-3 space-y-2 text-sm">
-        {items.map((it) => (
-          <li key={it.label}>
-            <Link href={it.href} className="text-mist-soft transition hover:text-mist">
-              {it.label}
-            </Link>
-          </li>
-        ))}
+        {items.map((it) =>
+          it.href === '#demo' ? (
+            <li key={it.label}>
+              <DemoTextLink className="text-mist-soft transition hover:text-mist">
+                {it.label}
+              </DemoTextLink>
+            </li>
+          ) : (
+            <li key={it.label}>
+              <Link href={it.href} className="text-mist-soft transition hover:text-mist">
+                {it.label}
+              </Link>
+            </li>
+          ),
+        )}
       </ul>
     </div>
   );

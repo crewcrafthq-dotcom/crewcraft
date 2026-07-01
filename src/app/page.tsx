@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
 import { AppLineup } from '@/components/marketing/AppLineup';
-import { DemoStrip } from '@/components/marketing/DemoStrip';
+import { DemoModal } from '@/components/marketing/DemoModal';
 import { Faq } from '@/components/marketing/Faq';
 import { FinalCta } from '@/components/marketing/FinalCta';
 import { Hero } from '@/components/marketing/Hero';
@@ -63,7 +63,6 @@ export default async function LandingPage() {
       <div className="overflow-x-hidden pb-20 lg:pb-0">
         <Hero />
         <Stats />
-        <Reveal><DemoStrip /></Reveal>
         <Reveal><Pain /></Reveal>
         <Reveal><HowItWorks /></Reveal>
         <WhyToolbelt />
@@ -76,6 +75,7 @@ export default async function LandingPage() {
         <Reveal><FinalCta /></Reveal>
         <SiteFooter />
       </div>
+      <DemoModal />
       <StickyCtaBar />
     </>
   );

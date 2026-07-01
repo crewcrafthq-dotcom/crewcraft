@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import { Eye, PlayCircle, Zap } from 'lucide-react';
+import { Eye, Zap } from 'lucide-react';
 
 import { BeforeAfter } from './BeforeAfter';
+import { WatchDemoButton } from './DemoModal';
 import { MobileMenu } from './MobileMenu';
 import { StartFreeButton, TrustLine } from './StartFree';
 import { ToolbeltLockup } from './ToolbeltLockup';
@@ -82,13 +83,7 @@ export function Hero() {
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
               <StartFreeButton />
-              <Link
-                href="#demo"
-                className="inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-xl border border-hairline-strong bg-night-800/70 px-6 font-semibold text-mist backdrop-blur transition duration-200 hover:border-accent/40 hover:bg-night-700"
-              >
-                <PlayCircle className="h-5 w-5 text-accent-bright" />
-                Watch the 35-second demo
-              </Link>
+              <WatchDemoButton />
             </div>
             <TrustLine className="mt-5" />
           </div>
