@@ -18,7 +18,7 @@ export function TotalsPanel({ totals, taxRate, onTaxRate, deposit, onDeposit }: 
       <Row label="Subtotal" value={money(totals.subtotal)} />
 
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-navy-soft">
+        <div className="flex items-center gap-2 text-mist-soft">
           <span>Tax</span>
           <Input
             aria-label="Tax rate percent"
@@ -39,10 +39,10 @@ export function TotalsPanel({ totals, taxRate, onTaxRate, deposit, onDeposit }: 
       </div>
 
       <div className="flex items-center justify-between pt-1">
-        <div className="flex items-center gap-2 text-navy-soft">
+        <div className="flex items-center gap-2 text-mist-soft">
           <span>Deposit</span>
           <div className="flex items-center">
-            <span className="text-navy-muted">$</span>
+            <span className="text-mist-mute">$</span>
             <Input
               aria-label="Deposit amount"
               inputMode="decimal"
@@ -53,7 +53,7 @@ export function TotalsPanel({ totals, taxRate, onTaxRate, deposit, onDeposit }: 
             />
           </div>
         </div>
-        <span className="font-medium text-accent-deep">{money(totals.depositDue)}</span>
+        <span className="font-medium text-accent-bright">{money(totals.depositDue)}</span>
       </div>
 
       {totals.depositDue > 0 ? (
@@ -66,7 +66,7 @@ export function TotalsPanel({ totals, taxRate, onTaxRate, deposit, onDeposit }: 
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-navy-soft">{label}</span>
+      <span className="text-mist-soft">{label}</span>
       <span className="font-medium">{value}</span>
     </div>
   );

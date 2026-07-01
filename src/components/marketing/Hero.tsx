@@ -1,50 +1,123 @@
 import Link from 'next/link';
-import { PlayCircle } from 'lucide-react';
+import { Eye, PlayCircle, Zap } from 'lucide-react';
 
 import { BeforeAfter } from './BeforeAfter';
+import { MobileMenu } from './MobileMenu';
 import { StartFreeButton, TrustLine } from './StartFree';
 import { ToolbeltLockup } from './ToolbeltLockup';
+
+const NAV = [
+  { label: 'How it works', href: '#how' },
+  { label: 'Why Toolbelt', href: '#why' },
+  { label: 'Pricing', href: '#pricing' },
+  { label: 'FAQ', href: '#faq' },
+];
 
 export function Hero() {
   return (
     <section id="hero" className="relative overflow-hidden">
+      {/* backdrop: dotted grid + slow-pulsing accent blobs */}
+      <div
+        aria-hidden
+        className="grid-bg pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(80%_60%_at_50%_0%,#000_30%,transparent_75%)]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-24 -top-40 -z-10 h-[560px] w-[560px] animate-pulse-slow rounded-full bg-accent/20 blur-[130px]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-40 top-40 -z-10 h-[420px] w-[420px] animate-pulse-slow rounded-full bg-blue-500/10 blur-[130px] [animation-delay:3s]"
+      />
+
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
+        {/* nav */}
         <nav className="flex items-center justify-between py-5">
           <ToolbeltLockup />
-          <Link
-            href="/login"
-            className="rounded-lg px-3 py-2 text-sm font-semibold text-navy-soft transition hover:text-navy"
-          >
-            Log in
-          </Link>
+          <div className="hidden items-center gap-1 md:flex">
+            {NAV.map((n) => (
+              <Link
+                key={n.href}
+                href={n.href}
+                className="nav-underline rounded-lg px-3 py-2 text-sm font-medium text-mist-soft transition hover:text-mist"
+              >
+                {n.label}
+              </Link>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/login"
+              className="hidden rounded-lg px-3 py-2 text-sm font-semibold text-mist-soft transition hover:text-mist sm:inline-flex"
+            >
+              Log in
+            </Link>
+            <StartFreeButton size="md" label="Start free" withArrow={false} className="hidden sm:inline-flex" />
+            <MobileMenu links={NAV} />
+          </div>
         </nav>
 
-        <div className="grid items-center gap-10 pb-14 pt-4 lg:grid-cols-2 lg:gap-14 lg:pb-24 lg:pt-10">
-          <div className="animate-fade-up">
-            <p className="eyebrow">For HVAC · Plumbing · Electrical · Roofing</p>
-            <h1 className="mt-3 text-[2.15rem] font-bold leading-[1.06] tracking-tight text-navy sm:text-5xl lg:text-[3.4rem]">
-              Type the job. Get a branded estimate in under a minute.
+        {/* hero body */}
+        <div className="grid items-center gap-10 pb-16 pt-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:pb-28 lg:pt-12">
+          <div className="min-w-0 animate-fade-up">
+            <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent-bright">
+              <span className="h-1.5 w-1.5 flex-none rounded-full bg-accent" />
+              Built for contractors
+              <span className="hidden sm:inline"> — HVAC · Plumbing · Electrical · Roofing</span>
+            </span>
+
+            <h1 className="mt-5 text-[2.3rem] font-extrabold leading-[1.03] tracking-tight text-mist sm:text-5xl lg:text-[3.6rem]">
+              Type the job.
+              <br className="hidden sm:block" /> Send a branded estimate in{' '}
+              <span className="bg-gradient-to-r from-accent to-accent-bright bg-clip-text text-transparent">
+                under a minute
+              </span>
+              .
             </h1>
-            <p className="mt-5 max-w-md text-lg leading-relaxed text-navy-soft">
+
+            <p className="mt-5 max-w-md text-lg leading-relaxed text-mist-soft">
               Toolbelt kills the after-hours paperwork. The quote’s written, totaled, and ready to
               send before you leave the driveway.
             </p>
 
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
               <StartFreeButton />
               <Link
                 href="#demo"
-                className="inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-xl border border-line bg-cream-card px-6 font-semibold text-navy shadow-sm transition duration-150 hover:bg-cream-deep"
+                className="inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-xl border border-hairline-strong bg-night-800/70 px-6 font-semibold text-mist backdrop-blur transition duration-200 hover:border-accent/40 hover:bg-night-700"
               >
-                <PlayCircle className="h-5 w-5" />
-                Watch the 15-second demo
+                <PlayCircle className="h-5 w-5 text-accent-bright" />
+                Watch the 35-second demo
               </Link>
             </div>
-            <TrustLine className="mt-4" />
+            <TrustLine className="mt-5" />
           </div>
 
-          <div className="animate-fade-up [animation-delay:120ms]">
-            <BeforeAfter trade="hvac" />
+          {/* product visual in a glowing frame + floating cards */}
+          <div className="relative min-w-0 animate-fade-up [animation-delay:140ms]">
+            <div className="gradient-border relative rounded-3xl bg-night-850/60 p-2 shadow-lift sm:p-3">
+              <BeforeAfter trade="hvac" />
+            </div>
+
+            <div className="absolute -left-4 -top-4 hidden animate-float items-center gap-2.5 rounded-xl border border-hairline-strong bg-night-800/95 px-3.5 py-2.5 shadow-lift backdrop-blur sm:flex">
+              <span className="grid h-8 w-8 place-items-center rounded-lg bg-emerald-500/15 text-emerald-400">
+                <Eye className="h-4 w-4" />
+              </span>
+              <div>
+                <p className="text-xs font-semibold text-mist">Opened by customer</p>
+                <p className="text-[11px] text-mist-mute">2 minutes ago</p>
+              </div>
+            </div>
+
+            <div className="absolute -bottom-4 -right-3 hidden animate-float-slow items-center gap-2.5 rounded-xl border border-hairline-strong bg-night-800/95 px-3.5 py-2.5 shadow-lift backdrop-blur sm:flex">
+              <span className="grid h-8 w-8 place-items-center rounded-lg bg-accent/15 text-accent-bright">
+                <Zap className="h-4 w-4" />
+              </span>
+              <div>
+                <p className="text-xs font-semibold text-mist">Ready in 48s</p>
+                <p className="text-[11px] text-mist-mute">typed → sent</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

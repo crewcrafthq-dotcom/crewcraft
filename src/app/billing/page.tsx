@@ -58,11 +58,11 @@ export default async function BillingPage({
   return (
     <AppShell trade={business.trade} businessName={business.name} width="narrow">
       <p className="eyebrow">Plan</p>
-      <h1 className="mt-1 text-display-sm font-bold text-navy">{paid ? 'Your plan' : 'Go Pro'}</h1>
+      <h1 className="mt-1 text-display-sm font-bold text-mist">{paid ? 'Your plan' : 'Go Pro'}</h1>
 
       {searchParams.reason === 'limit' && !paid ? (
-        <Card className="mt-4 border-accent/40 bg-accent-soft/40 p-4">
-          <p className="text-navy-soft">
+        <Card className="mt-4 border-accent/40 bg-accent/10/40 p-4">
+          <p className="text-mist-soft">
             You’ve used your 3 free estimates. Go Pro to keep building — unlimited estimates, same
             flat price.
           </p>
@@ -76,8 +76,8 @@ export default async function BillingPage({
               <Sparkles className="h-5 w-5" />
             </span>
             <div>
-              <h2 className="font-semibold text-navy">You’re on Pro</h2>
-              <p className="text-sm text-navy-soft">Unlimited estimates. Thanks for the support.</p>
+              <h2 className="font-semibold text-mist">You’re on Pro</h2>
+              <p className="text-sm text-mist-soft">Unlimited estimates. Thanks for the support.</p>
             </div>
           </div>
           <div className="mt-5">
@@ -86,14 +86,14 @@ export default async function BillingPage({
         </Card>
       ) : (
         <>
-          <p className="mt-2 text-navy-soft">Unlimited estimates. One flat price. Pick what fits.</p>
+          <p className="mt-2 text-mist-soft">Unlimited estimates. One flat price. Pick what fits.</p>
 
           <Card className="mt-5 p-5">
-            <p className="mb-3 text-sm font-semibold text-navy">Every plan includes</p>
+            <p className="mb-3 text-sm font-semibold text-mist">Every plan includes</p>
             <ul className="grid gap-2.5 sm:grid-cols-2">
               {FEATURES.map((f) => (
-                <li key={f} className="flex items-center gap-2.5 text-sm text-navy-soft">
-                  <span className="grid h-5 w-5 flex-none place-items-center rounded-full bg-accent-soft text-accent-deep">
+                <li key={f} className="flex items-center gap-2.5 text-sm text-mist-soft">
+                  <span className="grid h-5 w-5 flex-none place-items-center rounded-full bg-accent/10 text-accent-bright">
                     <Check className="h-3.5 w-3.5" />
                   </span>
                   {f}
@@ -116,12 +116,12 @@ export default async function BillingPage({
                     Best deal
                   </span>
                 ) : null}
-                <h2 className="font-semibold text-navy">{plan.name}</h2>
+                <h2 className="font-semibold text-mist">{plan.name}</h2>
                 <p className="mt-2">
-                  <span className="text-3xl font-bold text-navy">{plan.price}</span>
-                  <span className="text-sm text-navy-muted"> {plan.cadence}</span>
+                  <span className="text-3xl font-bold text-mist">{plan.price}</span>
+                  <span className="text-sm text-mist-mute"> {plan.cadence}</span>
                 </p>
-                <p className="mb-5 mt-1 text-sm text-navy-soft">{plan.note}</p>
+                <p className="mb-5 mt-1 text-sm text-mist-soft">{plan.note}</p>
                 <div className="mt-auto">
                   <UpgradeButton
                     priceKey={plan.key}

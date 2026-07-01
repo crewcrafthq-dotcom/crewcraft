@@ -5,11 +5,11 @@ type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
 type Size = 'sm' | 'md' | 'lg';
 
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-accent text-accent-fg shadow-accent hover:brightness-[0.96] active:brightness-90',
+  primary: 'bg-accent text-accent-fg shadow-accent hover:shadow-glow active:brightness-95',
   secondary:
-    'bg-cream-card text-navy border border-line shadow-sm hover:bg-cream-sunken hover:border-navy-muted/30',
-  ghost: 'text-navy-soft hover:bg-cream-deep',
-  danger: 'text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100',
+    'bg-night-800 text-mist border border-hairline hover:bg-night-700 hover:border-hairline-strong',
+  ghost: 'text-mist-soft hover:bg-night-800 hover:text-mist',
+  danger: 'text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/30',
 };
 
 const SIZES: Record<Size, string> = {
@@ -21,7 +21,7 @@ const SIZES: Record<Size, string> = {
 const BASE =
   'inline-flex items-center justify-center rounded-xl font-semibold cursor-pointer select-none ' +
   'transition duration-150 ease-out-soft active:scale-[0.98] ' +
-  'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/45 focus-visible:ring-offset-2 focus-visible:ring-offset-cream ' +
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-night-900 ' +
   'disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100 ' +
   '[&>svg]:h-[1.1em] [&>svg]:w-[1.1em] [&>svg]:flex-none';
 

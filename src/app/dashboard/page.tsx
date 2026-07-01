@@ -32,34 +32,34 @@ export default async function DashboardPage() {
     <AppShell trade={business.trade} businessName={business.name}>
       <header className="mb-8">
         <p className="eyebrow">Your workspace</p>
-        <h1 className="mt-1 text-display-sm font-bold text-navy">Welcome back, {firstName}.</h1>
-        <p className="mt-1.5 text-navy-soft">Pick a tool to get to work.</p>
+        <h1 className="mt-1 text-display-sm font-bold text-mist">Welcome back, {firstName}.</h1>
+        <p className="mt-1.5 text-mist-soft">Pick a tool to get to work.</p>
       </header>
 
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-navy-muted">Your apps</h2>
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-mist-mute">Your apps</h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {/* Live app */}
         <Link
           href="/estimates"
-          className="group block animate-fade-up rounded-2xl border border-line bg-cream-card p-5 shadow-card card-interactive"
+          className="group block animate-fade-up rounded-2xl border border-hairline bg-night-800 p-5 shadow-card card-interactive"
         >
           <div className="flex items-start justify-between">
             <span className="grid h-12 w-12 place-items-center rounded-xl bg-accent text-accent-fg shadow-accent">
               <FileText className="h-6 w-6" />
             </span>
-            <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent-deep">
+            <span className="rounded-full bg-accent/10 px-2.5 py-1 text-xs font-semibold text-accent-bright">
               Live
             </span>
           </div>
-          <h3 className="mt-4 text-lg font-bold text-navy">Estimate Builder</h3>
-          <p className="mt-1 text-sm text-navy-soft">
+          <h3 className="mt-4 text-lg font-bold text-mist">Estimate Builder</h3>
+          <p className="mt-1 text-sm text-mist-soft">
             Turn a plain-English job into a clean, branded estimate in under a minute.
           </p>
-          <div className="mt-4 flex items-center justify-between border-t border-line pt-3 text-sm">
-            <span className="text-navy-muted">
+          <div className="mt-4 flex items-center justify-between border-t border-hairline pt-3 text-sm">
+            <span className="text-mist-mute">
               {estimateCount} {estimateCount === 1 ? 'estimate' : 'estimates'}
             </span>
-            <span className="inline-flex items-center gap-1 font-semibold text-accent-deep">
+            <span className="inline-flex items-center gap-1 font-semibold text-accent-bright">
               Open
               <ArrowRight className="h-4 w-4 transition duration-150 group-hover:translate-x-0.5" />
             </span>
@@ -72,24 +72,24 @@ export default async function DashboardPage() {
           return (
             <div
               key={app.name}
-              className="rounded-2xl border border-dashed border-line bg-cream-card/50 p-5"
+              className="rounded-2xl border border-dashed border-hairline bg-night-800/50 p-5"
             >
               <div className="flex items-start justify-between">
-                <span className="grid h-12 w-12 place-items-center rounded-xl bg-cream-deep text-navy-muted">
+                <span className="grid h-12 w-12 place-items-center rounded-xl bg-night-700 text-mist-mute">
                   <Icon className="h-6 w-6" />
                 </span>
-                <span className="rounded-full bg-cream-deep px-2.5 py-1 text-xs font-semibold text-navy-muted">
+                <span className="rounded-full bg-night-700 px-2.5 py-1 text-xs font-semibold text-mist-mute">
                   Soon
                 </span>
               </div>
-              <h3 className="mt-4 text-lg font-bold text-navy-soft">{app.name}</h3>
-              <p className="mt-1 text-sm text-navy-muted">{app.desc}</p>
+              <h3 className="mt-4 text-lg font-bold text-mist-soft">{app.name}</h3>
+              <p className="mt-1 text-sm text-mist-mute">{app.desc}</p>
             </div>
           );
         })}
       </div>
 
-      <p className="mt-6 text-sm text-navy-muted">
+      <p className="mt-6 text-sm text-mist-mute">
         More tools are on the way — built for the trades, not for spreadsheets.
       </p>
     </AppShell>

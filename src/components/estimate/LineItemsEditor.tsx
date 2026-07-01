@@ -15,8 +15,8 @@ interface Props {
 }
 
 const iconBtn =
-  'grid h-8 w-8 place-items-center rounded-lg text-navy-muted transition cursor-pointer ' +
-  'hover:bg-cream-deep disabled:cursor-default disabled:opacity-30';
+  'grid h-8 w-8 place-items-center rounded-lg text-mist-mute transition cursor-pointer ' +
+  'hover:bg-night-700 disabled:cursor-default disabled:opacity-30';
 
 export function LineItemsEditor({ rows, onChange }: Props) {
   const update = (key: string, patch: Partial<EditorRow>) =>
@@ -37,20 +37,20 @@ export function LineItemsEditor({ rows, onChange }: Props) {
   return (
     <div>
       {rows.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-line bg-cream-sunken px-4 py-6 text-center text-sm text-navy-muted">
+        <p className="rounded-xl border border-dashed border-hairline bg-night-850 px-4 py-6 text-center text-sm text-mist-mute">
           No line items yet. Build them from the job above, or add them by hand.
         </p>
       ) : (
         <div className="space-y-3">
           {rows.map((row, i) => (
-            <div key={row.key} className="rounded-xl border border-line bg-cream-sunken p-3">
+            <div key={row.key} className="rounded-xl border border-hairline bg-night-850 p-3">
               <div className="flex items-start gap-2">
                 <Input
                   aria-label="Description"
                   placeholder="What's the line?"
                   value={row.description}
                   onChange={(e) => update(row.key, { description: e.target.value })}
-                  className="flex-1 bg-cream-card"
+                  className="flex-1 bg-night-800"
                 />
                 <button
                   type="button"
@@ -67,7 +67,7 @@ export function LineItemsEditor({ rows, onChange }: Props) {
                   aria-label="Category"
                   value={row.category}
                   onChange={(e) => update(row.key, { category: e.target.value as LineItemCategory })}
-                  className="h-9 w-28 bg-cream-card text-sm"
+                  className="h-9 w-28 bg-night-800 text-sm"
                 >
                   {(Object.keys(CATEGORY_LABELS) as LineItemCategory[]).map((c) => (
                     <option key={c} value={c}>
@@ -80,18 +80,18 @@ export function LineItemsEditor({ rows, onChange }: Props) {
                   inputMode="decimal"
                   value={row.quantity}
                   onChange={(e) => update(row.key, { quantity: e.target.value })}
-                  className="h-9 w-16 bg-cream-card text-sm"
+                  className="h-9 w-16 bg-night-800 text-sm"
                   placeholder="Qty"
                 />
                 <Input
                   aria-label="Unit"
                   value={row.unit}
                   onChange={(e) => update(row.key, { unit: e.target.value })}
-                  className="h-9 w-16 bg-cream-card text-sm"
+                  className="h-9 w-16 bg-night-800 text-sm"
                   placeholder="unit"
                 />
-                <div className="flex items-center rounded-xl border border-line bg-cream-card pl-2.5 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/15">
-                  <span className="text-navy-muted">$</span>
+                <div className="flex items-center rounded-xl border border-hairline bg-night-800 pl-2.5 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/15">
+                  <span className="text-mist-mute">$</span>
                   <Input
                     aria-label="Unit price"
                     inputMode="decimal"
@@ -101,7 +101,7 @@ export function LineItemsEditor({ rows, onChange }: Props) {
                     placeholder="0.00"
                   />
                 </div>
-                <span className="ml-auto text-sm font-semibold text-navy">
+                <span className="ml-auto text-sm font-semibold text-mist">
                   {money(lineTotal(Number(row.quantity) || 0, Number(row.unitPrice) || 0))}
                 </span>
                 <div className="flex">

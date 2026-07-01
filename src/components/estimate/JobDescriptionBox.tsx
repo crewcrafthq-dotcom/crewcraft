@@ -35,7 +35,7 @@ export function JobDescriptionBox({ value, onChange, onBuild, loading, error }: 
           disabled
           title="Voice input — coming soon"
           aria-label="Voice input (coming soon)"
-          className="absolute bottom-2.5 right-2.5 grid h-9 w-9 place-items-center rounded-lg text-navy-muted opacity-50"
+          className="absolute bottom-2.5 right-2.5 grid h-9 w-9 place-items-center rounded-lg text-mist-mute opacity-50"
         >
           <Mic className="h-[18px] w-[18px]" />
         </button>
@@ -46,7 +46,7 @@ export function JobDescriptionBox({ value, onChange, onBuild, loading, error }: 
           <Sparkles className={loading ? 'animate-pulse' : ''} />
           {loading ? 'Building…' : 'Build line items'}
         </Button>
-        <span className="text-sm text-navy-muted">
+        <span className="text-sm text-mist-mute">
           Prices come back as suggestions — review and edit them.
         </span>
       </div>

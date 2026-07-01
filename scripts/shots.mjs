@@ -12,7 +12,7 @@ const viewports = [
   { name: 'mobile', width: 375, height: 812, dsf: 2 },
   { name: 'desktop', width: 1440, height: 900, dsf: 1 },
 ];
-const sections = ['hero', 'demo', 'trades', 'output', 'pricing'];
+const sections = ['hero', 'how', 'why', 'demo', 'output', 'pricing', 'faq'];
 
 const browser = await chromium.launch();
 try {
@@ -37,6 +37,8 @@ try {
         console.log(`! ${vp.name}-${id}: ${e.message.split('\n')[0]}`);
       }
     }
+    await page.screenshot({ path: path.join(outDir, `${vp.name}-full.png`), fullPage: true });
+    console.log(`✓ ${vp.name}-full.png`);
     await ctx.close();
   }
 } finally {

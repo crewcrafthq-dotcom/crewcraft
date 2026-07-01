@@ -29,8 +29,8 @@ export function NavLinks() {
             className={cn(
               'inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition duration-150',
               active
-                ? 'bg-cream-deep text-navy'
-                : 'text-navy-soft hover:bg-cream-deep/60 hover:text-navy',
+                ? 'bg-night-700 text-mist'
+                : 'text-mist-soft hover:bg-night-700/60 hover:text-mist',
             )}
           >
             <Icon className="h-4 w-4" />

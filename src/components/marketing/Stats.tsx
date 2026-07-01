@@ -1,0 +1,26 @@
+import { StatCounter } from './StatCounter';
+
+// Honest, product-true numbers — not fabricated user counts.
+const STATS = [
+  { value: 60, suffix: 's', label: 'to a finished estimate' },
+  { value: 4, suffix: '', label: 'trades supported' },
+  { value: 3, suffix: '', label: 'free estimates to start' },
+  { value: 100, suffix: '%', label: 'your numbers, always' },
+];
+
+export function Stats() {
+  return (
+    <section className="mx-auto -mt-4 max-w-6xl px-5 sm:px-6">
+      <div className="grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-hairline bg-hairline sm:grid-cols-4">
+        {STATS.map((s) => (
+          <div key={s.label} className="bg-night-900 px-6 py-8 text-center">
+            <p className="text-4xl font-extrabold tracking-tight text-mist">
+              <StatCounter value={s.value} suffix={s.suffix} />
+            </p>
+            <p className="mt-1.5 text-sm text-mist-soft">{s.label}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}

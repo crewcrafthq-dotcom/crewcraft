@@ -12,13 +12,14 @@ export interface TradeTheme {
   trade: Trade;
   label: string;
   blurb: string;
-  accent: string; // fill / primary accent
-  accentFg: string; // text that sits on an accent fill
-  accentDeep: string; // accent-colored text on the beige background
-  accentRgb: string;
-  accentFgRgb: string;
+  accent: string; // fill / primary accent (hex — used by the PDF)
+  accentFg: string; // text that sits on an accent fill (PDF)
+  accentDeep: string; // accent-colored text on a light background (PDF / legacy)
+  accentRgb: string; // web fill — brightened to glow on dark
+  accentFgRgb: string; // ink on an accent fill (dark: near-black for all trades)
   accentDeepRgb: string;
-  accentSoftRgb: string; // faint tint background
+  accentSoftRgb: string; // faint tint background (legacy light)
+  accentBrightRgb: string; // accent-colored TEXT on dark
 }
 
 const THEMES: Record<Trade, TradeTheme> = {
@@ -29,10 +30,11 @@ const THEMES: Record<Trade, TradeTheme> = {
     accent: '#E8722A',
     accentFg: '#FFFFFF',
     accentDeep: '#C2571A',
-    accentRgb: '232 114 42',
-    accentFgRgb: '255 255 255',
+    accentRgb: '255 122 47',
+    accentFgRgb: '10 14 26',
     accentDeepRgb: '194 87 26',
     accentSoftRgb: '247 226 210',
+    accentBrightRgb: '255 160 105',
   },
   plumbing: {
     trade: 'plumbing',
@@ -41,10 +43,11 @@ const THEMES: Record<Trade, TradeTheme> = {
     accent: '#0F8A8A',
     accentFg: '#FFFFFF',
     accentDeep: '#0B6E6E',
-    accentRgb: '15 138 138',
-    accentFgRgb: '255 255 255',
+    accentRgb: '34 211 197',
+    accentFgRgb: '10 14 26',
     accentDeepRgb: '11 110 110',
     accentSoftRgb: '214 236 236',
+    accentBrightRgb: '94 234 212',
   },
   electrical: {
     trade: 'electrical',
@@ -53,10 +56,11 @@ const THEMES: Record<Trade, TradeTheme> = {
     accent: '#FFB400',
     accentFg: '#16263A', // navy on amber — never white
     accentDeep: '#D29100', // deeper amber for text on beige
-    accentRgb: '255 180 0',
-    accentFgRgb: '22 38 58',
+    accentRgb: '255 194 75',
+    accentFgRgb: '10 14 26',
     accentDeepRgb: '210 145 0',
     accentSoftRgb: '252 239 201',
+    accentBrightRgb: '255 209 130',
   },
   roofing: {
     trade: 'roofing',
@@ -65,10 +69,11 @@ const THEMES: Record<Trade, TradeTheme> = {
     accent: '#C0362C',
     accentFg: '#FFFFFF',
     accentDeep: '#9B2A22',
-    accentRgb: '192 54 44',
-    accentFgRgb: '255 255 255',
+    accentRgb: '255 92 114',
+    accentFgRgb: '10 14 26',
     accentDeepRgb: '155 42 34',
     accentSoftRgb: '242 216 213',
+    accentBrightRgb: '255 138 152',
   },
 };
 
@@ -82,6 +87,7 @@ export function themeVars(trade: Trade): React.CSSProperties {
   return {
     '--accent': t.accentRgb,
     '--accent-fg': t.accentFgRgb,
+    '--accent-bright': t.accentBrightRgb,
     '--accent-deep': t.accentDeepRgb,
     '--accent-soft': t.accentSoftRgb,
   } as React.CSSProperties;

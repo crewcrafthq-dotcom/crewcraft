@@ -48,18 +48,18 @@ export default async function EstimatesPage() {
 
   return (
     <AppShell trade={business.trade} businessName={business.name}>
-      <nav className="mb-4 flex items-center gap-1.5 text-sm text-navy-muted">
-        <Link href="/dashboard" className="hover:text-navy">
+      <nav className="mb-4 flex items-center gap-1.5 text-sm text-mist-mute">
+        <Link href="/dashboard" className="hover:text-mist">
           Apps
         </Link>
         <ChevronRight className="h-3.5 w-3.5" />
-        <span className="font-medium text-navy-soft">Estimate Builder</span>
+        <span className="font-medium text-mist-soft">Estimate Builder</span>
       </nav>
 
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-display-sm font-bold text-navy">Estimates</h1>
-          <p className="mt-1 text-navy-soft">Every estimate you’ve built, newest first.</p>
+          <h1 className="text-display-sm font-bold text-mist">Estimates</h1>
+          <p className="mt-1 text-mist-soft">Every estimate you’ve built, newest first.</p>
         </div>
         <Link href="/estimates/new" className={buttonClasses('primary', 'md')}>
           <FilePlus2 />
@@ -77,7 +77,7 @@ export default async function EstimatesPage() {
 
       {!paid ? (
         <Card className="mb-6 flex flex-wrap items-center justify-between gap-3 p-4">
-          <p className="text-sm text-navy-soft">
+          <p className="text-sm text-mist-soft">
             {remaining > 0
               ? `${remaining} of ${FREE_ESTIMATE_LIMIT} free estimates left.`
               : 'You’ve used your 3 free estimates.'}
@@ -90,11 +90,11 @@ export default async function EstimatesPage() {
 
       {estimates.length === 0 ? (
         <Card className="flex flex-col items-center px-6 py-14 text-center">
-          <span className="grid h-14 w-14 place-items-center rounded-2xl bg-accent-soft text-accent-deep">
+          <span className="grid h-14 w-14 place-items-center rounded-2xl bg-accent/10 text-accent-bright">
             <FileText className="h-7 w-7" />
           </span>
-          <h2 className="mt-4 text-lg font-semibold text-navy">No estimates yet</h2>
-          <p className="mt-1 max-w-sm text-navy-soft">
+          <h2 className="mt-4 text-lg font-semibold text-mist">No estimates yet</h2>
+          <p className="mt-1 max-w-sm text-mist-soft">
             Describe a job in plain words and Crewcraft drafts the line items. Takes about a minute.
           </p>
           <Link href="/estimates/new" className={buttonClasses('primary', 'md') + ' mt-6'}>
@@ -103,25 +103,25 @@ export default async function EstimatesPage() {
           </Link>
         </Card>
       ) : (
-        <Card className="divide-y divide-line overflow-hidden">
+        <Card className="divide-y divide-hairline overflow-hidden">
           {estimates.map((e) => (
             <Link
               key={e.id}
               href={`/estimates/${e.id}`}
-              className="group flex items-center gap-4 px-4 py-3.5 transition duration-150 hover:bg-cream-sunken"
+              className="group flex items-center gap-4 px-4 py-3.5 transition duration-150 hover:bg-night-850"
             >
-              <span className="grid h-10 w-10 flex-none place-items-center rounded-xl bg-cream-deep text-navy-soft transition group-hover:bg-accent-soft group-hover:text-accent-deep">
+              <span className="grid h-10 w-10 flex-none place-items-center rounded-xl bg-night-700 text-mist-soft transition group-hover:bg-accent/10 group-hover:text-accent-bright">
                 <FileText className="h-5 w-5" />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate font-semibold text-navy">
+                <p className="truncate font-semibold text-mist">
                   {e.customer_name || 'Untitled estimate'}
                 </p>
-                <p className="text-sm text-navy-muted">{shortDate(e.created_at)}</p>
+                <p className="text-sm text-mist-mute">{shortDate(e.created_at)}</p>
               </div>
-              <span className="font-semibold text-navy">{money(e.total)}</span>
+              <span className="font-semibold text-mist">{money(e.total)}</span>
               <StatusBadge status={e.status} />
-              <ArrowUpRight className="h-4 w-4 flex-none text-navy-muted opacity-0 transition group-hover:opacity-100" />
+              <ArrowUpRight className="h-4 w-4 flex-none text-mist-mute opacity-0 transition group-hover:opacity-100" />
             </Link>
           ))}
         </Card>
@@ -146,13 +146,13 @@ function Stat({
       <span
         className={
           'grid h-9 w-9 place-items-center rounded-lg ' +
-          (accent ? 'bg-accent text-accent-fg' : 'bg-cream-deep text-navy-soft')
+          (accent ? 'bg-accent text-accent-fg' : 'bg-night-700 text-mist-soft')
         }
       >
         <Icon className="h-[18px] w-[18px]" />
       </span>
-      <p className="mt-3 text-2xl font-bold text-navy">{value}</p>
-      <p className="text-sm text-navy-muted">{label}</p>
+      <p className="mt-3 text-2xl font-bold text-mist">{value}</p>
+      <p className="text-sm text-mist-mute">{label}</p>
     </Card>
   );
 }

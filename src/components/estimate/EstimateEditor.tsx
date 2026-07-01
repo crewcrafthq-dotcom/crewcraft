@@ -18,6 +18,7 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input, Label, Textarea } from '@/components/ui/Field';
+import { toast } from '@/components/ui/toast';
 import { computeTotals } from '@/lib/estimates';
 import { money } from '@/lib/format';
 import type { Business, EstimateWithItems, GeneratedEstimate } from '@/lib/types';
@@ -116,11 +117,13 @@ export function EstimateEditor({
     setSaving(false);
     if (res.ok) {
       setSaved(true);
+      toast('Saved.');
       setTimeout(() => setSaved(false), 2500);
       router.refresh();
       return true;
     }
     setSaveError(res.error);
+    toast(res.error, 'error');
     return false;
   }
 
@@ -151,6 +154,7 @@ export function EstimateEditor({
           unitPrice: String(li.unitPrice),
         })),
       );
+      toast('Line items ready.');
     } catch {
       setAiError('Something went wrong. Try again.');
     } finally {
@@ -173,7 +177,7 @@ export function EstimateEditor({
       <div className="mb-4 flex items-center justify-between">
         <Link
           href="/estimates"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-navy-soft transition hover:text-navy"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-mist-soft transition hover:text-mist"
         >
           <ArrowLeft className="h-4 w-4" />
           Estimates
@@ -236,11 +240,11 @@ export function EstimateEditor({
 
         {/* assumptions to confirm — above line items */}
         {assumptions.length > 0 ? (
-          <Card className="border-accent/40 bg-accent-soft/30 p-5">
+          <Card className="border-accent/40 bg-accent/10 p-5">
             <SectionTitle icon={ClipboardList} accent>
               Assumptions to confirm
             </SectionTitle>
-            <ul className="space-y-1.5 text-sm text-navy-soft">
+            <ul className="space-y-1.5 text-sm text-mist-soft">
               {assumptions.map((a, i) => (
                 <li key={i} className="flex gap-2">
                   <span className="mt-1.5 h-1.5 w-1.5 flex-none rounded-full bg-accent" />
@@ -294,11 +298,11 @@ export function EstimateEditor({
       </div>
 
       {/* sticky save bar */}
-      <div className="fixed inset-x-0 bottom-0 z-10 border-t border-line bg-cream/90 backdrop-blur-md">
+      <div className="fixed inset-x-0 bottom-0 z-10 border-t border-hairline bg-night-900/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="text-sm">
-            <span className="text-navy-muted">Total</span>{' '}
-            <span className="text-base font-bold text-navy">{money(totals.total)}</span>
+            <span className="text-mist-mute">Total</span>{' '}
+            <span className="text-base font-bold text-mist">{money(totals.total)}</span>
             {saveError ? <span className="ml-3 text-red-600">{saveError}</span> : null}
             {saved ? <span className="ml-3 font-medium text-emerald-600">Saved</span> : null}
           </div>
@@ -324,10 +328,10 @@ function SectionTitle({
   return (
     <h2
       className={
-        'mb-4 flex items-center gap-2 font-semibold ' + (accent ? 'text-accent-deep' : 'text-navy')
+        'mb-4 flex items-center gap-2 font-semibold ' + (accent ? 'text-accent-bright' : 'text-mist')
       }
     >
-      <Icon className={'h-[18px] w-[18px] ' + (accent ? 'text-accent-deep' : 'text-navy-muted')} />
+      <Icon className={'h-[18px] w-[18px] ' + (accent ? 'text-accent-bright' : 'text-mist-mute')} />
       {children}
     </h2>
   );

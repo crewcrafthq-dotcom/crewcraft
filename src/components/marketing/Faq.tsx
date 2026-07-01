@@ -1,26 +1,62 @@
-import { ChevronDown } from 'lucide-react';
+'use client';
+
+import { useState } from 'react';
+import { Plus } from 'lucide-react';
+
+import { cn } from '@/lib/cn';
 import { FAQ } from '@/lib/marketing';
 
 export function Faq() {
+  const [open, setOpen] = useState<number | null>(0);
+
   return (
-    <section className="mx-auto max-w-3xl px-5 py-16 sm:px-6 sm:py-20">
-      <h2 className="text-center text-3xl font-bold leading-tight text-navy sm:text-4xl">
+    <section id="faq" className="mx-auto max-w-3xl px-5 py-16 sm:px-6 sm:py-24">
+      <h2 className="text-center text-3xl font-bold leading-tight text-mist sm:text-4xl">
         Straight answers.
       </h2>
 
-      <div className="mt-8 space-y-3">
-        {FAQ.map((item) => (
-          <details
-            key={item.q}
-            className="group rounded-2xl border border-line bg-cream-card p-5 shadow-card"
-          >
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-semibold text-navy [&::-webkit-details-marker]:hidden">
-              {item.q}
-              <ChevronDown className="h-5 w-5 flex-none text-navy-muted transition duration-200 group-open:rotate-180" />
-            </summary>
-            <p className="mt-3 leading-relaxed text-navy-soft">{item.a}</p>
-          </details>
-        ))}
+      <div className="mt-10 space-y-3">
+        {FAQ.map((item, i) => {
+          const isOpen = open === i;
+          return (
+            <div
+              key={item.q}
+              className={cn(
+                'overflow-hidden rounded-2xl border bg-night-800 shadow-card transition-colors',
+                isOpen ? 'border-accent/40' : 'border-hairline',
+              )}
+            >
+              <button
+                type="button"
+                onClick={() => setOpen(isOpen ? null : i)}
+                aria-expanded={isOpen}
+                className="flex w-full cursor-pointer items-center justify-between gap-4 p-5 text-left font-semibold text-mist"
+              >
+                {item.q}
+                <span
+                  className={cn(
+                    'grid h-7 w-7 flex-none place-items-center rounded-full border transition-all duration-300',
+                    isOpen
+                      ? 'rotate-45 border-accent bg-accent text-accent-fg'
+                      : 'border-hairline-strong text-mist-mute',
+                  )}
+                >
+                  <Plus className="h-4 w-4" strokeWidth={2.5} />
+                </span>
+              </button>
+
+              {/* 0fr → 1fr gives a smooth, content-height-agnostic expand */}
+              <div
+                className="grid transition-all duration-300 ease-out-soft"
+                style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
+              >
+                <div className="overflow-hidden">
+                  <p className="px-5 pb-5 leading-relaxed text-mist-soft">{item.a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

@@ -15,14 +15,14 @@ export function TradeSelector() {
   const c = TRADE_CONTENT[trade];
 
   return (
-    <section id="trades" className="bg-cream-sunken">
+    <section id="trades" className="bg-night-850">
       <div data-trade={trade} style={themeVars(trade)} className="mx-auto max-w-6xl px-5 py-16 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-2xl text-center">
           <p className="eyebrow">Built for your trade</p>
-          <h2 className="mt-2 text-3xl font-bold leading-tight text-navy sm:text-4xl">
+          <h2 className="mt-2 text-3xl font-bold leading-tight text-mist sm:text-4xl">
             Pick your trade. Watch it fit.
           </h2>
-          <p className="mt-3 text-lg text-navy-soft">
+          <p className="mt-3 text-lg text-mist-soft">
             The right units, the right line items, your accent color — tap your trade and see.
           </p>
         </div>
@@ -42,7 +42,7 @@ export function TradeSelector() {
                   'inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-semibold transition duration-150 active:scale-[0.98]',
                   active
                     ? 'border-transparent shadow-accent'
-                    : 'border-line bg-cream-card text-navy-soft hover:bg-cream-deep',
+                    : 'border-hairline bg-night-800 text-mist-soft hover:bg-night-700',
                 )}
                 style={active ? { backgroundColor: theme.accent, color: theme.accentFg } : undefined}
               >
@@ -60,14 +60,14 @@ export function TradeSelector() {
         {/* example + testimonial swap to the trade */}
         <div className="mt-9 grid items-center gap-6 lg:grid-cols-2">
           <EstimatePreview trade={trade} className="mx-auto w-full max-w-md min-w-0" />
-          <figure className="rounded-2xl border border-line bg-cream-card p-6 shadow-card sm:p-8">
+          <figure className="rounded-2xl border border-hairline bg-night-800 p-6 shadow-card sm:p-8">
             <Quote className="h-8 w-8 text-accent" />
-            <blockquote className="mt-4 text-xl font-medium leading-snug text-navy sm:text-2xl">
+            <blockquote className="mt-4 text-xl font-medium leading-snug text-mist sm:text-2xl">
               “{c.testimonial.quote}”
             </blockquote>
-            <figcaption className="mt-5 text-sm font-semibold text-navy">
+            <figcaption className="mt-5 text-sm font-semibold text-mist">
               {c.testimonial.name}
-              <span className="font-normal text-navy-muted">
+              <span className="font-normal text-mist-mute">
                 {' · '}
                 {c.testimonial.trade}, {c.testimonial.city}
               </span>

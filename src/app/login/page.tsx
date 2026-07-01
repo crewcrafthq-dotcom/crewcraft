@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Lock, Mail, MailCheck } from 'lucide-react';
@@ -29,6 +29,12 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState<Sent>(null);
+
+  // Land on the right tab when linked from "Start free" (?mode=signup / login).
+  useEffect(() => {
+    const m = new URLSearchParams(window.location.search).get('mode');
+    if (m === 'signup' || m === 'login') setMode(m);
+  }, []);
 
   function callbackUrl() {
     const next = new URLSearchParams(window.location.search).get('next') ?? '';
@@ -112,11 +118,11 @@ export default function LoginPage() {
     return (
       <AuthFrame>
         <div className="text-center">
-          <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-accent-soft text-accent-deep">
+          <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-accent/10 text-accent-bright">
             <MailCheck className="h-6 w-6" />
           </span>
-          <h1 className="mt-4 text-xl font-bold text-navy">Check your email</h1>
-          <p className="mt-2 text-navy-soft">
+          <h1 className="mt-4 text-xl font-bold text-mist">Check your email</h1>
+          <p className="mt-2 text-mist-soft">
             {sent === 'magic' ? (
               <>We sent a sign-in link to <strong>{email}</strong>. Tap it to get in.</>
             ) : (
@@ -126,7 +132,7 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={() => setSent(null)}
-            className="mt-5 cursor-pointer text-sm font-medium text-accent-deep hover:underline"
+            className="mt-5 cursor-pointer text-sm font-medium text-accent-bright hover:underline"
           >
             Use a different email
           </button>
@@ -138,7 +144,7 @@ export default function LoginPage() {
   return (
     <AuthFrame>
       {/* tabs */}
-      <div className="mb-5 grid grid-cols-2 gap-1 rounded-xl bg-cream-sunken p-1">
+      <div className="mb-5 grid grid-cols-2 gap-1 rounded-xl bg-night-850 p-1">
         {(['login', 'signup'] as Mode[]).map((m) => (
           <button
             key={m}
@@ -149,7 +155,7 @@ export default function LoginPage() {
             }}
             className={cn(
               'cursor-pointer rounded-lg px-3 py-2 text-sm font-semibold transition',
-              mode === m ? 'bg-cream-card text-navy shadow-sm' : 'text-navy-muted hover:text-navy',
+              mode === m ? 'bg-night-800 text-mist shadow-sm' : 'text-mist-mute hover:text-mist',
             )}
           >
             {m === 'login' ? 'Log in' : 'Sign up'}
@@ -161,7 +167,7 @@ export default function LoginPage() {
         <div>
           <Label htmlFor="email">Email</Label>
           <div className="relative">
-            <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-muted" />
+            <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-mist-mute" />
             <Input
               id="email"
               type="email"
@@ -180,7 +186,7 @@ export default function LoginPage() {
           <div>
             <Label htmlFor="password">Password</Label>
             <div className="relative">
-              <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-muted" />
+              <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-mist-mute" />
               <Input
                 id="password"
                 type={showPw ? 'text' : 'password'}
@@ -195,7 +201,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={() => setShowPw((s) => !s)}
                 aria-label={showPw ? 'Hide password' : 'Show password'}
-                className="absolute right-2.5 top-1/2 grid h-8 w-8 -translate-y-1/2 cursor-pointer place-items-center rounded-lg text-navy-muted hover:bg-cream-deep"
+                className="absolute right-2.5 top-1/2 grid h-8 w-8 -translate-y-1/2 cursor-pointer place-items-center rounded-lg text-mist-mute hover:bg-night-700"
               >
                 {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -203,7 +209,7 @@ export default function LoginPage() {
           </div>
         ) : null}
 
-        {error ? <p className="text-sm text-red-600">{error}</p> : null}
+        {error ? <p className="text-sm text-red-400">{error}</p> : null}
 
         <Button type="submit" size="lg" className="w-full" disabled={loading}>
           {loading
@@ -223,7 +229,7 @@ export default function LoginPage() {
             setUsePassword((p) => !p);
             setError(null);
           }}
-          className="cursor-pointer text-sm font-medium text-navy-soft hover:text-navy"
+          className="cursor-pointer text-sm font-medium text-mist-soft hover:text-mist"
         >
           {usePassword ? 'Email me a link instead' : 'Use a password instead'}
         </button>
@@ -239,7 +245,7 @@ function AuthFrame({ children }: { children: React.ReactNode }) {
         <Brand />
       </Link>
       <Card className="p-6 sm:p-7">{children}</Card>
-      <p className="mt-5 px-2 text-center text-xs text-navy-muted">
+      <p className="mt-5 px-2 text-center text-xs text-mist-mute">
         By continuing you agree to keep crews crafty. No spam.
       </p>
     </main>

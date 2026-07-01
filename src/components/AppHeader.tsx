@@ -8,10 +8,10 @@ import { buttonClasses } from '@/components/ui/Button';
 
 export function AppHeader({ businessName }: { businessName: string }) {
   return (
-    <header className="sticky top-0 z-20 border-b border-line/70 bg-cream/80 backdrop-blur-md">
+    <header className="sticky top-0 z-20 border-b border-hairline/70 bg-night-900/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-3 px-4 sm:px-6">
         <div className="flex items-center gap-5">
-          <Link href="/dashboard" aria-label="Crewcraft home">
+          <Link href="/dashboard" aria-label="Toolbelt home">
             <Brand />
           </Link>
           <NavLinks />

@@ -3,60 +3,137 @@
 @tailwind utilities;
 
 /*
- * Crewcraft design system. Warm beige canvas + navy ink, lifted with white
- * surfaces and depth. The trade accent lives in CSS variables (R G B channels)
- * so Tailwind's `accent` colors resolve to the contractor's trade color.
- * :root carries a default (HVAC orange) for pre-login screens; [data-trade]
- * wrappers override it (see lib/trades.ts).
+ * Toolbelt (by Crewcraft) — DARK SaaS design system.
+ * Deep navy-black canvas, layered surfaces, per-trade accent as CSS variables
+ * (R G B channels) tuned to glow on dark. :root default = HVAC orange;
+ * [data-trade] wrappers override (see lib/trades.ts). --accent-bright is the
+ * lighter accent used for accent-colored TEXT on dark.
  */
 :root {
-  --accent: 232 114 42;
-  --accent-fg: 255 255 255;
-  --accent-deep: 194 87 26;
-  --accent-soft: 247 226 210;
+  --accent: 255 122 47; /* HVAC orange, brightened for dark */
+  --accent-fg: 10 14 26; /* ink that sits on an accent fill */
+  --accent-bright: 255 158 99; /* accent text on dark */
+  color-scheme: dark;
 }
 
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
   }
   body {
-    @apply text-navy antialiased;
-    background-color: #f1eadf;
-    /* gentle warm light for depth — subtle, not busy */
+    @apply bg-night-900 text-mist antialiased;
+    /* ambient accent aurora — quiet, top-weighted, fixed so it doesn't scroll */
     background-image:
-      radial-gradient(1100px 560px at 100% -8%, rgba(255, 255, 255, 0.7), transparent 60%),
-      radial-gradient(900px 520px at -10% 8%, rgba(255, 255, 255, 0.45), transparent 55%);
+      radial-gradient(900px 520px at 82% -10%, rgb(var(--accent) / 0.14), transparent 60%),
+      radial-gradient(720px 480px at 8% 2%, rgba(59, 130, 246, 0.08), transparent 58%);
     background-attachment: fixed;
-    font-feature-settings: 'kern', 'ss01';
+    font-feature-settings: 'kern', 'ss01', 'cv02', 'cv11';
   }
-  /* Visible keyboard focus everywhere. */
   :focus-visible {
-    @apply outline-none;
+    @apply outline-none ring-2 ring-accent/70 ring-offset-2 ring-offset-night-900;
   }
-  /* Comfortable phone tap targets. */
   input,
   select,
   textarea,
   button {
     font-family: inherit;
   }
+  ::selection {
+    background: rgb(var(--accent) / 0.3);
+    color: #fff;
+  }
 }
 
 @layer components {
   .field-label {
-    @apply mb-1.5 block text-sm font-medium text-navy-soft;
+    @apply mb-1.5 block text-sm font-medium text-mist-soft;
   }
   .eyebrow {
-    @apply text-xs font-semibold uppercase tracking-wider text-navy-muted;
+    @apply text-xs font-semibold uppercase tracking-[0.16em] text-accent-bright;
+  }
+  /* elevated dark card */
+  .card-dark {
+    @apply rounded-3xl border border-hairline bg-night-800 shadow-card;
   }
   /* hover-lift for interactive cards */
   .card-interactive {
-    @apply transition duration-200 ease-out-soft hover:-translate-y-0.5 hover:shadow-lift;
+    @apply transition duration-300 ease-out-soft hover:-translate-y-1 hover:border-hairline-strong hover:shadow-lift;
+  }
+  /* 1px gradient border (accent → transparent) */
+  .gradient-border {
+    position: relative;
+  }
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(140deg, rgb(var(--accent) / 0.55), rgba(255, 255, 255, 0.06) 40%, transparent 70%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  /* faint dotted grid texture for hero/section backdrops */
+  .grid-bg {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+  /* nav link: accent underline that grows left→right on hover */
+  .nav-underline {
+    position: relative;
+  }
+  .nav-underline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0.15rem;
+    height: 2px;
+    width: 100%;
+    border-radius: 2px;
+    background: rgb(var(--accent));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+  .nav-underline:hover::after {
+    transform: scaleX(1);
   }
 }
 
-/* Hero before→after transform loop */
+/* ── Scroll reveal (paired with <Reveal>) ─────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Staggered children: parent gets .reveal-group + .is-in on view; each child
+   carries .reveal-child and a --i index for its delay. */
+.reveal-child {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal-group.is-in .reveal-child {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--i, 0) * 80ms);
+}
+
+/* ── Hero before→after estimate loop ──────────────────────────────────── */
 @keyframes baBefore {
   0%, 38% { opacity: 1; }
   48%, 92% { opacity: 0; }
@@ -71,15 +148,15 @@
 .anim-after { animation: baAfter 9s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   *,
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
   }
-  /* Show only the finished estimate for reduced-motion users. */
+  .reveal, .reveal-child { opacity: 1; transform: none; }
   .anim-before { display: none; }
   .anim-after { animation: none !important; opacity: 1; transform: none; }
 }

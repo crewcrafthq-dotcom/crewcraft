@@ -18,8 +18,8 @@ export default async function OnboardingPage() {
       <header className="mb-7">
         <Brand />
         <p className="eyebrow mt-6">Step 1 of 1</p>
-        <h1 className="mt-1 text-display-sm font-bold text-navy">Set up your business</h1>
-        <p className="mt-1.5 text-navy-soft">
+        <h1 className="mt-1 text-display-sm font-bold text-mist">Set up your business</h1>
+        <p className="mt-1.5 text-mist-soft">
           This lands on every estimate — your logo, license, and rates. You can change it any time.
         </p>
       </header>

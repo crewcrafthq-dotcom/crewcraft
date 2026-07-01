@@ -2,9 +2,9 @@ import { cn } from '@/lib/cn';
 import type { EstimateStatus } from '@/lib/types';
 
 const STATUS: Record<EstimateStatus, { label: string; className: string; dot: string }> = {
-  draft: { label: 'Draft', className: 'bg-cream-deep text-navy-soft', dot: 'bg-navy-muted' },
+  draft: { label: 'Draft', className: 'bg-night-700 text-mist-soft', dot: 'bg-night-800-muted' },
   sent: { label: 'Sent', className: 'bg-sky-50 text-sky-700', dot: 'bg-sky-500' },
-  viewed: { label: 'Viewed', className: 'bg-accent-soft text-accent-deep', dot: 'bg-accent' },
+  viewed: { label: 'Viewed', className: 'bg-accent/10 text-accent-bright', dot: 'bg-accent' },
   accepted: { label: 'Accepted', className: 'bg-emerald-50 text-emerald-700', dot: 'bg-emerald-500' },
   declined: { label: 'Declined', className: 'bg-red-50 text-red-600', dot: 'bg-red-500' },
 };

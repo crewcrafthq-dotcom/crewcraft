@@ -6,6 +6,7 @@ import { Check, CheckCircle2, Copy, Download, Mail, Undo2, XCircle } from 'lucid
 
 import { Button } from '@/components/ui/Button';
 import { StatusBadge } from '@/components/StatusBadge';
+import { toast } from '@/components/ui/toast';
 import { setEstimateStatus } from '@/app/estimates/actions';
 import type { EstimateStatus } from '@/lib/types';
 
@@ -28,7 +29,6 @@ export function ShareActions({
   const router = useRouter();
   const [busy, setBusy] = useState<null | 'copy' | 'download' | 'send'>(null);
   const [copied, setCopied] = useState(false);
-  const [note, setNote] = useState<string | null>(null);
   const [localStatus, setLocalStatus] = useState<EstimateStatus>(status);
 
   const publicUrl =
@@ -36,13 +36,13 @@ export function ShareActions({
 
   async function copyLink() {
     setBusy('copy');
-    setNote(null);
     try {
       await navigator.clipboard.writeText(publicUrl);
       setCopied(true);
+      toast('Link copied');
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      setNote('Copy failed — long-press the link to copy it.');
+      toast('Copy failed — long-press the link to copy it.', 'error');
     } finally {
       setBusy(null);
     }
@@ -50,24 +50,22 @@ export function ShareActions({
 
   async function download() {
     setBusy('download');
-    setNote(null);
     const ok = await saveNow();
     setBusy(null);
     if (ok) window.open(`/api/estimates/${estimateId}/pdf`, '_blank');
-    else setNote('Save failed — try again.');
+    else toast('Save failed — try again.', 'error');
   }
 
   async function send() {
     if (!hasCustomerEmail) {
-      setNote('Add the customer’s email first.');
+      toast('Add the customer’s email first.', 'error');
       return;
     }
     setBusy('send');
-    setNote(null);
     const ok = await saveNow();
     if (!ok) {
       setBusy(null);
-      setNote('Save failed — try again.');
+      toast('Save failed — try again.', 'error');
       return;
     }
     try {
@@ -75,13 +73,13 @@ export function ShareActions({
       const json = await res.json().catch(() => ({}));
       if (res.ok) {
         setLocalStatus('sent');
-        setNote('Sent to the customer.');
+        toast('Estimate sent to the customer.');
         router.refresh();
       } else {
-        setNote(json.error ?? 'Could not send. Try again.');
+        toast(json.error ?? 'Could not send. Try again.', 'error');
       }
     } catch {
-      setNote('Could not send. Try again.');
+      toast('Could not send. Try again.', 'error');
     } finally {
       setBusy(null);
     }
@@ -91,22 +89,23 @@ export function ShareActions({
     const res = await setEstimateStatus(estimateId, next);
     if (res.ok) {
       setLocalStatus(next);
+      toast(`Marked ${next}.`);
       router.refresh();
     } else {
-      setNote(res.error);
+      toast(res.error, 'error');
     }
   }
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <span className="font-semibold text-navy">Send it</span>
+        <span className="font-semibold text-mist">Send it</span>
         <StatusBadge status={localStatus} />
       </div>
 
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
         <Button variant="secondary" onClick={copyLink} disabled={busy !== null}>
-          {copied ? <Check className="text-emerald-600" /> : <Copy />}
+          {copied ? <Check className="text-emerald-400" /> : <Copy />}
           {copied ? 'Copied' : 'Copy link'}
         </Button>
         <Button variant="secondary" onClick={download} disabled={busy !== null}>
@@ -119,15 +118,15 @@ export function ShareActions({
         </Button>
       </div>
 
-      <div className="border-t border-line pt-4">
-        <p className="mb-2 text-sm text-navy-soft">Mark this estimate:</p>
+      <div className="border-t border-hairline pt-4">
+        <p className="mb-2 text-sm text-mist-soft">Mark this estimate:</p>
         <div className="flex flex-wrap gap-2">
           <Button variant="secondary" size="sm" onClick={() => changeStatus('accepted')}>
-            <CheckCircle2 className="text-emerald-600" />
+            <CheckCircle2 className="text-emerald-400" />
             Accepted
           </Button>
           <Button variant="secondary" size="sm" onClick={() => changeStatus('declined')}>
-            <XCircle className="text-red-500" />
+            <XCircle className="text-red-400" />
             Declined
           </Button>
           <Button variant="ghost" size="sm" onClick={() => changeStatus('draft')}>
@@ -136,8 +135,6 @@ export function ShareActions({
           </Button>
         </div>
       </div>
-
-      {note ? <p className="text-sm text-accent-deep">{note}</p> : null}
     </div>
   );
 }
