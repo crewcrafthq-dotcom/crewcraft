@@ -30,31 +30,51 @@ export async function POST(request: NextRequest) {
   const stripe = getStripe();
   const supabase = createClient();
 
-  // Reuse or create the Stripe customer for this business.
-  let customerId = business.stripe_customer_id;
-  if (!customerId) {
-    const customer = await stripe.customers.create({
-      email: business.email ?? user.email ?? undefined,
-      name: business.name,
-      metadata: { user_id: user.id },
+  try {
+    // Reuse the business's Stripe customer — but self-heal if the stored id is
+    // invalid for the current mode (e.g. a test-mode customer after switching to
+    // live keys), deleted, or missing. Otherwise checkout 500s with "No such
+    // customer" forever.
+    let customerId = business.stripe_customer_id;
+    let valid = false;
+    if (customerId) {
+      try {
+        const existing = await stripe.customers.retrieve(customerId);
+        valid = !('deleted' in existing && existing.deleted);
+      } catch {
+        valid = false; // wrong mode / deleted / not found
+      }
+    }
+    if (!valid) {
+      const customer = await stripe.customers.create({
+        email: business.email ?? user.email ?? undefined,
+        name: business.name,
+        metadata: { user_id: user.id },
+      });
+      customerId = customer.id;
+      await supabase
+        .from('businesses')
+        .update({ stripe_customer_id: customerId })
+        .eq('user_id', user.id);
+    }
+
+    const checkout = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      customer: customerId as string,
+      line_items: [{ price: priceId, quantity: 1 }],
+      allow_promotion_codes: true,
+      client_reference_id: user.id,
+      subscription_data: { metadata: { user_id: user.id } },
+      success_url: `${appUrl()}/dashboard?upgraded=1`,
+      cancel_url: `${appUrl()}/billing`,
     });
-    customerId = customer.id;
-    await supabase
-      .from('businesses')
-      .update({ stripe_customer_id: customerId })
-      .eq('user_id', user.id);
+
+    return NextResponse.json({ url: checkout.url });
+  } catch (err) {
+    console.error('Stripe checkout failed:', err);
+    return NextResponse.json(
+      { error: 'Could not start checkout. Please try again in a moment.' },
+      { status: 500 },
+    );
   }
-
-  const checkout = await stripe.checkout.sessions.create({
-    mode: 'subscription',
-    customer: customerId,
-    line_items: [{ price: priceId, quantity: 1 }],
-    allow_promotion_codes: true,
-    client_reference_id: user.id,
-    subscription_data: { metadata: { user_id: user.id } },
-    success_url: `${appUrl()}/dashboard?upgraded=1`,
-    cancel_url: `${appUrl()}/billing`,
-  });
-
-  return NextResponse.json({ url: checkout.url });
 }

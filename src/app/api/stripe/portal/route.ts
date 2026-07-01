@@ -16,10 +16,17 @@ export async function POST(_request: NextRequest) {
     return NextResponse.json({ error: 'No billing account yet.' }, { status: 400 });
   }
 
-  const session = await getStripe().billingPortal.sessions.create({
-    customer: business.stripe_customer_id,
-    return_url: `${appUrl()}/settings`,
-  });
-
-  return NextResponse.json({ url: session.url });
+  try {
+    const session = await getStripe().billingPortal.sessions.create({
+      customer: business.stripe_customer_id,
+      return_url: `${appUrl()}/settings`,
+    });
+    return NextResponse.json({ url: session.url });
+  } catch (err) {
+    console.error('Stripe portal failed:', err);
+    return NextResponse.json(
+      { error: 'Could not open billing. Please try again in a moment.' },
+      { status: 500 },
+    );
+  }
 }
