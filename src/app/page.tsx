@@ -20,12 +20,45 @@ import { getSession } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
+// Structured data so Google understands this is a SaaS product with pricing.
+const JSON_LD = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://crewcraftapp.com/#org',
+      name: 'Crewcraft',
+      url: 'https://crewcraftapp.com',
+      logo: 'https://crewcraftapp.com/og.png',
+    },
+    {
+      '@type': 'SoftwareApplication',
+      name: 'Toolbelt by Crewcraft',
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'Web',
+      url: 'https://crewcraftapp.com',
+      description:
+        'Type the job in plain English and send a branded estimate in under a minute. Built for HVAC, plumbing, electrical & roofing contractors.',
+      publisher: { '@id': 'https://crewcraftapp.com/#org' },
+      offers: [
+        { '@type': 'Offer', name: 'Founding', price: '19', priceCurrency: 'USD' },
+        { '@type': 'Offer', name: 'Pro Monthly', price: '29', priceCurrency: 'USD' },
+        { '@type': 'Offer', name: 'Pro Annual', price: '288', priceCurrency: 'USD' },
+      ],
+    },
+  ],
+};
+
 export default async function LandingPage() {
   const { user, business } = await getSession();
   if (user) redirect(business ? '/dashboard' : '/onboarding');
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+      />
       {/* room for the sticky mobile CTA so it never covers the footer */}
       <div className="overflow-x-hidden pb-20 lg:pb-0">
         <Hero />

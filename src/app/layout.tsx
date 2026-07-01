@@ -24,10 +24,45 @@ const poppins = localFont({
   display: 'swap',
 });
 
+const DESCRIPTION =
+  'Type the job in plain English and send a branded estimate in under a minute. Built for HVAC, plumbing, electrical & roofing contractors. 3 free, no credit card.';
+
 export const metadata: Metadata = {
-  title: 'Toolbelt by Crewcraft — Estimates in 60 seconds',
-  description:
-    'Type the job in plain English. Get a clean, branded estimate you can send in under a minute. Built for trade contractors.',
+  // Makes every relative URL (canonical, OG image) absolute against the live domain.
+  metadataBase: new URL('https://crewcraftapp.com'),
+  title: {
+    default: 'Toolbelt by Crewcraft — Estimates in 60 seconds',
+    template: '%s · Toolbelt by Crewcraft',
+  },
+  description: DESCRIPTION,
+  applicationName: 'Toolbelt by Crewcraft',
+  keywords: [
+    'contractor estimate app',
+    'estimating software for contractors',
+    'HVAC estimate software',
+    'plumbing estimate app',
+    'electrical estimate software',
+    'roofing estimate app',
+    'AI estimate builder',
+    'quote software for contractors',
+  ],
+  alternates: { canonical: '/' },
+  openGraph: {
+    type: 'website',
+    url: 'https://crewcraftapp.com',
+    siteName: 'Toolbelt by Crewcraft',
+    title: 'Toolbelt by Crewcraft — Estimates in 60 seconds',
+    description: DESCRIPTION,
+    locale: 'en_US',
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Toolbelt by Crewcraft' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Toolbelt by Crewcraft — Estimates in 60 seconds',
+    description: DESCRIPTION,
+    images: ['/og.png'],
+  },
+  robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
