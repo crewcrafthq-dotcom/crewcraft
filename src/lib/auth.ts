@@ -41,6 +41,7 @@ export async function countEstimates(userId: string): Promise<number> {
   const { count } = await supabase
     .from('estimates')
     .select('id', { count: 'exact', head: true })
-    .eq('user_id', userId);
+    .eq('user_id', userId)
+    .eq('kind', 'estimate');
   return count ?? 0;
 }

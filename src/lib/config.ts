@@ -10,6 +10,16 @@ export const AI_MODEL_FALLBACK = 'claude-haiku-4-5';
 /** Free tier: 3 estimates total, then the paywall (§6). Not per month. */
 export const FREE_ESTIMATE_LIMIT = 3;
 
+/** Follow-up reminders: nudge after N quiet days, at most MAX times. */
+export const REMINDER_AFTER_DAYS = 3;
+export const REMINDER_MAX = 2;
+
+/** Invoices default to net-14. */
+export const INVOICE_DUE_DAYS = 14;
+
+/** AI photo input: keep request bodies sane. */
+export const AI_MAX_PHOTOS = 4;
+
 /** Stripe price ids, wired from env so this code carries no secrets. */
 export const STRIPE_PRICES = {
   proMonthly: process.env.STRIPE_PRICE_PRO_MONTHLY ?? '',

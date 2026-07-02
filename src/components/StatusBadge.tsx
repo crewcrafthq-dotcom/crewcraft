@@ -7,6 +7,7 @@ const STATUS: Record<EstimateStatus, { label: string; className: string; dot: st
   viewed: { label: 'Viewed', className: 'bg-accent/10 text-accent-bright', dot: 'bg-accent' },
   accepted: { label: 'Accepted', className: 'bg-emerald-50 text-emerald-700', dot: 'bg-emerald-500' },
   declined: { label: 'Declined', className: 'bg-red-50 text-red-600', dot: 'bg-red-500' },
+  paid: { label: 'Paid', className: 'bg-emerald-50 text-emerald-700', dot: 'bg-emerald-500' },
 };
 
 export function StatusBadge({ status }: { status: EstimateStatus }) {

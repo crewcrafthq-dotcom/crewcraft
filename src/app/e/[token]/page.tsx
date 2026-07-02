@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { BadgeCheck, CreditCard } from 'lucide-react';
 
 import { TradeTheme } from '@/components/TradeTheme';
+import { ResponsePanel } from '@/components/public/ResponsePanel';
 import { buttonClasses } from '@/components/ui/Button';
-import { CATEGORY_LABELS, computeTotals, groupByCategory } from '@/lib/estimates';
+import { CATEGORY_LABELS, computeTotals, docNumber, groupByCategory } from '@/lib/estimates';
 import { loadEstimateByToken, markViewedByToken } from '@/lib/estimate-data';
 import { money, shortDate } from '@/lib/format';
 
@@ -20,6 +22,8 @@ export default async function PublicEstimatePage({ params }: { params: { token: 
   await markViewedByToken(params.token);
 
   const { business, estimate } = bundle;
+  const invoice = estimate.kind === 'invoice';
+  const paid = invoice && estimate.status === 'paid';
   const groups = groupByCategory(estimate.line_items);
   const totals = computeTotals(
     estimate.line_items.map((i) => ({ quantity: i.quantity, unitPrice: i.unit_price })),
@@ -27,6 +31,16 @@ export default async function PublicEstimatePage({ params }: { params: { token: 
     estimate.deposit,
   );
   const contact = [business.phone, business.email].filter(Boolean).join('  ·  ');
+
+  // What (if anything) we're asking the customer to pay right now.
+  const amountDue = invoice
+    ? totals.balanceDue > 0
+      ? totals.balanceDue
+      : totals.total
+    : totals.depositDue;
+  const showPay =
+    (invoice && !paid) || (!invoice && estimate.status === 'accepted' && totals.depositDue > 0);
+  const hasPayMethod = Boolean(business.payment_link || business.payment_instructions);
 
   return (
     <TradeTheme trade={business.trade} className="min-h-screen">
@@ -47,8 +61,20 @@ export default async function PublicEstimatePage({ params }: { params: { token: 
             {contact ? <p className="text-sm text-navy-soft">{contact}</p> : null}
           </div>
           <div className="text-right">
-            <p className="text-xl font-bold tracking-wide text-accent-deep">ESTIMATE</p>
+            <p className="text-xl font-bold tracking-wide text-accent-deep">
+              {invoice ? 'INVOICE' : 'ESTIMATE'}
+            </p>
             <p className="text-sm text-navy-soft">{shortDate(estimate.created_at)}</p>
+            <p className="text-sm text-navy-muted">{docNumber(estimate.kind, estimate.id)}</p>
+            {invoice && estimate.due_date ? (
+              <p className="text-sm text-navy-soft">Due {shortDate(estimate.due_date)}</p>
+            ) : null}
+            {paid ? (
+              <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold tracking-wide text-emerald-700">
+                <BadgeCheck className="h-3.5 w-3.5" />
+                PAID
+              </span>
+            ) : null}
           </div>
         </div>
 
@@ -114,20 +140,55 @@ export default async function PublicEstimatePage({ params }: { params: { token: 
             </div>
             {totals.depositDue > 0 ? (
               <>
-                <Row label="Deposit due" value={money(totals.depositDue)} accent />
+                <Row
+                  label={invoice ? 'Deposit received' : 'Deposit due'}
+                  value={money(totals.depositDue)}
+                  accent
+                />
                 <Row label="Balance due" value={money(totals.balanceDue)} />
               </>
             ) : null}
           </div>
         </section>
 
-        {/* notes */}
-        {estimate.notes ? (
-          <section className="mb-6 border-t border-line pt-4">
-            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-navy-muted">
-              Notes & terms
+        {/* accept / decline — estimates only */}
+        {!invoice ? (
+          <ResponsePanel
+            token={estimate.public_token}
+            status={estimate.status}
+            signedName={estimate.signed_name}
+            acceptedAt={estimate.accepted_at}
+            declinedAt={estimate.declined_at}
+          />
+        ) : null}
+
+        {/* how to pay */}
+        {showPay && hasPayMethod ? (
+          <section className="mb-6 rounded-2xl border border-line bg-cream-card p-5">
+            <p className="mb-1 flex items-center gap-2 font-semibold text-navy">
+              <CreditCard className="h-[18px] w-[18px] text-accent-deep" />
+              {invoice ? 'Pay this invoice' : 'Pay your deposit'}
             </p>
-            <p className="text-sm text-navy-soft">{estimate.notes}</p>
+            <p className="mb-3 text-sm text-navy-soft">
+              {invoice
+                ? `${money(amountDue)} due${estimate.due_date ? ` by ${shortDate(estimate.due_date)}` : ''}.`
+                : `A deposit of ${money(amountDue)} locks in the job.`}
+            </p>
+            {business.payment_link ? (
+              <a
+                href={business.payment_link}
+                target="_blank"
+                rel="noreferrer"
+                className={buttonClasses('primary', 'md')}
+              >
+                Pay online
+              </a>
+            ) : null}
+            {business.payment_instructions ? (
+              <p className="mt-3 whitespace-pre-line text-sm text-navy-soft">
+                {business.payment_instructions}
+              </p>
+            ) : null}
           </section>
         ) : null}
 

@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from '@react-pdf/renderer';
 
-import { computeTotals, groupByCategory, CATEGORY_LABELS } from '@/lib/estimates';
+import { computeTotals, docNumber, groupByCategory, CATEGORY_LABELS } from '@/lib/estimates';
 import { money, shortDate } from '@/lib/format';
 import { getTheme } from '@/lib/trades';
 import type { Business, EstimateWithItems } from '@/lib/types';
@@ -98,6 +98,20 @@ const styles = StyleSheet.create({
   grandVal: { fontSize: 14, fontWeight: 700 },
   depRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 3, paddingHorizontal: 4, marginTop: 2 },
 
+  // paid stamp + signature
+  paidBadge: {
+    alignSelf: 'flex-end',
+    marginTop: 4,
+    borderRadius: 6,
+    borderWidth: 1.5,
+    borderColor: '#059669',
+    paddingVertical: 2,
+    paddingHorizontal: 8,
+  },
+  paidText: { fontSize: 10, fontWeight: 700, color: '#059669', letterSpacing: 1.5 },
+  signBlock: { marginTop: 20, paddingTop: 12, borderTopWidth: 1, borderTopColor: LINE },
+  signName: { fontSize: 12, fontWeight: 600, color: INK, marginTop: 2 },
+
   // terms / footer
   terms: { marginTop: 24, paddingTop: 12, borderTopWidth: 1, borderTopColor: LINE },
   termsText: { fontSize: 9, color: MUTED },
@@ -130,10 +144,13 @@ export function EstimatePdf({ business, estimate }: Props) {
   );
 
   const contact = [business.phone, business.email].filter(Boolean).join('   ·   ');
-  const number = `EST-${estimate.id.replace(/-/g, '').slice(0, 6).toUpperCase()}`;
+  const invoice = estimate.kind === 'invoice';
+  const docWord = invoice ? 'INVOICE' : 'ESTIMATE';
+  const number = docNumber(estimate.kind, estimate.id);
+  const paid = invoice && estimate.status === 'paid';
 
   return (
-    <Document title={`Estimate — ${business.name}`}>
+    <Document title={`${invoice ? 'Invoice' : 'Estimate'} — ${business.name}`}>
       <Page size="LETTER" style={styles.page}>
         <View style={[styles.accentRule, { backgroundColor: theme.accent }]} />
 
@@ -149,7 +166,7 @@ export function EstimatePdf({ business, estimate }: Props) {
             {contact ? <Text style={styles.bizLine}>{contact}</Text> : null}
           </View>
           <View style={styles.docCol}>
-            <Text style={[styles.docWord, { color: theme.accentDeep }]}>ESTIMATE</Text>
+            <Text style={[styles.docWord, { color: theme.accentDeep }]}>{docWord}</Text>
             <View style={styles.metaRow}>
               <Text style={styles.metaLabel}>Date</Text>
               <Text style={styles.metaVal}>{shortDate(estimate.created_at)}</Text>
@@ -158,6 +175,17 @@ export function EstimatePdf({ business, estimate }: Props) {
               <Text style={styles.metaLabel}>Number</Text>
               <Text style={styles.metaVal}>{number}</Text>
             </View>
+            {invoice && estimate.due_date ? (
+              <View style={styles.metaRow}>
+                <Text style={styles.metaLabel}>Due</Text>
+                <Text style={styles.metaVal}>{shortDate(estimate.due_date)}</Text>
+              </View>
+            ) : null}
+            {paid ? (
+              <View style={styles.paidBadge}>
+                <Text style={styles.paidText}>PAID</Text>
+              </View>
+            ) : null}
           </View>
         </View>
 
@@ -226,7 +254,7 @@ export function EstimatePdf({ business, estimate }: Props) {
             {estimate.deposit > 0 ? (
               <>
                 <View style={styles.depRow}>
-                  <Text style={styles.tLabel}>Deposit due</Text>
+                  <Text style={styles.tLabel}>{invoice ? 'Deposit received' : 'Deposit due'}</Text>
                   <Text style={[styles.tVal, { color: theme.accentDeep }]}>{money(totals.depositDue)}</Text>
                 </View>
                 <View style={styles.depRow}>
@@ -237,6 +265,17 @@ export function EstimatePdf({ business, estimate }: Props) {
             ) : null}
           </View>
         </View>
+
+        {/* customer acceptance (e-sign) */}
+        {!invoice && estimate.status === 'accepted' && estimate.signed_name ? (
+          <View style={styles.signBlock}>
+            <Text style={styles.eyebrow}>ACCEPTED BY</Text>
+            <Text style={styles.signName}>{estimate.signed_name}</Text>
+            {estimate.accepted_at ? (
+              <Text style={styles.termsText}>Signed electronically on {shortDate(estimate.accepted_at)}</Text>
+            ) : null}
+          </View>
+        ) : null}
 
         {/* terms */}
         {estimate.notes ? (

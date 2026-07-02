@@ -9,7 +9,7 @@ import { getTheme } from '@/lib/trades';
 
 export const runtime = 'nodejs';
 
-/** Email the estimate to the customer (PDF attached) and mark it Sent. */
+/** Email the estimate or invoice to the customer (PDF attached) and mark it Sent. */
 export async function POST(_request: NextRequest, { params }: { params: { id: string } }) {
   const bundle = await loadEstimateForUser(params.id);
   if (!bundle) {
@@ -28,10 +28,12 @@ export async function POST(_request: NextRequest, { params }: { params: { id: st
     const pdf = await renderEstimatePdf(business, estimate);
     await sendEstimateEmail({
       to: estimate.customer_email,
+      kind: estimate.kind,
       businessName: business.name,
       customerName: estimate.customer_name,
       total: estimate.total,
       publicUrl,
+      dueDate: estimate.due_date,
       pdf,
       accent: theme.accent,
       accentFg: theme.accentFg,
@@ -44,11 +46,12 @@ export async function POST(_request: NextRequest, { params }: { params: { id: st
     );
   }
 
-  // Mark as Sent — but never undo an Accepted/Declined estimate.
-  if (estimate.status !== 'accepted' && estimate.status !== 'declined') {
-    const supabase = createClient();
-    await supabase.from('estimates').update({ status: 'sent' }).eq('id', estimate.id);
-  }
+  // Mark as Sent — but never undo an Accepted/Declined/Paid document.
+  const supabase = createClient();
+  const terminal = ['accepted', 'declined', 'paid'].includes(estimate.status);
+  const patch: Record<string, unknown> = { sent_at: new Date().toISOString() };
+  if (!terminal) patch.status = 'sent';
+  await supabase.from('estimates').update(patch).eq('id', estimate.id);
 
   return NextResponse.json({ ok: true });
 }

@@ -1,12 +1,14 @@
 'use client';
 
-import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import Link from 'next/link';
+import { BookOpen, ChevronDown, ChevronUp, Plus, Trash2, X } from 'lucide-react';
 
 import { Input, Select } from '@/components/ui/Field';
 import { Button } from '@/components/ui/Button';
 import { CATEGORY_LABELS, lineTotal } from '@/lib/estimates';
 import { money } from '@/lib/format';
-import type { LineItemCategory } from '@/lib/types';
+import type { LineItemCategory, PriceBookItem } from '@/lib/types';
 import { newRow, type EditorRow } from './types';
 
 interface Props {
@@ -14,11 +16,17 @@ interface Props {
   onChange: (rows: EditorRow[]) => void;
 }
 
+type PickerItem = Pick<PriceBookItem, 'id' | 'category' | 'description' | 'unit' | 'unit_price'>;
+
 const iconBtn =
   'grid h-8 w-8 place-items-center rounded-lg text-mist-mute transition cursor-pointer ' +
   'hover:bg-night-700 disabled:cursor-default disabled:opacity-30';
 
 export function LineItemsEditor({ rows, onChange }: Props) {
+  const [picker, setPicker] = useState<PickerItem[] | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerLoading, setPickerLoading] = useState(false);
+
   const update = (key: string, patch: Partial<EditorRow>) =>
     onChange(rows.map((r) => (r.key === key ? { ...r, ...patch } : r)));
 
@@ -33,6 +41,40 @@ export function LineItemsEditor({ rows, onChange }: Props) {
   };
 
   const add = (category: LineItemCategory) => onChange([...rows, newRow(category)]);
+
+  async function openPicker() {
+    if (pickerOpen) {
+      setPickerOpen(false);
+      return;
+    }
+    setPickerOpen(true);
+    if (picker === null) {
+      setPickerLoading(true);
+      try {
+        const res = await fetch('/api/pricebook');
+        const json = await res.json().catch(() => ({}));
+        setPicker(res.ok ? ((json.items ?? []) as PickerItem[]) : []);
+      } catch {
+        setPicker([]);
+      } finally {
+        setPickerLoading(false);
+      }
+    }
+  }
+
+  function addFromBook(item: PickerItem) {
+    onChange([
+      ...rows,
+      {
+        key: Math.random().toString(36).slice(2),
+        category: item.category,
+        description: item.description,
+        quantity: '1',
+        unit: item.unit,
+        unitPrice: String(item.unit_price),
+      },
+    ]);
+  }
 
   return (
     <div>
@@ -130,7 +172,7 @@ export function LineItemsEditor({ rows, onChange }: Props) {
         </div>
       )}
 
-      <div className="mt-3 flex gap-2">
+      <div className="mt-3 flex flex-wrap gap-2">
         <Button type="button" variant="secondary" size="sm" onClick={() => add('labor')}>
           <Plus />
           Labor
@@ -139,7 +181,59 @@ export function LineItemsEditor({ rows, onChange }: Props) {
           <Plus />
           Materials
         </Button>
+        <Button type="button" variant="secondary" size="sm" onClick={openPicker}>
+          <BookOpen />
+          From price book
+        </Button>
       </div>
+
+      {pickerOpen ? (
+        <div className="mt-3 rounded-xl border border-hairline bg-night-850 p-3">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="text-sm font-semibold text-mist">Price book</p>
+            <button
+              type="button"
+              onClick={() => setPickerOpen(false)}
+              aria-label="Close price book"
+              className={iconBtn}
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+          {pickerLoading ? (
+            <p className="py-3 text-sm text-mist-mute">Loading…</p>
+          ) : !picker || picker.length === 0 ? (
+            <p className="py-3 text-sm text-mist-mute">
+              Nothing saved yet.{' '}
+              <Link href="/pricebook" className="text-accent-bright underline-offset-2 hover:underline">
+                Add your rates in the Price Book
+              </Link>{' '}
+              and they'll show up here.
+            </p>
+          ) : (
+            <div className="max-h-56 divide-y divide-hairline overflow-y-auto">
+              {picker.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => addFromBook(item)}
+                  className="flex w-full items-center gap-3 px-1 py-2 text-left transition hover:bg-night-800"
+                >
+                  <span className="w-20 flex-none text-xs font-semibold uppercase tracking-wide text-mist-mute">
+                    {CATEGORY_LABELS[item.category]}
+                  </span>
+                  <span className="min-w-0 flex-1 truncate text-sm text-mist">{item.description}</span>
+                  <span className="flex-none text-sm text-mist-soft">
+                    {money(item.unit_price)}
+                    {item.unit ? <span className="text-mist-mute"> / {item.unit}</span> : null}
+                  </span>
+                  <Plus className="h-4 w-4 flex-none text-mist-mute" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : null}
     </div>
   );
 }
