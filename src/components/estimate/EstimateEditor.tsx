@@ -203,7 +203,7 @@ export function EstimateEditor({
     }
   }
 
-  function useTier(tier: GeneratedTier) {
+  function applyTier(tier: GeneratedTier) {
     setScope(tier.scopeOfWork ?? '');
     setAssumptions(tier.assumptions ?? []);
     setRows(rowsFromGenerated(tier.lineItems ?? []));
@@ -348,7 +348,7 @@ export function EstimateEditor({
                     <p className="mb-3 mt-1 flex-1 text-sm text-mist-soft">
                       {tier.lineItems.length} line {tier.lineItems.length === 1 ? 'item' : 'items'}
                     </p>
-                    <Button type="button" size="sm" onClick={() => useTier(tier)}>
+                    <Button type="button" size="sm" onClick={() => applyTier(tier)}>
                       Use this option
                     </Button>
                   </div>

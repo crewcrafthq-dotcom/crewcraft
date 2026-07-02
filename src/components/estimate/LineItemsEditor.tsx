@@ -208,7 +208,7 @@ export function LineItemsEditor({ rows, onChange }: Props) {
               <Link href="/pricebook" className="text-accent-bright underline-offset-2 hover:underline">
                 Add your rates in the Price Book
               </Link>{' '}
-              and they'll show up here.
+              and they&rsquo;ll show up here.
             </p>
           ) : (
             <div className="max-h-56 divide-y divide-hairline overflow-y-auto">

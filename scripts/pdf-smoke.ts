@@ -21,6 +21,9 @@ const business: Business = {
   address: '42 Volt Ave, Sparksville, CA',
   default_tax_rate: 8.25,
   default_labor_rate: 110,
+  review_link: null,
+  payment_link: null,
+  payment_instructions: null,
   stripe_customer_id: null,
   stripe_subscription_id: null,
   plan: 'free',
@@ -31,11 +34,25 @@ const business: Business = {
 const estimate: EstimateWithItems = {
   id: 'e1',
   user_id: 'u1',
+  kind: 'estimate',
   customer_name: 'Dana Homeowner',
   customer_address: '7 Maple St, Sparksville, CA',
   customer_phone: '(555) 222-1111',
   customer_email: 'dana@example.com',
-  status: 'draft',
+  // exercise the e-sign block on the PDF
+  status: 'accepted',
+  signed_name: 'Dana Homeowner',
+  accepted_at: new Date().toISOString(),
+  declined_at: null,
+  decline_reason: null,
+  due_date: null,
+  paid_at: null,
+  source_estimate_id: null,
+  sent_at: null,
+  reminders_enabled: true,
+  last_reminder_at: null,
+  reminder_count: 0,
+  review_requested_at: null,
   scope_of_work:
     'Replace the main electrical panel with a 200-amp service and bring the grounding up to code. Includes permit coordination and a final inspection walkthrough.',
   subtotal: 0,
@@ -56,16 +73,36 @@ const estimate: EstimateWithItems = {
   ],
 };
 
+// The same job as a paid invoice — exercises the INVOICE header, due date,
+// PAID stamp, and "Deposit received" labels.
+const invoice: EstimateWithItems = {
+  ...estimate,
+  id: 'i1',
+  kind: 'invoice',
+  status: 'paid',
+  signed_name: null,
+  accepted_at: null,
+  due_date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
+  paid_at: new Date().toISOString(),
+  source_estimate_id: 'e1',
+};
+
 async function main() {
-  const pdf = await renderEstimatePdf(business, estimate);
-  if (!pdf || pdf.length < 1000) {
-    throw new Error(`PDF looks empty (${pdf?.length ?? 0} bytes)`);
-  }
   const outDir = path.join(process.cwd(), 'scratch');
   mkdirSync(outDir, { recursive: true });
-  const outPath = path.join(outDir, 'estimate-smoke.pdf');
-  writeFileSync(outPath, pdf);
-  console.log(`✓ PDF rendered: ${pdf.length} bytes → ${outPath}`);
+
+  for (const [name, doc] of [
+    ['estimate-smoke.pdf', estimate],
+    ['invoice-smoke.pdf', invoice],
+  ] as const) {
+    const pdf = await renderEstimatePdf(business, doc);
+    if (!pdf || pdf.length < 1000) {
+      throw new Error(`PDF looks empty (${pdf?.length ?? 0} bytes)`);
+    }
+    const outPath = path.join(outDir, name);
+    writeFileSync(outPath, pdf);
+    console.log(`✓ PDF rendered: ${pdf.length} bytes → ${outPath}`);
+  }
 }
 
 main().catch((err) => {

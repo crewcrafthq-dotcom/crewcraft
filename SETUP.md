@@ -35,6 +35,8 @@ cp .env.example .env.local   # then fill it in as you go below
    - `supabase/migrations/0001_init.sql` — tables + indexes
    - `supabase/migrations/0002_rls.sql` — Row Level Security policies
    - `supabase/migrations/0003_storage.sql` — the public `logos` bucket + policies
+   - `supabase/migrations/0004_apps.sql` — accept/e-sign, invoices, reminders,
+     review requests, get-paid settings, and the price book
 
    (Or with the Supabase CLI: `supabase db push`.)
 
@@ -145,3 +147,9 @@ npm run build       # production build
    - Stripe **webhook** endpoint → `https://yourdomain.com/api/stripe/webhook`
 4. The PDF and email routes run on the Node.js runtime (already set via
    `export const runtime = 'nodejs'`), so they work on Vercel functions as-is.
+5. **Follow-up reminders (optional).** Set a `CRON_SECRET` env var (any long
+   random string) and Vercel will call `/api/cron/reminders` daily at 15:00 UTC
+   (schedule in `vercel.json`) with `Authorization: Bearer $CRON_SECRET`. The
+   sweep nudges customers who haven't answered a sent estimate in 3 days, at
+   most twice per estimate. Without `CRON_SECRET` the route stays off; manual
+   "Send reminder" in the editor works either way.

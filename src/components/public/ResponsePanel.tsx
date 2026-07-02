@@ -93,8 +93,8 @@ export function ResponsePanel({ token, status, signedName, acceptedAt, declinedA
       {!declining ? (
         <>
           <p className="mb-3 text-sm text-navy-soft">
-            Type your full name below to accept this estimate. That's your electronic signature —
-            no printer needed.
+            Type your full name below to accept this estimate. That&rsquo;s your electronic
+            signature — no printer needed.
           </p>
           <div className="flex flex-col gap-2 sm:flex-row">
             <input
@@ -127,7 +127,7 @@ export function ResponsePanel({ token, status, signedName, acceptedAt, declinedA
       ) : (
         <>
           <p className="mb-3 text-sm text-navy-soft">
-            No hard feelings. Add a note if you'd like — it goes straight to the contractor.
+            No hard feelings. Add a note if you&rsquo;d like — it goes straight to the contractor.
           </p>
           <textarea
             aria-label="Reason for declining (optional)"
