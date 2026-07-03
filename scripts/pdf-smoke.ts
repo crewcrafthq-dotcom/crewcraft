@@ -24,6 +24,7 @@ const business: Business = {
   review_link: null,
   payment_link: null,
   payment_instructions: null,
+  auto_invoice: false,
   stripe_customer_id: null,
   stripe_subscription_id: null,
   plan: 'free',

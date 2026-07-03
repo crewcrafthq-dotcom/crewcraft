@@ -34,6 +34,7 @@ export interface Business {
   review_link: string | null; // e.g. the Google review URL
   payment_link: string | null; // e.g. a Stripe Payment Link
   payment_instructions: string | null; // e.g. "Zelle to (555) 123-4567"
+  auto_invoice: boolean; // on acceptance, create + email the invoice automatically
   stripe_customer_id: string | null;
   stripe_subscription_id: string | null;
   plan: Plan;

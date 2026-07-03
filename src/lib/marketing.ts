@@ -89,16 +89,27 @@ export interface ToolItem {
   name: string;
   tagline: string;
   status: 'live' | 'next';
-  icon: 'estimates' | 'voice' | 'supplements' | 'followup' | 'reviews';
+  icon:
+    | 'estimates'
+    | 'esign'
+    | 'invoices'
+    | 'followup'
+    | 'customers'
+    | 'analytics'
+    | 'voice'
+    | 'supplements'
+    | 'reviews';
 }
 
 /** What's on the belt. Estimates is the flagship; the rest are honest about status. */
 export const APP_LINEUP: ToolItem[] = [
-  { name: 'Toolbelt Estimates', tagline: 'Type the job, send a branded estimate.', status: 'live', icon: 'estimates' },
+  { name: 'Toolbelt Estimates', tagline: 'Type the job — or snap photos — and send a branded, e-signable estimate.', status: 'live', icon: 'estimates' },
+  { name: 'Invoices', tagline: 'Accepted estimates become invoices — automatically, if you want.', status: 'live', icon: 'invoices' },
+  { name: 'Follow-up Engine', tagline: 'Quotes and overdue invoices that chase themselves so you don’t.', status: 'live', icon: 'followup' },
+  { name: 'Customers', tagline: 'Every customer and job history, built from your paperwork.', status: 'live', icon: 'customers' },
+  { name: 'Analytics', tagline: 'Win rate, average ticket, quoted vs won.', status: 'live', icon: 'analytics' },
   { name: 'Toolbelt Voice', tagline: 'Talk it out, get the paperwork.', status: 'next', icon: 'voice' },
   { name: 'Toolbelt Supplements', tagline: 'Roofing insurance supplements, done faster.', status: 'next', icon: 'supplements' },
-  { name: 'Follow-up Engine', tagline: 'Quotes that chase themselves so you don’t.', status: 'next', icon: 'followup' },
-  { name: 'Review-Getter', tagline: 'Turn finished jobs into 5-star reviews.', status: 'next', icon: 'reviews' },
 ];
 
 export const PRICING = {
@@ -107,7 +118,7 @@ export const PRICING = {
     price: '$0',
     cadence: 'forever',
     line: '3 estimates total — a real taste, no timer.',
-    features: ['3 estimates', 'AI line items', 'Branded PDF + link', 'No credit card'],
+    features: ['3 estimates', 'AI line items', 'Customer e-sign', 'No credit card'],
   },
   pro: {
     name: 'Pro',
@@ -115,7 +126,7 @@ export const PRICING = {
     cadence: '/mo',
     annual: '$24/mo billed annually',
     line: 'Unlimited estimates. One flat price.',
-    features: ['Unlimited estimates', 'Branded PDF + shareable link', 'Email + view tracking', 'Cancel anytime'],
+    features: ['Unlimited estimates', 'E-sign, invoices & auto follow-ups', 'Customers + analytics', 'Cancel anytime'],
   },
   founding: {
     name: 'Founding',
@@ -141,5 +152,9 @@ export const FAQ: { q: string; a: string }[] = [
   {
     q: 'What do I need to start?',
     a: 'Your company name and your logo. Add your license and rates once, and they land on every estimate after that.',
+  },
+  {
+    q: 'Can customers accept and pay online?',
+    a: 'Yes. Every estimate link has an accept button — the customer types their name to e-sign, you get an email, and the signature lands on the PDF. Add your payment link in Settings and accepted estimates show a "Pay online" button for the deposit.',
   },
 ];

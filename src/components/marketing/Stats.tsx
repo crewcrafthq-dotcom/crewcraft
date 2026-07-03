@@ -3,9 +3,9 @@ import { StatCounter } from './StatCounter';
 // Honest, product-true numbers — not fabricated user counts.
 const STATS = [
   { value: 60, suffix: 's', label: 'to a finished estimate' },
+  { value: 5, suffix: '', label: 'apps on the belt' },
   { value: 4, suffix: '', label: 'trades supported' },
   { value: 3, suffix: '', label: 'free estimates to start' },
-  { value: 100, suffix: '%', label: 'your numbers, always' },
 ];
 
 export function Stats() {

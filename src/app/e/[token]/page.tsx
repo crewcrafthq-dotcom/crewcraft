@@ -5,6 +5,7 @@ import { BadgeCheck, CreditCard } from 'lucide-react';
 import { TradeTheme } from '@/components/TradeTheme';
 import { ResponsePanel } from '@/components/public/ResponsePanel';
 import { buttonClasses } from '@/components/ui/Button';
+import { ESTIMATE_VALID_DAYS } from '@/lib/config';
 import { CATEGORY_LABELS, computeTotals, docNumber, groupByCategory } from '@/lib/estimates';
 import { loadEstimateByToken, markViewedByToken } from '@/lib/estimate-data';
 import { money, shortDate } from '@/lib/format';
@@ -71,6 +72,11 @@ export default async function PublicEstimatePage({ params }: { params: { token: 
             <p className="text-sm text-navy-muted">{docNumber(estimate.kind, estimate.id)}</p>
             {invoice && estimate.due_date ? (
               <p className="text-sm text-navy-soft">Due {shortDate(estimate.due_date)}</p>
+            ) : null}
+            {!invoice && !['accepted', 'declined'].includes(estimate.status) ? (
+              <p className="text-sm text-navy-soft">
+                Valid until {shortDate(validUntil(estimate.created_at))}
+              </p>
             ) : null}
             {paid ? (
               <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold tracking-wide text-emerald-700">
@@ -225,4 +231,10 @@ function Row({ label, value, accent }: { label: string; value: string; accent?: 
 function trimNum(n: number): string {
   const v = Number(n) || 0;
   return Number.isInteger(v) ? String(v) : String(Math.round(v * 100) / 100);
+}
+
+function validUntil(createdAt: string): Date {
+  const d = new Date(createdAt);
+  d.setDate(d.getDate() + ESTIMATE_VALID_DAYS);
+  return d;
 }

@@ -154,6 +154,24 @@ export function BusinessForm({ action, initial, submitLabel, extended }: Props) 
               defaultValue={initial?.review_link ?? ''}
               placeholder="https://g.page/r/…/review — your Google review link"
             />
+            <input type="hidden" name="auto_invoice_present" value="1" />
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-hairline bg-night-850 p-4">
+              <input
+                type="checkbox"
+                name="auto_invoice"
+                defaultChecked={Boolean(initial?.auto_invoice)}
+                className="mt-0.5 h-5 w-5 accent-[rgb(var(--accent))]"
+              />
+              <span>
+                <span className="block text-sm font-semibold text-mist">
+                  Auto-invoice when a customer accepts
+                </span>
+                <span className="mt-0.5 block text-sm text-mist-mute">
+                  The moment an estimate is e-signed, the invoice is created and emailed to the
+                  customer with a 14-day due date — no tap needed from you.
+                </span>
+              </span>
+            </label>
           </fieldset>
         ) : null}
 

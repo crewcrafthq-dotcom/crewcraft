@@ -65,6 +65,11 @@ export async function writeBusinessFromForm(formData: FormData): Promise<WriteRe
   for (const key of ['review_link', 'payment_link', 'payment_instructions'] as const) {
     if (formData.has(key)) fields[key] = str(formData, key);
   }
+  // Checkbox: a sentinel field marks the form as carrying it, since an
+  // unchecked box submits nothing at all.
+  if (formData.has('auto_invoice_present')) {
+    fields.auto_invoice = formData.get('auto_invoice') === 'on';
+  }
 
   const { data: existing } = await supabase
     .from('businesses')

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { Camera, Layers3, Mic, Sparkles, X } from 'lucide-react';
+import { Camera, Layers3, Sparkles, X } from 'lucide-react';
 
 import { Button } from '@/components/ui/Button';
 import { Textarea } from '@/components/ui/Field';
@@ -39,30 +39,15 @@ export function JobDescriptionBox({
 
   return (
     <div>
-      <div className="relative">
-        <Textarea
-          aria-label="Job description"
-          placeholder="Describe the job in plain words — e.g. “Replace a 40-gallon gas water heater in the garage, haul off the old one.”"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          rows={4}
-          className="pr-12"
-        />
-        {/*
-          Voice input is the headline v2 feature (§2). This is the clean seam —
-          a placeholder mic button, wired to nothing yet.
-        */}
-        <button
-          type="button"
-          data-voice-seam
-          disabled
-          title="Voice input — coming soon"
-          aria-label="Voice input (coming soon)"
-          className="absolute bottom-2.5 right-2.5 grid h-9 w-9 place-items-center rounded-lg text-mist-mute opacity-50"
-        >
-          <Mic className="h-[18px] w-[18px]" />
-        </button>
-      </div>
+      {/* Voice input stays a v2 feature — the seam is this box; no dead mic
+          button in the meantime (it read as broken). */}
+      <Textarea
+        aria-label="Job description"
+        placeholder="Describe the job in plain words — e.g. “Replace a 40-gallon gas water heater in the garage, haul off the old one.”"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        rows={4}
+      />
 
       {/* job-site photos */}
       <input

@@ -45,7 +45,7 @@ export default async function DashboardPage() {
   const accepted = estimates.filter((e) => e.status === 'accepted').length;
   const declined = estimates.filter((e) => e.status === 'declined').length;
   const decided = accepted + declined;
-  const winRate = decided > 0 ? `${Math.round((accepted / decided) * 100)}%` : '—';
+  const winRateMeta = decided > 0 ? `Win rate ${Math.round((accepted / decided) * 100)}%` : 'No data yet';
   const outstanding = invoices
     .filter((i) => i.status !== 'paid')
     .reduce((s, i) => s + (i.total || 0), 0);
@@ -79,7 +79,7 @@ export default async function DashboardPage() {
       desc: 'Win rate, average ticket, quoted vs won. Know which jobs are worth chasing.',
       href: '/analytics',
       icon: TrendingUp,
-      meta: `Win rate ${winRate}`,
+      meta: winRateMeta,
     },
     {
       name: 'Price Book',
