@@ -43,7 +43,10 @@ export default async function PublicEstimatePage({ params }: { params: { token: 
   const hasPayMethod = Boolean(business.payment_link || business.payment_instructions);
 
   return (
-    <TradeTheme trade={business.trade} className="min-h-screen">
+    // The customer page keeps the light "paper" look (§8 cream) — the app's
+    // dark shell never applies here, so force the light canvas + navy ink the
+    // navy/cream text tokens below are designed for.
+    <TradeTheme trade={business.trade} className="min-h-screen bg-cream text-navy">
       <main className="mx-auto max-w-2xl px-5 py-8">
         {/* header */}
         <div className="flex items-start justify-between gap-4">
