@@ -8,6 +8,7 @@ import {
   StyleSheet,
 } from '@react-pdf/renderer';
 
+import { ESTIMATE_VALID_DAYS } from '@/lib/config';
 import { computeTotals, docNumber, groupByCategory, CATEGORY_LABELS } from '@/lib/estimates';
 import { money, shortDate } from '@/lib/format';
 import { getTheme } from '@/lib/trades';
@@ -181,6 +182,12 @@ export function EstimatePdf({ business, estimate }: Props) {
                 <Text style={styles.metaVal}>{shortDate(estimate.due_date)}</Text>
               </View>
             ) : null}
+            {!invoice && !['accepted', 'declined'].includes(estimate.status) ? (
+              <View style={styles.metaRow}>
+                <Text style={styles.metaLabel}>Valid until</Text>
+                <Text style={styles.metaVal}>{shortDate(validUntil(estimate.created_at))}</Text>
+              </View>
+            ) : null}
             {paid ? (
               <View style={styles.paidBadge}>
                 <Text style={styles.paidText}>PAID</Text>
@@ -301,4 +308,10 @@ export function EstimatePdf({ business, estimate }: Props) {
 function trimNum(n: number): string {
   const v = Number(n) || 0;
   return Number.isInteger(v) ? String(v) : String(Math.round(v * 100) / 100);
+}
+
+function validUntil(createdAt: string): Date {
+  const d = new Date(createdAt);
+  d.setDate(d.getDate() + ESTIMATE_VALID_DAYS);
+  return d;
 }

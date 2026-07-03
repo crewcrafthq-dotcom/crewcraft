@@ -22,6 +22,22 @@ export default async function NewEstimatePage() {
   }
 
   const supabase = createClient();
+
+  // Re-open an abandoned empty draft instead of stacking a new row each time
+  // the button is tapped — keeps the list clean.
+  const { data: existing } = await supabase
+    .from('estimates')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('kind', 'estimate')
+    .eq('status', 'draft')
+    .eq('customer_name', '')
+    .eq('total', 0)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (existing) redirect(`/estimates/${existing.id}`);
+
   const { data, error } = await supabase
     .from('estimates')
     .insert({

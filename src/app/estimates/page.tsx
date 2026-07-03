@@ -14,7 +14,7 @@ import { AppShell } from '@/components/AppShell';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Card } from '@/components/ui/Card';
 import { buttonClasses } from '@/components/ui/Button';
-import { getSession } from '@/lib/auth';
+import { getSession, isUsedEstimate } from '@/lib/auth';
 import { FREE_ESTIMATE_LIMIT, isPaidStatus } from '@/lib/config';
 import { money, shortDate } from '@/lib/format';
 import { createClient } from '@/lib/supabase/server';
@@ -39,7 +39,11 @@ export default async function EstimatesPage() {
 
   const estimates = (data ?? []) as Row[];
   const paid = isPaidStatus(business.subscription_status);
-  const remaining = Math.max(0, FREE_ESTIMATE_LIMIT - estimates.length);
+  // Untouched empty drafts don't burn free estimates (matches countEstimates).
+  const usedCount = estimates.filter((e) =>
+    isUsedEstimate({ status: e.status, total: e.total, customer_name: e.customer_name }),
+  ).length;
+  const remaining = Math.max(0, FREE_ESTIMATE_LIMIT - usedCount);
 
   const openCount = estimates.filter((e) => ['draft', 'sent', 'viewed'].includes(e.status)).length;
   const acceptedCount = estimates.filter((e) => e.status === 'accepted').length;

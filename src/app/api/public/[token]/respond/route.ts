@@ -2,8 +2,14 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 import { appUrl } from '@/lib/config';
 import { sendAppEmail } from '@/lib/email/send';
+import { sendEstimateEmail } from '@/lib/email/send-estimate';
 import { responseNotificationHtml } from '@/lib/email/templates';
-import { loadEstimateByToken, ownerNotifyEmail } from '@/lib/estimate-data';
+import {
+  createInvoiceFromEstimate,
+  loadEstimateByToken,
+  ownerNotifyEmail,
+} from '@/lib/estimate-data';
+import { renderEstimatePdf } from '@/lib/pdf/render';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getTheme } from '@/lib/trades';
 
@@ -66,6 +72,36 @@ export async function POST(request: NextRequest, { params }: { params: { token: 
       .update({ status: 'declined', declined_at: now, decline_reason: note })
       .eq('id', estimate.id);
     if (error) return NextResponse.json({ error: 'Could not save. Try again.' }, { status: 500 });
+  }
+
+  // Auto-invoice: when enabled, acceptance creates and emails the invoice on
+  // its own. Best-effort — a failure here never blocks the acceptance.
+  if (action === 'accept' && business.auto_invoice && estimate.customer_email) {
+    try {
+      const invoice = await createInvoiceFromEstimate(estimate);
+      if (invoice) {
+        const theme = getTheme(business.trade);
+        const pdf = await renderEstimatePdf(business, { ...invoice, status: 'sent' });
+        await sendEstimateEmail({
+          to: estimate.customer_email,
+          kind: 'invoice',
+          businessName: business.name,
+          customerName: estimate.customer_name,
+          total: invoice.total,
+          publicUrl: `${appUrl()}/e/${invoice.public_token}`,
+          dueDate: invoice.due_date,
+          pdf,
+          accent: theme.accent,
+          accentFg: theme.accentFg,
+        });
+        await admin
+          .from('estimates')
+          .update({ status: 'sent', sent_at: now })
+          .eq('id', invoice.id);
+      }
+    } catch (err) {
+      console.error('Auto-invoice failed:', err);
+    }
   }
 
   // Tell the contractor. Best-effort — the customer's response is already saved.

@@ -35,13 +35,26 @@ export async function getSession(): Promise<{
   return { user, business: (data as Business) ?? null };
 }
 
-/** Count of estimates the user has created (for the free-tier gate). */
+/** An estimate the contractor actually used — not an untouched empty draft. */
+export function isUsedEstimate(e: {
+  status: string;
+  total: number;
+  customer_name: string;
+}): boolean {
+  return e.status !== 'draft' || (e.total ?? 0) > 0 || Boolean(e.customer_name?.trim());
+}
+
+/**
+ * Count of estimates the user has actually used (for the free-tier gate).
+ * Opening and abandoning the editor leaves an empty draft — that must never
+ * burn one of the 3 free estimates.
+ */
 export async function countEstimates(userId: string): Promise<number> {
   const supabase = createClient();
-  const { count } = await supabase
+  const { data } = await supabase
     .from('estimates')
-    .select('id', { count: 'exact', head: true })
+    .select('id, status, total, customer_name')
     .eq('user_id', userId)
     .eq('kind', 'estimate');
-  return count ?? 0;
+  return (data ?? []).filter(isUsedEstimate).length;
 }

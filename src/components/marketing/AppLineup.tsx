@@ -1,4 +1,14 @@
-import { ClipboardList, FileText, Mic, Send, Star } from 'lucide-react';
+import {
+  ClipboardList,
+  FileText,
+  Mic,
+  PenLine,
+  Receipt,
+  Send,
+  Star,
+  TrendingUp,
+  Users2,
+} from 'lucide-react';
 
 import { cn } from '@/lib/cn';
 import { APP_LINEUP, type ToolItem } from '@/lib/marketing';
@@ -6,14 +16,18 @@ import { StartFreeButton } from './StartFree';
 
 const ICONS: Record<ToolItem['icon'], React.ComponentType<{ className?: string }>> = {
   estimates: FileText,
+  esign: PenLine,
+  invoices: Receipt,
+  followup: Send,
+  customers: Users2,
+  analytics: TrendingUp,
   voice: Mic,
   supplements: ClipboardList,
-  followup: Send,
   reviews: Star,
 };
 
 export function AppLineup() {
-  const flagship = APP_LINEUP.find((a) => a.status === 'live')!;
+  const [flagship, ...rest] = APP_LINEUP.filter((a) => a.status === 'live');
   const next = APP_LINEUP.filter((a) => a.status === 'next');
   const FlagIcon = ICONS[flagship.icon];
 
@@ -22,7 +36,7 @@ export function AppLineup() {
       <div className="max-w-2xl">
         <p className="eyebrow">What’s on the belt</p>
         <h2 className="mt-2 text-3xl font-bold leading-tight text-mist sm:text-4xl">
-          One tool today. More coming.
+          Five tools today. More coming.
         </h2>
         <p className="mt-3 text-lg text-mist-soft">
           Each app is a tool on the belt, built to kill the same paperwork — and marked honestly so
@@ -47,6 +61,30 @@ export function AppLineup() {
           </div>
         </div>
         <StartFreeButton size="md" label="Start free" className="w-full sm:w-auto" />
+      </div>
+
+      {/* the rest of the live belt */}
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {rest.map((tool) => {
+          const Icon = ICONS[tool.icon];
+          return (
+            <div
+              key={tool.name}
+              className="rounded-2xl border border-hairline bg-night-800 p-5 shadow-card"
+            >
+              <div className="flex items-start justify-between">
+                <span className="grid h-10 w-10 place-items-center rounded-xl bg-accent/10 text-accent-bright">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <span className="rounded-full bg-accent/10 px-2 py-0.5 text-xs font-bold text-accent-bright">
+                  Live now
+                </span>
+              </div>
+              <h3 className="mt-4 font-bold text-mist">{tool.name}</h3>
+              <p className="mt-1 text-sm text-mist-soft">{tool.tagline}</p>
+            </div>
+          );
+        })}
       </div>
 
       {/* coming next */}

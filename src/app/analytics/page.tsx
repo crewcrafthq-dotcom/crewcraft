@@ -58,15 +58,18 @@ export default async function AnalyticsPage() {
 
   // ── monthly quoted vs won (last 6 months) ────────────────────────────────
   const months = lastMonths(MONTHS);
-  const monthly = months.map(({ key, label }) => {
-    const quoted = estimates
-      .filter((e) => monthKey(e.created_at) === key)
-      .reduce((s, e) => s + (e.total || 0), 0);
-    const won = accepted
-      .filter((e) => monthKey(e.accepted_at ?? e.updated_at) === key)
-      .reduce((s, e) => s + (e.total || 0), 0);
-    return { key, label, quoted, won };
-  });
+  const monthly = months
+    .map(({ key, label }) => {
+      const quoted = estimates
+        .filter((e) => monthKey(e.created_at) === key)
+        .reduce((s, e) => s + (e.total || 0), 0);
+      const won = accepted
+        .filter((e) => monthKey(e.accepted_at ?? e.updated_at) === key)
+        .reduce((s, e) => s + (e.total || 0), 0);
+      return { key, label, quoted, won };
+    })
+    // A young account would otherwise show a wall of empty $0.00 months.
+    .filter((m) => m.quoted > 0 || m.won > 0);
   const monthlyMax = Math.max(1, ...monthly.flatMap((m) => [m.quoted, m.won]));
 
   // ── pipeline funnel ───────────────────────────────────────────────────────
@@ -158,22 +161,28 @@ export default async function AnalyticsPage() {
                 </div>
               </div>
               <p className="mb-4 text-sm text-mist-mute">Last {MONTHS} months, by dollar value.</p>
-              <div className="space-y-4">
-                {monthly.map((m) => (
-                  <div key={m.key}>
-                    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-mist-mute">
-                      {m.label}
-                    </p>
-                    <BarRow
-                      label="Quoted"
-                      value={m.quoted}
-                      max={monthlyMax}
-                      className="border border-hairline-strong bg-night-600"
-                    />
-                    <BarRow label="Won" value={m.won} max={monthlyMax} className="bg-accent" />
-                  </div>
-                ))}
-              </div>
+              {monthly.length === 0 ? (
+                <p className="rounded-xl border border-dashed border-hairline px-4 py-6 text-center text-sm text-mist-mute">
+                  No dollars quoted yet — totals show up here as soon as an estimate has a value.
+                </p>
+              ) : (
+                <div className="space-y-4">
+                  {monthly.map((m) => (
+                    <div key={m.key}>
+                      <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-mist-mute">
+                        {m.label}
+                      </p>
+                      <BarRow
+                        label="Quoted"
+                        value={m.quoted}
+                        max={monthlyMax}
+                        className="border border-hairline-strong bg-night-600"
+                      />
+                      <BarRow label="Won" value={m.won} max={monthlyMax} className="bg-accent" />
+                    </div>
+                  ))}
+                </div>
+              )}
             </Card>
 
             {/* pipeline */}

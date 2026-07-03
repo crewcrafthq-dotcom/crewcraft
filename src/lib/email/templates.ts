@@ -140,6 +140,40 @@ export function reminderEmailHtml({
   );
 }
 
+interface InvoiceReminderEmailArgs {
+  businessName: string;
+  customerName: string;
+  total: number;
+  dueDate: string | null;
+  publicUrl: string;
+  accent: string;
+  accentFg: string;
+}
+
+/** Friendly past-due invoice nudge. */
+export function invoiceReminderEmailHtml({
+  businessName,
+  customerName,
+  total,
+  dueDate,
+  publicUrl,
+  accent,
+  accentFg,
+}: InvoiceReminderEmailArgs): string {
+  const hi = customerName ? `Hi ${escapeHtml(customerName)},` : 'Hi,';
+  const due = dueDate ? ` (due ${shortDate(dueDate)})` : '';
+  return emailShell(
+    heading(businessName) +
+      paragraph(
+        `${hi}<br/><br/>
+        A quick reminder that your invoice for <strong>${money(total)}</strong>${due} is still open.
+        You can view it and see the payment options below — and if it's already on its way, thank you!`,
+      ) +
+      button({ href: publicUrl, label: 'View the invoice', accent, accentFg }) +
+      signoff(businessName),
+  );
+}
+
 interface ReviewRequestEmailArgs {
   businessName: string;
   customerName: string;

@@ -37,6 +37,9 @@ cp .env.example .env.local   # then fill it in as you go below
    - `supabase/migrations/0003_storage.sql` — the public `logos` bucket + policies
    - `supabase/migrations/0004_apps.sql` — accept/e-sign, invoices, reminders,
      review requests, get-paid settings, and the price book
+   - `supabase/migrations/0005_auto_invoice.sql` — auto-invoice-on-acceptance toggle
+   - `supabase/migrations/0006_stripe_connect.sql` — Stripe Connect fields +
+     online deposit tracking
 
    (Or with the Supabase CLI: `supabase db push`.)
 
@@ -151,5 +154,20 @@ npm run build       # production build
    random string) and Vercel will call `/api/cron/reminders` daily at 15:00 UTC
    (schedule in `vercel.json`) with `Authorization: Bearer $CRON_SECRET`. The
    sweep nudges customers who haven't answered a sent estimate in 3 days, at
-   most twice per estimate. Without `CRON_SECRET` the route stays off; manual
-   "Send reminder" in the editor works either way.
+   most twice per estimate — and chases overdue unpaid invoices the same way.
+   Without `CRON_SECRET` the route stays off; manual "Send reminder" in the
+   editor works either way.
+6. **Stripe Connect (optional — integrated payments).** Enable Connect on your
+   Stripe account (platform profile: software platform, Standard accounts,
+   users liable for losses, Stripe-hosted onboarding). Then create a second
+   webhook endpoint in Stripe:
+   - URL: `https://yourdomain.com/api/stripe/connect-webhook`
+   - IMPORTANT: choose **"Listen to events on Connected accounts"** (not your
+     own account) — this is a separate option when adding the endpoint.
+   - Events: `checkout.session.completed`, `account.updated`
+   - Copy its signing secret → `STRIPE_CONNECT_WEBHOOK_SECRET`
+
+   Contractors then hit "Connect Stripe" in Settings; once their account can
+   take charges, the public estimate/invoice pages switch from the manual
+   payment link to integrated Checkout, and payments mark invoices Paid (and
+   stamp estimate deposits) automatically via the webhook.

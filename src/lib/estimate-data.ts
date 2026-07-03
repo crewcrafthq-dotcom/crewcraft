@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { INVOICE_DUE_DAYS } from '@/lib/config';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import type { Business, EstimateWithItems } from '@/lib/types';
@@ -97,6 +98,73 @@ export function estimateFilename(estimate: EstimateWithItems): string {
       .replace(/(^-|-$)/g, '')
       .slice(0, 40) || kind;
   return `${kind}-${slug}.pdf`;
+}
+
+/**
+ * Create an invoice from an estimate via the service-role client — used by the
+ * auto-invoice-on-acceptance flow, where no contractor session exists. Copies
+ * the customer, scope, totals, and line items; net-14 due date; links back to
+ * the source estimate. Returns the invoice with its items, or null on failure.
+ */
+export async function createInvoiceFromEstimate(
+  estimate: EstimateWithItems,
+): Promise<EstimateWithItems | null> {
+  const admin = createAdminClient();
+
+  // One invoice per estimate — acceptance can be retried, invoicing shouldn't be.
+  const { data: existing } = await admin
+    .from('estimates')
+    .select('*, line_items(*)')
+    .eq('source_estimate_id', estimate.id)
+    .eq('kind', 'invoice')
+    .maybeSingle();
+  if (existing) return sortItems(existing as EstimateWithItems);
+
+  const due = new Date();
+  due.setDate(due.getDate() + INVOICE_DUE_DAYS);
+
+  const { data: invoice, error } = await admin
+    .from('estimates')
+    .insert({
+      user_id: estimate.user_id,
+      kind: 'invoice',
+      customer_name: estimate.customer_name,
+      customer_address: estimate.customer_address,
+      customer_phone: estimate.customer_phone,
+      customer_email: estimate.customer_email,
+      status: 'draft',
+      scope_of_work: estimate.scope_of_work,
+      subtotal: estimate.subtotal,
+      tax_rate: estimate.tax_rate,
+      tax_amount: estimate.tax_amount,
+      deposit: estimate.deposit,
+      total: estimate.total,
+      notes: estimate.notes,
+      due_date: due.toISOString().slice(0, 10),
+      source_estimate_id: estimate.id,
+    })
+    .select('*')
+    .single();
+  if (error || !invoice) return null;
+
+  const items = estimate.line_items ?? [];
+  if (items.length > 0) {
+    await admin.from('line_items').insert(
+      items.map((li, index) => ({
+        estimate_id: invoice.id,
+        category: li.category,
+        description: li.description,
+        quantity: li.quantity,
+        unit: li.unit,
+        unit_price: li.unit_price,
+        line_total: li.line_total,
+        sort_order: li.sort_order ?? index,
+      })),
+    );
+  }
+
+  const bundle = { ...(invoice as EstimateWithItems), line_items: items };
+  return bundle;
 }
 
 /**

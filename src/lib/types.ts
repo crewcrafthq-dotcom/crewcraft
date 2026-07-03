@@ -34,6 +34,9 @@ export interface Business {
   review_link: string | null; // e.g. the Google review URL
   payment_link: string | null; // e.g. a Stripe Payment Link
   payment_instructions: string | null; // e.g. "Zelle to (555) 123-4567"
+  auto_invoice: boolean; // on acceptance, create + email the invoice automatically
+  stripe_account_id: string | null; // Connect: the contractor's own Stripe account
+  stripe_charges_enabled: boolean; // Connect: cached "can take payments" status
   stripe_customer_id: string | null;
   stripe_subscription_id: string | null;
   plan: Plan;
@@ -80,6 +83,8 @@ export interface Estimate {
   due_date: string | null;
   paid_at: string | null;
   source_estimate_id: string | null;
+  // online deposit collection (estimates)
+  deposit_paid_at: string | null;
   // send + follow-up reminders
   sent_at: string | null;
   reminders_enabled: boolean;

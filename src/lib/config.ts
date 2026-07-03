@@ -17,6 +17,9 @@ export const REMINDER_MAX = 2;
 /** Invoices default to net-14. */
 export const INVOICE_DUE_DAYS = 14;
 
+/** Estimates advertise a validity window (shown on the public page + PDF). */
+export const ESTIMATE_VALID_DAYS = 30;
+
 /** AI photo input: keep request bodies sane. */
 export const AI_MAX_PHOTOS = 4;
 

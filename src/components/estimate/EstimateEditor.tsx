@@ -256,6 +256,11 @@ export function EstimateEditor({
                 Signed electronically on {shortDate(estimate.accepted_at)}.
               </p>
             ) : null}
+            {estimate.deposit_paid_at ? (
+              <p className="mt-1 text-sm font-medium text-emerald-400">
+                Deposit paid online {shortDate(estimate.deposit_paid_at)}.
+              </p>
+            ) : null}
           </Card>
         ) : null}
         {!invoice && estimate.status === 'declined' ? (
