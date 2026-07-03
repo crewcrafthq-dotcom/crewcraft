@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { BadgeCheck, CreditCard } from 'lucide-react';
 
 import { TradeTheme } from '@/components/TradeTheme';
+import { PayButton } from '@/components/public/PayButton';
 import { ResponsePanel } from '@/components/public/ResponsePanel';
 import { buttonClasses } from '@/components/ui/Button';
 import { ESTIMATE_VALID_DAYS } from '@/lib/config';
@@ -39,9 +40,15 @@ export default async function PublicEstimatePage({ params }: { params: { token: 
       ? totals.balanceDue
       : totals.total
     : totals.depositDue;
+  const depositPaid = !invoice && Boolean(estimate.deposit_paid_at);
   const showPay =
-    (invoice && !paid) || (!invoice && estimate.status === 'accepted' && totals.depositDue > 0);
-  const hasPayMethod = Boolean(business.payment_link || business.payment_instructions);
+    !depositPaid &&
+    ((invoice && !paid) || (!invoice && estimate.status === 'accepted' && totals.depositDue > 0));
+  // Integrated checkout (Stripe Connect) wins; the manual link/instructions
+  // remain the fallback for contractors who haven't connected.
+  const hasCheckout = Boolean(business.stripe_account_id && business.stripe_charges_enabled);
+  const hasPayMethod =
+    hasCheckout || Boolean(business.payment_link || business.payment_instructions);
 
   return (
     // The customer page keeps the light "paper" look (§8 cream) — the app's
@@ -171,6 +178,20 @@ export default async function PublicEstimatePage({ params }: { params: { token: 
           />
         ) : null}
 
+        {/* deposit already collected */}
+        {depositPaid ? (
+          <section className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+            <p className="flex items-center gap-2 font-semibold text-emerald-700">
+              <BadgeCheck className="h-5 w-5" />
+              Deposit paid — thank you!
+            </p>
+            <p className="mt-1 text-sm text-emerald-700/90">
+              {money(totals.depositDue)} received {shortDate(estimate.deposit_paid_at as string)}.
+              The balance of {money(totals.balanceDue)} is due on completion.
+            </p>
+          </section>
+        ) : null}
+
         {/* how to pay */}
         {showPay && hasPayMethod ? (
           <section className="mb-6 rounded-2xl border border-line bg-cream-card p-5">
@@ -183,7 +204,12 @@ export default async function PublicEstimatePage({ params }: { params: { token: 
                 ? `${money(amountDue)} due${estimate.due_date ? ` by ${shortDate(estimate.due_date)}` : ''}.`
                 : `A deposit of ${money(amountDue)} locks in the job.`}
             </p>
-            {business.payment_link ? (
+            {hasCheckout ? (
+              <PayButton
+                token={estimate.public_token}
+                label={`Pay ${money(amountDue)} online`}
+              />
+            ) : business.payment_link ? (
               <a
                 href={business.payment_link}
                 target="_blank"

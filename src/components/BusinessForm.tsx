@@ -132,7 +132,7 @@ export function BusinessForm({ action, initial, submitLabel, extended }: Props) 
             </div>
             <Text
               name="payment_link"
-              label="Payment link (optional)"
+              label="Payment link (optional — fallback when Stripe isn't connected)"
               type="url"
               defaultValue={initial?.payment_link ?? ''}
               placeholder="https://buy.stripe.com/… or your payment page"

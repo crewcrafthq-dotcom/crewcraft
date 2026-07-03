@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { CreditCard } from 'lucide-react';
+import { BadgeCheck, CreditCard, Landmark } from 'lucide-react';
 
 import { AppShell } from '@/components/AppShell';
 import { BusinessForm } from '@/components/BusinessForm';
@@ -45,6 +45,43 @@ export default async function SettingsPage() {
           <Link href="/billing" className={buttonClasses(paid ? 'secondary' : 'primary', 'sm')}>
             {paid ? 'Manage billing' : 'Go Pro'}
           </Link>
+        </div>
+      </Card>
+
+      {/* Stripe Connect — integrated payments */}
+      <Card className="mb-6 p-5">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span
+              className={
+                'grid h-10 w-10 flex-none place-items-center rounded-xl ' +
+                (business.stripe_charges_enabled
+                  ? 'bg-emerald-500/15 text-emerald-400'
+                  : 'bg-night-700 text-mist-soft')
+              }
+            >
+              {business.stripe_charges_enabled ? (
+                <BadgeCheck className="h-5 w-5" />
+              ) : (
+                <Landmark className="h-5 w-5" />
+              )}
+            </span>
+            <div>
+              <h2 className="font-semibold text-mist">Online payments</h2>
+              <p className="text-sm text-mist-soft">
+                {business.stripe_charges_enabled
+                  ? 'Stripe connected — deposits and invoices reconcile automatically.'
+                  : business.stripe_account_id
+                    ? 'Almost there — finish your Stripe setup to take payments.'
+                    : 'Connect your Stripe account so customers pay right on the estimate, and invoices mark themselves paid.'}
+              </p>
+            </div>
+          </div>
+          {!business.stripe_charges_enabled ? (
+            <a href="/api/stripe/connect/onboard" className={buttonClasses('primary', 'sm')}>
+              {business.stripe_account_id ? 'Finish Stripe setup' : 'Connect Stripe'}
+            </a>
+          ) : null}
         </div>
       </Card>
 
