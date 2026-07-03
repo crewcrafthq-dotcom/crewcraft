@@ -87,13 +87,25 @@ export async function markViewedByToken(token: string): Promise<void> {
   }
 }
 
-/** A safe filename for the PDF download. */
+/** A safe filename for the PDF download (estimate-*.pdf / invoice-*.pdf). */
 export function estimateFilename(estimate: EstimateWithItems): string {
+  const kind = estimate.kind === 'invoice' ? 'invoice' : 'estimate';
   const slug =
-    (estimate.customer_name || 'estimate')
+    (estimate.customer_name || kind)
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '')
-      .slice(0, 40) || 'estimate';
-  return `estimate-${slug}.pdf`;
+      .slice(0, 40) || kind;
+  return `${kind}-${slug}.pdf`;
+}
+
+/**
+ * Where contractor notifications go: the business email if set, else the
+ * account's login email (service-role lookup).
+ */
+export async function ownerNotifyEmail(business: Business): Promise<string | null> {
+  if (business.email) return business.email;
+  const admin = createAdminClient();
+  const { data } = await admin.auth.admin.getUserById(business.user_id);
+  return data?.user?.email ?? null;
 }

@@ -5,6 +5,10 @@ import { NextResponse, type NextRequest } from 'next/server';
 const AUTHED_PREFIXES = [
   '/dashboard',
   '/estimates',
+  '/invoices',
+  '/customers',
+  '/analytics',
+  '/pricebook',
   '/onboarding',
   '/settings',
   '/billing',

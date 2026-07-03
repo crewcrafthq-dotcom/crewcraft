@@ -50,7 +50,12 @@ export default async function SettingsPage() {
 
       <Card className="p-6">
         <h2 className="mb-4 font-semibold text-mist">Business profile</h2>
-        <BusinessForm action={updateBusinessAction} initial={business} submitLabel="Save changes" />
+        <BusinessForm
+          action={updateBusinessAction}
+          initial={business}
+          submitLabel="Save changes"
+          extended
+        />
       </Card>
     </AppShell>
   );

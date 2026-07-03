@@ -1,4 +1,4 @@
-import type { LineItem, LineItemCategory } from './types';
+import type { DocumentKind, LineItem, LineItemCategory } from './types';
 
 /**
  * The single source of truth for estimate math (§5 guardrail). Every line total
@@ -55,6 +55,18 @@ export function computeTotals(
     depositDue: toDollars(depositCents),
     balanceDue: toDollars(balanceCents),
   };
+}
+
+/** Human labels for the two document kinds. */
+export const KIND_LABELS: Record<DocumentKind, string> = {
+  estimate: 'Estimate',
+  invoice: 'Invoice',
+};
+
+/** Short document number derived from the row id (EST-A1B2C3 / INV-A1B2C3). */
+export function docNumber(kind: DocumentKind, id: string): string {
+  const prefix = kind === 'invoice' ? 'INV' : 'EST';
+  return `${prefix}-${id.replace(/-/g, '').slice(0, 6).toUpperCase()}`;
 }
 
 export const CATEGORY_LABELS: Record<LineItemCategory, string> = {

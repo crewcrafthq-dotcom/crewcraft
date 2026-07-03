@@ -24,6 +24,7 @@ export default async function EstimatePage({ params }: { params: { id: string } 
   if (!data) notFound();
 
   const estimate = data as EstimateWithItems;
+  if (estimate.kind === 'invoice') redirect(`/invoices/${estimate.id}`);
   estimate.line_items = (estimate.line_items ?? []).sort((a, b) => a.sort_order - b.sort_order);
 
   return (

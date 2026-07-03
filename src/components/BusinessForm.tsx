@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
 import { Button } from '@/components/ui/Button';
-import { Input, Label } from '@/components/ui/Field';
+import { Input, Label, Textarea } from '@/components/ui/Field';
 import { cn } from '@/lib/cn';
 import { getTheme, themeVars } from '@/lib/trades';
 import { TRADES, type Business, type Trade } from '@/lib/types';
@@ -17,9 +17,11 @@ interface Props {
   action: Action;
   initial?: Partial<Business>;
   submitLabel: string;
+  /** Settings-only extras: get-paid + review link. Onboarding stays lean. */
+  extended?: boolean;
 }
 
-export function BusinessForm({ action, initial, submitLabel }: Props) {
+export function BusinessForm({ action, initial, submitLabel, extended }: Props) {
   const [state, formAction] = useFormState(action, {});
   const [trade, setTrade] = useState<Trade>((initial?.trade as Trade) ?? 'hvac');
   const [logoPreview, setLogoPreview] = useState<string | null>(initial?.logo_url ?? null);
@@ -117,6 +119,43 @@ export function BusinessForm({ action, initial, submitLabel }: Props) {
             placeholder="95"
           />
         </div>
+
+        {extended ? (
+          <fieldset className="space-y-5 border-t border-hairline pt-6">
+            <legend className="sr-only">Getting paid & reviews</legend>
+            <div>
+              <h3 className="font-semibold text-mist">Getting paid & reviews</h3>
+              <p className="mt-1 text-sm text-mist-mute">
+                These power the “Pay online” button customers see on accepted estimates and
+                invoices, and the one-tap review request.
+              </p>
+            </div>
+            <Text
+              name="payment_link"
+              label="Payment link (optional)"
+              type="url"
+              defaultValue={initial?.payment_link ?? ''}
+              placeholder="https://buy.stripe.com/… or your payment page"
+            />
+            <div>
+              <Label htmlFor="payment_instructions">Payment instructions (optional)</Label>
+              <Textarea
+                id="payment_instructions"
+                name="payment_instructions"
+                rows={2}
+                defaultValue={initial?.payment_instructions ?? ''}
+                placeholder={'e.g. "Zelle or check to Acme Heating — (555) 123-4567"'}
+              />
+            </div>
+            <Text
+              name="review_link"
+              label="Review link (optional)"
+              type="url"
+              defaultValue={initial?.review_link ?? ''}
+              placeholder="https://g.page/r/…/review — your Google review link"
+            />
+          </fieldset>
+        ) : null}
 
         {state.error ? <p className="text-sm text-red-700">{state.error}</p> : null}
         {state.ok ? <p className="text-sm text-accent-bright">Saved.</p> : null}

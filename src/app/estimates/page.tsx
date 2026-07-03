@@ -34,6 +34,7 @@ export default async function EstimatesPage() {
     .from('estimates')
     .select('id, customer_name, total, status, created_at, updated_at')
     .eq('user_id', user.id)
+    .eq('kind', 'estimate')
     .order('updated_at', { ascending: false });
 
   const estimates = (data ?? []) as Row[];

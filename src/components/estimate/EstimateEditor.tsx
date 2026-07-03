@@ -6,13 +6,17 @@ import { useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   Calculator,
+  CalendarDays,
+  CheckCircle2,
   ClipboardList,
   Copy,
+  Layers3,
   ListTree,
   Save,
   Trash2,
   User,
   Wand2,
+  XCircle,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/Button';
@@ -20,13 +24,20 @@ import { Card } from '@/components/ui/Card';
 import { Input, Label, Textarea } from '@/components/ui/Field';
 import { toast } from '@/components/ui/toast';
 import { computeTotals } from '@/lib/estimates';
-import { money } from '@/lib/format';
-import type { Business, EstimateWithItems, GeneratedEstimate } from '@/lib/types';
+import { money, shortDate } from '@/lib/format';
+import type {
+  Business,
+  EstimateWithItems,
+  GeneratedEstimate,
+  GeneratedTier,
+  GeneratedTiers,
+} from '@/lib/types';
 
 import { JobDescriptionBox } from './JobDescriptionBox';
 import { LineItemsEditor } from './LineItemsEditor';
 import { ShareActions } from './ShareActions';
 import { TotalsPanel } from './TotalsPanel';
+import { fileToEditorPhoto, photoPayload, type EditorPhoto } from './photos';
 import { newRow, type EditorRow } from './types';
 import {
   deleteEstimate,
@@ -34,6 +45,7 @@ import {
   saveEstimate,
   type SaveEstimatePayload,
 } from '@/app/estimates/actions';
+import { AI_MAX_PHOTOS } from '@/lib/config';
 
 function rowsFromEstimate(estimate: EstimateWithItems): EditorRow[] {
   if (estimate.line_items.length === 0) return [newRow('labor')];
@@ -47,6 +59,17 @@ function rowsFromEstimate(estimate: EstimateWithItems): EditorRow[] {
   }));
 }
 
+function rowsFromGenerated(items: GeneratedEstimate['lineItems']): EditorRow[] {
+  return items.map((li) => ({
+    key: Math.random().toString(36).slice(2),
+    category: li.category,
+    description: li.description,
+    quantity: String(li.quantity),
+    unit: li.unit,
+    unitPrice: String(li.unitPrice),
+  }));
+}
+
 export function EstimateEditor({
   business,
   estimate,
@@ -55,6 +78,7 @@ export function EstimateEditor({
   estimate: EstimateWithItems;
 }) {
   const router = useRouter();
+  const invoice = estimate.kind === 'invoice';
 
   const [customerName, setCustomerName] = useState(estimate.customer_name ?? '');
   const [customerAddress, setCustomerAddress] = useState(estimate.customer_address ?? '');
@@ -70,6 +94,11 @@ export function EstimateEditor({
   );
   const [deposit, setDeposit] = useState(estimate.deposit ? String(estimate.deposit) : '');
   const [notes, setNotes] = useState(estimate.notes ?? '');
+  const [dueDate, setDueDate] = useState(estimate.due_date ?? '');
+
+  const [photos, setPhotos] = useState<EditorPhoto[]>([]);
+  const [tiersMode, setTiersMode] = useState(false);
+  const [tierOptions, setTierOptions] = useState<GeneratedTier[] | null>(null);
 
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
@@ -100,6 +129,7 @@ export function EstimateEditor({
       tax_rate: Number(taxRate) || 0,
       deposit: Number(deposit) || 0,
       notes,
+      due_date: invoice ? dueDate : '',
       line_items: rows.map((r) => ({
         category: r.category,
         description: r.description,
@@ -127,34 +157,45 @@ export function EstimateEditor({
     return false;
   }
 
+  async function addPhotos(files: FileList) {
+    const room = AI_MAX_PHOTOS - photos.length;
+    const picked = Array.from(files).slice(0, Math.max(0, room));
+    const converted = await Promise.all(picked.map(fileToEditorPhoto));
+    const good = converted.filter((p): p is EditorPhoto => p !== null);
+    if (good.length < picked.length) toast('Some photos couldn’t be read.', 'error');
+    if (good.length > 0) setPhotos((prev) => [...prev, ...good]);
+  }
+
   async function buildLineItems() {
     setAiLoading(true);
     setAiError(null);
+    setTierOptions(null);
     try {
       const res = await fetch('/api/ai/generate', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ jobDescription }),
+        body: JSON.stringify({
+          jobDescription,
+          photos: photoPayload(photos),
+          tiers: tiersMode,
+        }),
       });
       const json = await res.json();
       if (!res.ok) {
         setAiError(json.error ?? "couldn't read that — try rephrasing the job");
         return;
       }
-      const data = json as GeneratedEstimate;
-      setScope(data.scopeOfWork ?? '');
-      setAssumptions(data.assumptions ?? []);
-      setRows(
-        (data.lineItems ?? []).map((li) => ({
-          key: Math.random().toString(36).slice(2),
-          category: li.category,
-          description: li.description,
-          quantity: String(li.quantity),
-          unit: li.unit,
-          unitPrice: String(li.unitPrice),
-        })),
-      );
-      toast('Line items ready.');
+      if (tiersMode) {
+        const data = json as GeneratedTiers;
+        setTierOptions(data.tiers ?? []);
+        toast('Three options ready — pick one.');
+      } else {
+        const data = json as GeneratedEstimate;
+        setScope(data.scopeOfWork ?? '');
+        setAssumptions(data.assumptions ?? []);
+        setRows(rowsFromGenerated(data.lineItems ?? []));
+        toast('Line items ready.');
+      }
     } catch {
       setAiError('Something went wrong. Try again.');
     } finally {
@@ -162,12 +203,20 @@ export function EstimateEditor({
     }
   }
 
+  function applyTier(tier: GeneratedTier) {
+    setScope(tier.scopeOfWork ?? '');
+    setAssumptions(tier.assumptions ?? []);
+    setRows(rowsFromGenerated(tier.lineItems ?? []));
+    setTierOptions(null);
+    toast(`Loaded the “${tier.name}” option.`);
+  }
+
   async function onDuplicate() {
     await duplicateEstimate(estimate.id);
   }
 
   async function onDelete() {
-    if (window.confirm('Delete this estimate? This can’t be undone.')) {
+    if (window.confirm(`Delete this ${invoice ? 'invoice' : 'estimate'}? This can’t be undone.`)) {
       await deleteEstimate(estimate.id);
     }
   }
@@ -176,11 +225,11 @@ export function EstimateEditor({
     <div className="pb-28">
       <div className="mb-4 flex items-center justify-between">
         <Link
-          href="/estimates"
+          href={invoice ? '/invoices' : '/estimates'}
           className="inline-flex items-center gap-1.5 text-sm font-medium text-mist-soft transition hover:text-mist"
         >
           <ArrowLeft className="h-4 w-4" />
-          Estimates
+          {invoice ? 'Invoices' : 'Estimates'}
         </Link>
         <div className="flex gap-1">
           <Button variant="ghost" size="sm" onClick={onDuplicate}>
@@ -195,6 +244,32 @@ export function EstimateEditor({
       </div>
 
       <div className="space-y-5">
+        {/* customer response — the e-sign record */}
+        {!invoice && estimate.status === 'accepted' && estimate.signed_name ? (
+          <Card className="border-emerald-500/25 bg-emerald-500/10 p-5">
+            <p className="flex items-center gap-2 font-semibold text-emerald-400">
+              <CheckCircle2 className="h-[18px] w-[18px]" />
+              Accepted by {estimate.signed_name}
+            </p>
+            {estimate.accepted_at ? (
+              <p className="mt-1 text-sm text-mist-soft">
+                Signed electronically on {shortDate(estimate.accepted_at)}.
+              </p>
+            ) : null}
+          </Card>
+        ) : null}
+        {!invoice && estimate.status === 'declined' ? (
+          <Card className="border-red-500/25 bg-red-500/10 p-5">
+            <p className="flex items-center gap-2 font-semibold text-red-400">
+              <XCircle className="h-[18px] w-[18px]" />
+              Declined{estimate.declined_at ? ` on ${shortDate(estimate.declined_at)}` : ''}
+            </p>
+            {estimate.decline_reason ? (
+              <p className="mt-1 text-sm text-mist-soft">“{estimate.decline_reason}”</p>
+            ) : null}
+          </Card>
+        ) : null}
+
         {/* customer */}
         <Card className="p-5">
           <SectionTitle icon={User}>Customer</SectionTitle>
@@ -214,17 +289,81 @@ export function EstimateEditor({
           </div>
         </Card>
 
-        {/* job description → AI */}
-        <Card className="p-5">
-          <SectionTitle icon={Wand2}>The job</SectionTitle>
-          <JobDescriptionBox
-            value={jobDescription}
-            onChange={setJobDescription}
-            onBuild={buildLineItems}
-            loading={aiLoading}
-            error={aiError}
-          />
-        </Card>
+        {/* invoice details */}
+        {invoice ? (
+          <Card className="p-5">
+            <SectionTitle icon={CalendarDays}>Invoice details</SectionTitle>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Due date">
+                <Input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+              </Field>
+              {estimate.paid_at ? (
+                <div className="self-end pb-2 text-sm text-emerald-400">
+                  Paid {shortDate(estimate.paid_at)}
+                </div>
+              ) : null}
+            </div>
+          </Card>
+        ) : null}
+
+        {/* job description → AI (estimates only) */}
+        {!invoice ? (
+          <Card className="p-5">
+            <SectionTitle icon={Wand2}>The job</SectionTitle>
+            <JobDescriptionBox
+              value={jobDescription}
+              onChange={setJobDescription}
+              onBuild={buildLineItems}
+              loading={aiLoading}
+              error={aiError}
+              photos={photos}
+              onAddPhotos={addPhotos}
+              onRemovePhoto={(key) => setPhotos((prev) => prev.filter((p) => p.key !== key))}
+              tiersMode={tiersMode}
+              onTiersMode={setTiersMode}
+            />
+          </Card>
+        ) : null}
+
+        {/* good / better / best picker */}
+        {tierOptions && tierOptions.length > 0 ? (
+          <Card className="border-accent/40 bg-accent/10 p-5">
+            <SectionTitle icon={Layers3} accent>
+              Pick an option
+            </SectionTitle>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {tierOptions.map((tier) => {
+                const t = computeTotals(
+                  tier.lineItems.map((li) => ({ quantity: li.quantity, unitPrice: li.unitPrice })),
+                  Number(taxRate) || 0,
+                  0,
+                );
+                return (
+                  <div
+                    key={tier.name}
+                    className="flex flex-col rounded-xl border border-hairline bg-night-850 p-4"
+                  >
+                    <p className="font-bold text-mist">{tier.name}</p>
+                    <p className="mt-1 text-xl font-bold text-accent-bright">{money(t.total)}</p>
+                    <p className="mb-3 mt-1 flex-1 text-sm text-mist-soft">
+                      {tier.lineItems.length} line {tier.lineItems.length === 1 ? 'item' : 'items'}
+                    </p>
+                    <Button type="button" size="sm" onClick={() => applyTier(tier)}>
+                      Use this option
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+            <button
+              type="button"
+              onClick={() => setTierOptions(null)}
+              className="mt-3 text-sm text-mist-mute underline-offset-2 hover:underline"
+            >
+              Dismiss
+            </button>
+          </Card>
+        ) : null}
 
         {/* scope of work */}
         <Card className="p-5">
@@ -288,10 +427,9 @@ export function EstimateEditor({
         {/* share */}
         <Card className="p-5">
           <ShareActions
-            estimateId={estimate.id}
-            publicToken={estimate.public_token}
-            status={estimate.status}
+            estimate={estimate}
             hasCustomerEmail={Boolean(customerEmail.trim())}
+            hasReviewLink={Boolean(business.review_link)}
             saveNow={saveNow}
           />
         </Card>
