@@ -40,7 +40,8 @@ steps (Supabase / Stripe / Vercel) click-by-click, and paste full SQL contents
 Env vars beyond the obvious (see `.env.example`): `CRON_SECRET` (cron auth),
 `STRIPE_CONNECT_WEBHOOK_SECRET` (Connect webhook — configured in Stripe to
 listen on **connected accounts** for `checkout.session.completed` +
-`account.updated`).
+`account.updated`), `OWNER_EMAILS` (comma-separated admin emails with
+unlimited estimates — `isOwnerEmail` in `src/lib/config.ts`).
 
 ## Architecture rules — do not regress these
 
