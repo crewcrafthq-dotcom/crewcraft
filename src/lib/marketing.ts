@@ -10,7 +10,6 @@ export interface TradeContent {
   job: string; // plain-English job a contractor would type
   lines: PreviewLine[];
   total: string;
-  testimonial: { quote: string; name: string; trade: string; city: string };
 }
 
 /** Per-trade example used by the hero, trade selector, and output showcase. */
@@ -23,12 +22,6 @@ export const TRADE_CONTENT: Record<Trade, TradeContent> = {
       { category: 'materials', desc: 'Evaporator coil', amount: '$420.00' },
     ],
     total: '$2,910.00',
-    testimonial: {
-      quote: 'I quote jobs from the driveway now. Used to be an hour of typing after dinner.',
-      name: 'Mike R.',
-      trade: 'HVAC',
-      city: 'Tulsa',
-    },
   },
   plumbing: {
     job: 'Replace a 40-gallon gas water heater in the garage, haul off the old one.',
@@ -38,12 +31,6 @@ export const TRADE_CONTENT: Record<Trade, TradeContent> = {
       { category: 'materials', desc: 'Fittings & gas connector', amount: '$85.00' },
     ],
     total: '$1,125.00',
-    testimonial: {
-      quote: 'Customers say it looks like I hired a designer. I typed three sentences.',
-      name: 'Dave P.',
-      trade: 'Plumbing',
-      city: 'Akron',
-    },
   },
   electrical: {
     job: 'Swap a 100A panel for 200A service, bring grounding up to code, coordinate the permit.',
@@ -53,12 +40,6 @@ export const TRADE_CONTENT: Record<Trade, TradeContent> = {
       { category: 'materials', desc: 'Breakers & grounding kit', amount: '$180.00' },
     ],
     total: '$1,480.00',
-    testimonial: {
-      quote: 'Sent the estimate before I left the driveway. Closed it that night.',
-      name: 'Carlos M.',
-      trade: 'Electrical',
-      city: 'Fresno',
-    },
   },
   roofing: {
     job: 'Tear off and replace 22 squares of architectural shingles, new flashing and 2 sheets of decking.',
@@ -68,12 +49,6 @@ export const TRADE_CONTENT: Record<Trade, TradeContent> = {
       { category: 'materials', desc: 'Flashing & decking', amount: '$360.00' },
     ],
     total: '$6,960.00',
-    testimonial: {
-      quote: 'Even just the estimates gave me my weekends back. Three sentences and it’s done.',
-      name: 'Tanya W.',
-      trade: 'Roofing',
-      city: 'Raleigh',
-    },
   },
 };
 
