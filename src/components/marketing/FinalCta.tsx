@@ -14,7 +14,6 @@ export function FinalCta() {
           <StartFreeButton />
         </div>
         <TrustLine className="mt-4" />
-        <p className="mt-6 text-sm font-semibold text-mist-mute">From the Crewcraft crew.</p>
       </div>
     </section>
   );

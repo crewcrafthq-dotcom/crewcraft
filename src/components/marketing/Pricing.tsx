@@ -3,12 +3,17 @@ import { Check } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { StartFreeButton } from './StartFree';
 
-// The three real plans — mapped 1:1 to the Stripe prices and the billing page.
+// Every plan is the same product — only the billing changes. One shared
+// feature strip (below the cards) instead of the same list pasted three times.
 const FEATURES = [
   'Unlimited estimates',
-  'AI labor & material line items',
-  'Branded PDF + shareable link',
-  'Email + open tracking',
+  'AI line items from text or photos',
+  'Good / Better / Best options',
+  'Customer e-sign on every estimate',
+  'Invoices + auto-invoice on acceptance',
+  'Online payments via your Stripe',
+  'Auto follow-ups & overdue chasing',
+  'Customers, analytics & price book',
 ];
 
 const PLANS = [
@@ -81,18 +86,7 @@ export function Pricing() {
               <span className="text-4xl font-extrabold tracking-tight text-mist">{p.price}</span>
               <span className="text-sm text-mist-mute"> {p.unit}</span>
             </p>
-            <p className="mt-2 min-h-[2.75rem] text-sm text-mist-soft">{p.note}</p>
-
-            <ul className="mt-5 flex-1 space-y-2.5">
-              {FEATURES.map((f) => (
-                <li key={f} className="flex items-center gap-2.5 text-sm text-mist-soft">
-                  <span className="grid h-5 w-5 flex-none place-items-center rounded-full bg-accent/10 text-accent-bright">
-                    <Check className="h-3.5 w-3.5" />
-                  </span>
-                  {f}
-                </li>
-              ))}
-            </ul>
+            <p className="mt-2 min-h-[2.75rem] flex-1 text-sm text-mist-soft">{p.note}</p>
 
             <StartFreeButton
               tone={p.featured ? 'accent' : 'outline'}
@@ -103,6 +97,23 @@ export function Pricing() {
             />
           </div>
         ))}
+      </div>
+
+      {/* one product, one feature list — every plan gets all of it */}
+      <div className="mt-8 rounded-2xl border border-hairline bg-night-800 p-6 shadow-card sm:p-7">
+        <p className="text-sm font-bold uppercase tracking-wide text-mist-mute">
+          Every plan includes all of it
+        </p>
+        <ul className="mt-4 grid gap-x-6 gap-y-2.5 sm:grid-cols-2 lg:grid-cols-4">
+          {FEATURES.map((f) => (
+            <li key={f} className="flex items-center gap-2.5 text-sm text-mist-soft">
+              <span className="grid h-5 w-5 flex-none place-items-center rounded-full bg-accent/10 text-accent-bright">
+                <Check className="h-3.5 w-3.5" />
+              </span>
+              {f}
+            </li>
+          ))}
+        </ul>
       </div>
 
       <p className="mt-6 text-center text-sm text-mist-mute">
