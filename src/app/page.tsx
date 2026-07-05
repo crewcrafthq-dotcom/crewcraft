@@ -10,6 +10,7 @@ import { OutputShowcase } from '@/components/marketing/OutputShowcase';
 import { Pain } from '@/components/marketing/Pain';
 import { Pricing } from '@/components/marketing/Pricing';
 import { Reveal } from '@/components/marketing/Reveal';
+import { ScrollDepth } from '@/components/marketing/ScrollDepth';
 import { SiteFooter } from '@/components/marketing/SiteFooter';
 import { SocialProof } from '@/components/marketing/SocialProof';
 import { Stats } from '@/components/marketing/Stats';
@@ -77,6 +78,7 @@ export default async function LandingPage() {
       </div>
       <DemoModal />
       <StickyCtaBar />
+      <ScrollDepth />
     </>
   );
 }
