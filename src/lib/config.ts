@@ -49,3 +49,18 @@ export function appUrl(): string {
 export function isPaidStatus(status: string | null | undefined): boolean {
   return status === 'active' || status === 'trialing';
 }
+
+/**
+ * Owner/admin allowlist: comma-separated emails in the OWNER_EMAILS env var
+ * get unlimited estimates without a subscription (SERVER ONLY). Survives
+ * Stripe webhook syncs because it never touches the plan columns.
+ */
+export function isOwnerEmail(email: string | null | undefined): boolean {
+  const raw = process.env.OWNER_EMAILS ?? '';
+  if (!email || !raw) return false;
+  return raw
+    .split(',')
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean)
+    .includes(email.toLowerCase());
+}

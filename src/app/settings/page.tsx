@@ -7,7 +7,7 @@ import { BusinessForm } from '@/components/BusinessForm';
 import { Card } from '@/components/ui/Card';
 import { buttonClasses } from '@/components/ui/Button';
 import { getSession } from '@/lib/auth';
-import { isPaidStatus } from '@/lib/config';
+import { isOwnerEmail, isPaidStatus } from '@/lib/config';
 import { updateBusinessAction } from './actions';
 
 export const dynamic = 'force-dynamic';
@@ -17,6 +17,7 @@ export default async function SettingsPage() {
   if (!user) redirect('/login');
   if (!business) redirect('/onboarding');
 
+  const owner = isOwnerEmail(user.email);
   const paid = isPaidStatus(business.subscription_status);
 
   return (
@@ -30,21 +31,29 @@ export default async function SettingsPage() {
             <span
               className={
                 'grid h-10 w-10 flex-none place-items-center rounded-xl ' +
-                (paid ? 'bg-accent text-accent-fg' : 'bg-night-700 text-mist-soft')
+                (paid || owner ? 'bg-accent text-accent-fg' : 'bg-night-700 text-mist-soft')
               }
             >
               <CreditCard className="h-5 w-5" />
             </span>
             <div>
-              <h2 className="font-semibold text-mist">{paid ? 'Pro plan' : 'Free plan'}</h2>
+              <h2 className="font-semibold text-mist">
+                {owner ? 'Owner account' : paid ? 'Pro plan' : 'Free plan'}
+              </h2>
               <p className="text-sm text-mist-soft">
-                {paid ? 'Unlimited estimates.' : '3 estimates total, then upgrade.'}
+                {owner
+                  ? 'Unlimited estimates — no subscription needed.'
+                  : paid
+                    ? 'Unlimited estimates.'
+                    : '3 estimates total, then upgrade.'}
               </p>
             </div>
           </div>
-          <Link href="/billing" className={buttonClasses(paid ? 'secondary' : 'primary', 'sm')}>
-            {paid ? 'Manage billing' : 'Go Pro'}
-          </Link>
+          {!owner ? (
+            <Link href="/billing" className={buttonClasses(paid ? 'secondary' : 'primary', 'sm')}>
+              {paid ? 'Manage billing' : 'Go Pro'}
+            </Link>
+          ) : null}
         </div>
       </Card>
 
