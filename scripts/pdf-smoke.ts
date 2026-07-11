@@ -6,7 +6,9 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { renderEstimatePdf } from '@/lib/pdf/render';
+import { renderEstimatePdfSync } from '@/lib/pdf/render';
+import { PDF_STRINGS } from '@/lib/pdf/i18n';
+import { localeFor } from '@/lib/pdf/languages';
 import type { Business, EstimateWithItems } from '@/lib/types';
 
 const business: Business = {
@@ -57,6 +59,8 @@ const estimate: EstimateWithItems = {
   last_reminder_at: null,
   reminder_count: 0,
   review_requested_at: null,
+  pdf_language: 'en',
+  pdf_translation: null,
   scope_of_work:
     'Replace the main electrical panel with a 200-amp service and bring the grounding up to code. Includes permit coordination and a final inspection walkthrough.',
   subtotal: 0,
@@ -95,17 +99,22 @@ async function main() {
   const outDir = path.join(process.cwd(), 'scratch');
   mkdirSync(outDir, { recursive: true });
 
-  for (const [name, doc] of [
-    ['estimate-smoke.pdf', estimate],
-    ['invoice-smoke.pdf', invoice],
-  ] as const) {
-    const pdf = await renderEstimatePdf(business, doc);
+  // English estimate + invoice, plus a Romanian estimate to eyeball localized
+  // labels and diacritic glyphs (ș ț ă â î) — labels only, no AI needed.
+  const jobs: Array<[string, EstimateWithItems, string]> = [
+    ['estimate-smoke.pdf', estimate, 'en'],
+    ['invoice-smoke.pdf', invoice, 'en'],
+    ['estimate-ro-smoke.pdf', estimate, 'ro'],
+  ];
+
+  for (const [name, doc, lang] of jobs) {
+    const pdf = await renderEstimatePdfSync(business, doc, PDF_STRINGS[lang], localeFor(lang));
     if (!pdf || pdf.length < 1000) {
       throw new Error(`PDF looks empty (${pdf?.length ?? 0} bytes)`);
     }
     const outPath = path.join(outDir, name);
     writeFileSync(outPath, pdf);
-    console.log(`✓ PDF rendered: ${pdf.length} bytes → ${outPath}`);
+    console.log(`✓ PDF rendered (${lang}): ${pdf.length} bytes → ${outPath}`);
   }
 }
 

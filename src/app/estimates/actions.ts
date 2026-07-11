@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { INVOICE_DUE_DAYS } from '@/lib/config';
 import { createClient } from '@/lib/supabase/server';
 import { computeTotals, lineTotal } from '@/lib/estimates';
+import { normalizeLang } from '@/lib/pdf/languages';
 import type { EstimateStatus, LineItemCategory } from '@/lib/types';
 
 const CATEGORIES: LineItemCategory[] = ['labor', 'materials', 'other'];
@@ -29,6 +30,8 @@ export interface SaveEstimatePayload {
   notes: string;
   /** Invoices only — ISO date (yyyy-mm-dd) or empty. */
   due_date?: string;
+  /** Language code for the generated PDF (from PDF_LANGUAGES). */
+  pdf_language?: string;
   line_items: SaveLineItem[];
 }
 
@@ -96,6 +99,7 @@ export async function saveEstimate(
       total: totals.total,
       deposit: totals.depositDue,
       due_date: isoDate(payload.due_date),
+      pdf_language: normalizeLang(payload.pdf_language),
     })
     .eq('id', id)
     .eq('user_id', user.id);
@@ -210,6 +214,7 @@ export async function duplicateEstimate(id: string) {
       deposit: src.deposit,
       total: src.total,
       notes: src.notes,
+      pdf_language: src.pdf_language ?? 'en',
       due_date: src.kind === 'invoice' ? defaultDueDate() : null,
     })
     .select('id')
@@ -259,6 +264,7 @@ export async function convertToInvoice(id: string) {
       deposit: src.deposit,
       total: src.total,
       notes: src.notes,
+      pdf_language: src.pdf_language ?? 'en',
       due_date: defaultDueDate(),
       source_estimate_id: src.id,
     })

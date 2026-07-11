@@ -140,6 +140,7 @@ export async function createInvoiceFromEstimate(
       deposit: estimate.deposit,
       total: estimate.total,
       notes: estimate.notes,
+      pdf_language: estimate.pdf_language ?? 'en',
       due_date: due.toISOString().slice(0, 10),
       source_estimate_id: estimate.id,
     })

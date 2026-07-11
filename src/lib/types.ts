@@ -92,8 +92,20 @@ export interface Estimate {
   reminder_count: number;
   // review requests
   review_requested_at: string | null;
+  // multilingual PDF
+  pdf_language: string; // BCP-47-ish code from PDF_LANGUAGES; 'en' default
+  pdf_translation: PdfTranslation | null; // cached AI translation of typed content
   created_at: string;
   updated_at: string;
+}
+
+/** Cached translation of an estimate's free-text content for one language. */
+export interface PdfTranslation {
+  lang: string;
+  hash: string; // fingerprint of the source content; stale cache is ignored
+  scope: string | null;
+  notes: string | null;
+  items: Record<string, string>; // line_item id → translated description
 }
 
 export interface EstimateWithItems extends Estimate {

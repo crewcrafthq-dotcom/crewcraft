@@ -9,10 +9,11 @@ import {
 } from '@react-pdf/renderer';
 
 import { ESTIMATE_VALID_DAYS } from '@/lib/config';
-import { computeTotals, docNumber, groupByCategory, CATEGORY_LABELS } from '@/lib/estimates';
-import { money, shortDate } from '@/lib/format';
+import { computeTotals, docNumber, groupByCategory } from '@/lib/estimates';
+import { money } from '@/lib/format';
 import { getTheme } from '@/lib/trades';
-import type { Business, EstimateWithItems } from '@/lib/types';
+import type { Business, EstimateWithItems, LineItemCategory } from '@/lib/types';
+import { PDF_STRINGS, type PdfStrings } from './i18n';
 
 // Clean white, slate-neutral system. The trade accent is used sparingly:
 // the top rule, the ESTIMATE label, section headers, and the totals bar.
@@ -133,9 +134,13 @@ const styles = StyleSheet.create({
 interface Props {
   business: Business;
   estimate: EstimateWithItems;
+  /** Localized labels; defaults to English so callers can omit it. */
+  strings?: PdfStrings;
+  /** BCP-47 locale for date formatting. */
+  locale?: string;
 }
 
-export function EstimatePdf({ business, estimate }: Props) {
+export function EstimatePdf({ business, estimate, strings = PDF_STRINGS.en, locale = 'en-US' }: Props) {
   const theme = getTheme(business.trade);
   const groups = groupByCategory(estimate.line_items);
   const totals = computeTotals(
@@ -144,9 +149,23 @@ export function EstimatePdf({ business, estimate }: Props) {
     estimate.deposit,
   );
 
+  const categoryLabel: Record<LineItemCategory, string> = {
+    labor: strings.labor,
+    materials: strings.materials,
+    other: strings.other,
+  };
+  const fmtDate = (v: string | Date) => localizedDate(v, locale);
+  const up = (s: string) => {
+    try {
+      return s.toLocaleUpperCase(locale);
+    } catch {
+      return s.toUpperCase();
+    }
+  };
+
   const contact = [business.phone, business.email].filter(Boolean).join('   ·   ');
   const invoice = estimate.kind === 'invoice';
-  const docWord = invoice ? 'INVOICE' : 'ESTIMATE';
+  const docWord = up(invoice ? strings.invoice : strings.estimate);
   const number = docNumber(estimate.kind, estimate.id);
   const paid = invoice && estimate.status === 'paid';
 
@@ -169,28 +188,28 @@ export function EstimatePdf({ business, estimate }: Props) {
           <View style={styles.docCol}>
             <Text style={[styles.docWord, { color: theme.accentDeep }]}>{docWord}</Text>
             <View style={styles.metaRow}>
-              <Text style={styles.metaLabel}>Date</Text>
-              <Text style={styles.metaVal}>{shortDate(estimate.created_at)}</Text>
+              <Text style={styles.metaLabel}>{strings.date}</Text>
+              <Text style={styles.metaVal}>{fmtDate(estimate.created_at)}</Text>
             </View>
             <View style={styles.metaRow}>
-              <Text style={styles.metaLabel}>Number</Text>
+              <Text style={styles.metaLabel}>{strings.number}</Text>
               <Text style={styles.metaVal}>{number}</Text>
             </View>
             {invoice && estimate.due_date ? (
               <View style={styles.metaRow}>
-                <Text style={styles.metaLabel}>Due</Text>
-                <Text style={styles.metaVal}>{shortDate(estimate.due_date)}</Text>
+                <Text style={styles.metaLabel}>{strings.due}</Text>
+                <Text style={styles.metaVal}>{fmtDate(estimate.due_date)}</Text>
               </View>
             ) : null}
             {!invoice && !['accepted', 'declined'].includes(estimate.status) ? (
               <View style={styles.metaRow}>
-                <Text style={styles.metaLabel}>Valid until</Text>
-                <Text style={styles.metaVal}>{shortDate(validUntil(estimate.created_at))}</Text>
+                <Text style={styles.metaLabel}>{strings.validUntil}</Text>
+                <Text style={styles.metaVal}>{fmtDate(validUntil(estimate.created_at))}</Text>
               </View>
             ) : null}
             {paid ? (
               <View style={styles.paidBadge}>
-                <Text style={styles.paidText}>PAID</Text>
+                <Text style={styles.paidText}>{up(strings.paid)}</Text>
               </View>
             ) : null}
           </View>
@@ -200,8 +219,8 @@ export function EstimatePdf({ business, estimate }: Props) {
 
         {/* customer */}
         <View style={styles.block}>
-          <Text style={styles.eyebrow}>PREPARED FOR</Text>
-          <Text style={styles.custName}>{estimate.customer_name || 'Customer'}</Text>
+          <Text style={styles.eyebrow}>{up(strings.preparedFor)}</Text>
+          <Text style={styles.custName}>{estimate.customer_name || strings.customer}</Text>
           {estimate.customer_address ? <Text style={styles.custLine}>{estimate.customer_address}</Text> : null}
           {estimate.customer_phone ? <Text style={styles.custLine}>{estimate.customer_phone}</Text> : null}
           {estimate.customer_email ? <Text style={styles.custLine}>{estimate.customer_email}</Text> : null}
@@ -210,7 +229,7 @@ export function EstimatePdf({ business, estimate }: Props) {
         {/* scope */}
         {estimate.scope_of_work ? (
           <View style={styles.block}>
-            <Text style={styles.eyebrow}>SCOPE OF WORK</Text>
+            <Text style={styles.eyebrow}>{up(strings.scopeOfWork)}</Text>
             <Text style={styles.scope}>{estimate.scope_of_work}</Text>
           </View>
         ) : null}
@@ -218,17 +237,17 @@ export function EstimatePdf({ business, estimate }: Props) {
         {/* line items */}
         <View>
           <View style={styles.thead}>
-            <Text style={[styles.th, styles.cDesc]}>Description</Text>
-            <Text style={[styles.th, styles.cQty]}>Qty</Text>
-            <Text style={[styles.th, styles.cUnit]}>Unit</Text>
-            <Text style={[styles.th, styles.cRate]}>Rate</Text>
-            <Text style={[styles.th, styles.cAmt]}>Amount</Text>
+            <Text style={[styles.th, styles.cDesc]}>{strings.description}</Text>
+            <Text style={[styles.th, styles.cQty]}>{strings.qty}</Text>
+            <Text style={[styles.th, styles.cUnit]}>{strings.unit}</Text>
+            <Text style={[styles.th, styles.cRate]}>{strings.rate}</Text>
+            <Text style={[styles.th, styles.cAmt]}>{strings.amount}</Text>
           </View>
 
           {groups.map((group) => (
             <View key={group.category} wrap={false}>
               <Text style={[styles.groupLabel, { color: theme.accentDeep }]}>
-                {CATEGORY_LABELS[group.category]}
+                {categoryLabel[group.category]}
               </Text>
               {group.items.map((item) => (
                 <View key={item.id} style={styles.row}>
@@ -247,25 +266,25 @@ export function EstimatePdf({ business, estimate }: Props) {
         <View style={styles.totalsWrap}>
           <View style={styles.totalsBox}>
             <View style={styles.tRow}>
-              <Text style={styles.tLabel}>Subtotal</Text>
+              <Text style={styles.tLabel}>{strings.subtotal}</Text>
               <Text style={styles.tVal}>{money(totals.subtotal)}</Text>
             </View>
             <View style={styles.tRow}>
-              <Text style={styles.tLabel}>Tax ({trimNum(estimate.tax_rate)}%)</Text>
+              <Text style={styles.tLabel}>{strings.tax} ({trimNum(estimate.tax_rate)}%)</Text>
               <Text style={styles.tVal}>{money(totals.taxAmount)}</Text>
             </View>
             <View style={[styles.grand, { backgroundColor: theme.accent }]}>
-              <Text style={[styles.grandLabel, { color: theme.accentFg }]}>Total</Text>
+              <Text style={[styles.grandLabel, { color: theme.accentFg }]}>{strings.total}</Text>
               <Text style={[styles.grandVal, { color: theme.accentFg }]}>{money(totals.total)}</Text>
             </View>
             {estimate.deposit > 0 ? (
               <>
                 <View style={styles.depRow}>
-                  <Text style={styles.tLabel}>{invoice ? 'Deposit received' : 'Deposit due'}</Text>
+                  <Text style={styles.tLabel}>{invoice ? strings.depositReceived : strings.depositDue}</Text>
                   <Text style={[styles.tVal, { color: theme.accentDeep }]}>{money(totals.depositDue)}</Text>
                 </View>
                 <View style={styles.depRow}>
-                  <Text style={styles.tLabel}>Balance due</Text>
+                  <Text style={styles.tLabel}>{strings.balanceDue}</Text>
                   <Text style={styles.tVal}>{money(totals.balanceDue)}</Text>
                 </View>
               </>
@@ -276,10 +295,10 @@ export function EstimatePdf({ business, estimate }: Props) {
         {/* customer acceptance (e-sign) */}
         {!invoice && estimate.status === 'accepted' && estimate.signed_name ? (
           <View style={styles.signBlock}>
-            <Text style={styles.eyebrow}>ACCEPTED BY</Text>
+            <Text style={styles.eyebrow}>{up(strings.acceptedBy)}</Text>
             <Text style={styles.signName}>{estimate.signed_name}</Text>
             {estimate.accepted_at ? (
-              <Text style={styles.termsText}>Signed electronically on {shortDate(estimate.accepted_at)}</Text>
+              <Text style={styles.termsText}>{strings.signedOn} {fmtDate(estimate.accepted_at)}</Text>
             ) : null}
           </View>
         ) : null}
@@ -287,7 +306,7 @@ export function EstimatePdf({ business, estimate }: Props) {
         {/* terms */}
         {estimate.notes ? (
           <View style={styles.terms}>
-            <Text style={styles.eyebrow}>NOTES & TERMS</Text>
+            <Text style={styles.eyebrow}>{up(strings.notesTerms)}</Text>
             <Text style={styles.termsText}>{estimate.notes}</Text>
           </View>
         ) : null}
@@ -295,7 +314,7 @@ export function EstimatePdf({ business, estimate }: Props) {
         {/* footer */}
         <View style={styles.footer} fixed>
           <Text style={styles.footText}>
-            {business.license ? `License ${business.license}` : business.name}
+            {business.license ? `${strings.license} ${business.license}` : business.name}
           </Text>
           <Text style={styles.footText}>{contact}</Text>
         </View>
@@ -314,4 +333,16 @@ function validUntil(createdAt: string): Date {
   const d = new Date(createdAt);
   d.setDate(d.getDate() + ESTIMATE_VALID_DAYS);
   return d;
+}
+
+/** Date in the target locale (e.g. "3 iul. 2026"), falling back to en-US. */
+function localizedDate(value: string | Date, locale: string): string {
+  const d = typeof value === 'string' ? new Date(value) : value;
+  if (Number.isNaN(d.getTime())) return '';
+  const opts: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', year: 'numeric' };
+  try {
+    return new Intl.DateTimeFormat(locale, opts).format(d);
+  } catch {
+    return new Intl.DateTimeFormat('en-US', opts).format(d);
+  }
 }

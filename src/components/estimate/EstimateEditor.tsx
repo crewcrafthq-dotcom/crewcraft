@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   ClipboardList,
   Copy,
+  Languages,
   Layers3,
   ListTree,
   Save,
@@ -21,10 +22,11 @@ import {
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { Input, Label, Textarea } from '@/components/ui/Field';
+import { Input, Label, Select, Textarea } from '@/components/ui/Field';
 import { toast } from '@/components/ui/toast';
 import { computeTotals } from '@/lib/estimates';
 import { money, shortDate } from '@/lib/format';
+import { PDF_LANGUAGES, normalizeLang } from '@/lib/pdf/languages';
 import type {
   Business,
   EstimateWithItems,
@@ -95,6 +97,7 @@ export function EstimateEditor({
   const [deposit, setDeposit] = useState(estimate.deposit ? String(estimate.deposit) : '');
   const [notes, setNotes] = useState(estimate.notes ?? '');
   const [dueDate, setDueDate] = useState(estimate.due_date ?? '');
+  const [pdfLanguage, setPdfLanguage] = useState(normalizeLang(estimate.pdf_language));
 
   const [photos, setPhotos] = useState<EditorPhoto[]>([]);
   const [tiersMode, setTiersMode] = useState(false);
@@ -130,6 +133,7 @@ export function EstimateEditor({
       deposit: Number(deposit) || 0,
       notes,
       due_date: invoice ? dueDate : '',
+      pdf_language: pdfLanguage,
       line_items: rows.map((r) => ({
         category: r.category,
         description: r.description,
@@ -427,6 +431,24 @@ export function EstimateEditor({
             rows={3}
             placeholder="Payment terms, warranty, anything the customer should know."
           />
+        </Card>
+
+        {/* PDF language */}
+        <Card className="p-5">
+          <SectionTitle icon={Languages}>PDF language</SectionTitle>
+          <div className="grid gap-2 sm:max-w-sm">
+            <Select value={pdfLanguage} onChange={(e) => setPdfLanguage(e.target.value)}>
+              {PDF_LANGUAGES.map((l) => (
+                <option key={l.code} value={l.code}>
+                  {l.label}
+                </option>
+              ))}
+            </Select>
+            <p className="text-sm text-mist-mute">
+              The {invoice ? 'invoice' : 'estimate'} PDF is generated in this language — labels and
+              your typed scope, line items, and notes. Prices stay as entered.
+            </p>
+          </div>
         </Card>
 
         {/* share */}
