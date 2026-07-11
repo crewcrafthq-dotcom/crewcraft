@@ -3,6 +3,7 @@
 import { useEffect, useSyncExternalStore } from 'react';
 import { PlayCircle, X } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { trackEvent } from '@/lib/analytics';
 
 // Tiny module store so any trigger (hero button, footer link) can open the one
 // modal that's mounted at the page root. Same pattern as the toast store.
@@ -18,6 +19,8 @@ function subscribe(l: () => void) {
 export function openDemo() {
   open = true;
   emit();
+  // demo opens are the strongest engagement signal on the page
+  trackEvent('watch_demo');
 }
 function closeDemo() {
   open = false;

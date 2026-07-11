@@ -10,11 +10,13 @@ import { OutputShowcase } from '@/components/marketing/OutputShowcase';
 import { Pain } from '@/components/marketing/Pain';
 import { Pricing } from '@/components/marketing/Pricing';
 import { Reveal } from '@/components/marketing/Reveal';
+import { ScrollDepth } from '@/components/marketing/ScrollDepth';
 import { SiteFooter } from '@/components/marketing/SiteFooter';
 import { SocialProof } from '@/components/marketing/SocialProof';
 import { Stats } from '@/components/marketing/Stats';
 import { StickyCtaBar } from '@/components/marketing/StickyCtaBar';
 import { TradeSelector } from '@/components/marketing/TradeSelector';
+import { TryItDemo } from '@/components/marketing/TryItDemo';
 import { WhyToolbelt } from '@/components/marketing/WhyToolbelt';
 import { getSession } from '@/lib/auth';
 
@@ -63,6 +65,7 @@ export default async function LandingPage() {
       <div className="overflow-x-hidden pb-20 lg:pb-0">
         <Hero />
         <Stats />
+        <Reveal><TryItDemo /></Reveal>
         <Reveal><Pain /></Reveal>
         <Reveal><HowItWorks /></Reveal>
         <WhyToolbelt />
@@ -77,6 +80,7 @@ export default async function LandingPage() {
       </div>
       <DemoModal />
       <StickyCtaBar />
+      <ScrollDepth />
     </>
   );
 }

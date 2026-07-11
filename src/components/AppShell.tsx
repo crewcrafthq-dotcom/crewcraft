@@ -1,4 +1,5 @@
 import { AppHeader } from '@/components/AppHeader';
+import { InstallPrompt } from '@/components/InstallPrompt';
 import { TradeTheme } from '@/components/TradeTheme';
 import { cn } from '@/lib/cn';
 import type { Trade } from '@/lib/types';
@@ -26,6 +27,7 @@ export function AppShell({
       >
         {children}
       </main>
+      <InstallPrompt />
     </TradeTheme>
   );
 }
