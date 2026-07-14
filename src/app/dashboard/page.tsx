@@ -4,54 +4,24 @@ import {
   ArrowRight,
   BookOpen,
   CalendarClock,
-  Calculator,
   FileText,
-  Flame,
-  Package,
   PartyPopper,
   Receipt,
   TrendingUp,
   TriangleAlert,
   Users2,
-  Wrench,
 } from 'lucide-react';
 
 import { AppShell } from '@/components/AppShell';
+import { ToolIcon } from '@/components/ToolIcon';
 import { getSession } from '@/lib/auth';
 import { buildCustomers, type CustomerDoc } from '@/lib/customers';
 import { money } from '@/lib/format';
+import { liveTradeTools, TRADE_SECTIONS } from '@/lib/marketing';
+import { getTheme } from '@/lib/trades';
 import { createClient } from '@/lib/supabase/server';
-import type { Trade } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
-
-// One live trade tool per trade, next to the universal apps.
-const TRADE_APPS: Record<Trade, { name: string; desc: string; href: string; icon: typeof Wrench }> = {
-  hvac: {
-    name: 'Maintenance Plan Builder',
-    desc: 'Three ready-made maintenance agreements — pick one, brand it, send it.',
-    href: '/apps/maintenance-plan',
-    icon: Wrench,
-  },
-  plumbing: {
-    name: 'Water Heater Quote Pack',
-    desc: 'Tank vs tankless, good-better-best — three quotes, one tap each.',
-    href: '/apps/water-heater',
-    icon: Flame,
-  },
-  electrical: {
-    name: 'Load Calc Helper',
-    desc: 'Quick NEC-style service load check before you quote the panel.',
-    href: '/apps/load-calc',
-    icon: Calculator,
-  },
-  roofing: {
-    name: 'Material Order Sheet',
-    desc: 'Turn an estimate into a printable supplier order list.',
-    href: '/apps/order-sheet',
-    icon: Package,
-  },
-};
 
 export default async function DashboardPage({
   searchParams,
@@ -89,17 +59,15 @@ export default async function DashboardPage({
     .filter((i) => i.status !== 'paid')
     .reduce((s, i) => s + (i.total || 0), 0);
 
-  const tradeApp = TRADE_APPS[business.trade];
-
-  const apps = [
+  // The paperwork pipeline — every trade, every day.
+  const core = [
     {
       name: 'Estimate Builder',
-      desc: 'Turn a plain-English job (or a few photos) into a branded estimate in under a minute.',
+      desc: 'Type it, dictate it, or snap photos — a branded estimate in under a minute.',
       href: '/estimates',
       icon: FileText,
       meta: `${estimates.length} ${estimates.length === 1 ? 'estimate' : 'estimates'}`,
     },
-    { ...tradeApp, meta: `Built for ${business.trade === 'hvac' ? 'HVAC' : business.trade}` },
     {
       name: 'Invoices',
       desc: 'One tap turns an accepted estimate into an invoice. Track what’s owed and what’s paid.',
@@ -129,10 +97,12 @@ export default async function DashboardPage({
       meta: `${priceBookCount ?? 0} ${priceBookCount === 1 ? 'item' : 'items'} saved`,
     },
   ];
-  // Order sheets work for every trade; roofing already has it as its trade app.
-  if (business.trade !== 'roofing') {
-    apps.push({ ...TRADE_APPS.roofing, meta: 'Works with any estimate' });
-  }
+
+  const tradeLabel = getTheme(business.trade).label;
+  const tools = liveTradeTools();
+  const mine = tools.filter((t) => t.trade === business.trade);
+  const others = tools.filter((t) => t.trade !== business.trade);
+  const upcoming = TRADE_SECTIONS[business.trade].tools.filter((t) => t.status !== 'live');
 
   return (
     <AppShell trade={business.trade} businessName={business.name}>
@@ -150,7 +120,7 @@ export default async function DashboardPage({
 
       {searchParams.error === 'create' ? (
         <div className="mb-6 flex items-center gap-3 rounded-2xl border border-red-500/40 bg-red-500/10 p-4">
-          <TriangleAlert className="h-5 w-5 flex-none text-red-600" />
+          <TriangleAlert className="h-5 w-5 flex-none text-bad" />
           <p className="text-sm text-ink-soft">
             That estimate didn’t save — give it another try. If it keeps happening, email{' '}
             <a href="mailto:hello@crewcraftapp.com" className="font-semibold text-ink underline">
@@ -164,12 +134,15 @@ export default async function DashboardPage({
       <header className="mb-8">
         <p className="eyebrow">Your workspace</p>
         <h1 className="mt-1 text-display-sm font-bold text-ink">Welcome back, {business.name}.</h1>
-        <p className="mt-1.5 text-ink-soft">Pick a tool to get to work.</p>
+        <p className="mt-1.5 text-ink-soft">The whole belt, one screen. Pick a tool.</p>
       </header>
 
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-mute">Your apps</h2>
+      {/* the paperwork pipeline */}
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-mute">
+        Run the business
+      </h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {apps.map((app) => {
+        {core.map((app) => {
           const Icon = app.icon;
           return (
             <Link
@@ -197,8 +170,92 @@ export default async function DashboardPage({
             </Link>
           );
         })}
+      </div>
 
-        {/* Roadmap */}
+      {/* the contractor's own trade */}
+      <h2 className="mb-3 mt-8 text-sm font-semibold uppercase tracking-wide text-ink-mute">
+        Built for {tradeLabel}
+      </h2>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {mine.map((tool) => (
+          <Link
+            key={tool.href}
+            href={tool.href!}
+            className="group block rounded-2xl border border-hairline bg-paper-800 p-5 shadow-card card-interactive"
+          >
+            <div className="flex items-start justify-between">
+              <span className="grid h-12 w-12 place-items-center rounded-xl bg-accent text-accent-fg shadow-accent">
+                <ToolIcon icon={tool.icon} className="h-6 w-6" />
+              </span>
+              <span className="rounded-full bg-accent/10 px-2.5 py-1 text-xs font-semibold text-accent-bright">
+                Live
+              </span>
+            </div>
+            <h3 className="mt-4 text-lg font-bold text-ink">{tool.name}</h3>
+            <p className="mt-1 text-sm text-ink-soft">{tool.tagline}</p>
+            <div className="mt-4 flex items-center justify-between border-t border-hairline pt-3 text-sm">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-ink-mute">
+                {tool.kind === 'automation' ? 'Automation' : 'App'}
+              </span>
+              <span className="inline-flex items-center gap-1 font-semibold text-accent-bright">
+                Open
+                <ArrowRight className="h-4 w-4 transition duration-150 group-hover:translate-x-0.5" />
+              </span>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      {/* every other trade's tools still work — materials lists, photo reports… */}
+      {others.length > 0 ? (
+        <>
+          <h2 className="mb-3 mt-8 text-sm font-semibold uppercase tracking-wide text-ink-mute">
+            From the other trades — yours too
+          </h2>
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            {others.map((tool) => (
+              <Link
+                key={tool.href}
+                href={tool.href!}
+                className="group flex items-center gap-3 rounded-xl border border-hairline bg-paper-800 p-3.5 shadow-card transition hover:border-accent/40"
+              >
+                <span className="grid h-9 w-9 flex-none place-items-center rounded-lg bg-accent/10 text-accent-bright">
+                  <ToolIcon icon={tool.icon} className="h-5 w-5" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block truncate text-sm font-semibold text-ink">{tool.name}</span>
+                  <span className="block text-[10px] font-semibold uppercase tracking-wider text-ink-mute">
+                    {getTheme(tool.trade).label}
+                  </span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </>
+      ) : null}
+
+      {/* honest roadmap */}
+      <h2 className="mb-3 mt-8 text-sm font-semibold uppercase tracking-wide text-ink-mute">
+        On the way
+      </h2>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {upcoming.map((tool) => (
+          <div
+            key={tool.name}
+            className="rounded-2xl border border-dashed border-hairline bg-paper-800/50 p-5"
+          >
+            <div className="flex items-start justify-between">
+              <span className="grid h-12 w-12 place-items-center rounded-xl bg-paper-700 text-ink-mute">
+                <ToolIcon icon={tool.icon} className="h-6 w-6" />
+              </span>
+              <span className="rounded-full bg-paper-700 px-2.5 py-1 text-xs font-semibold text-ink-mute">
+                {tool.status === 'next' ? 'Coming next' : 'Planned'}
+              </span>
+            </div>
+            <h3 className="mt-4 text-lg font-bold text-ink-soft">{tool.name}</h3>
+            <p className="mt-1 text-sm text-ink-mute">{tool.tagline}</p>
+          </div>
+        ))}
         <div className="rounded-2xl border border-dashed border-hairline bg-paper-800/50 p-5">
           <div className="flex items-start justify-between">
             <span className="grid h-12 w-12 place-items-center rounded-xl bg-paper-700 text-ink-mute">
@@ -214,7 +271,11 @@ export default async function DashboardPage({
       </div>
 
       <p className="mt-6 text-sm text-ink-mute">
-        More tools are on the way — built for the trades, not for spreadsheets.
+        More tools are on the way — built for the trades, not for spreadsheets. Want one bumped up
+        the list?{' '}
+        <a href="mailto:hello@crewcraftapp.com" className="font-medium text-ink-soft underline hover:text-ink">
+          Tell us.
+        </a>
       </p>
     </AppShell>
   );

@@ -100,7 +100,7 @@ export default async function CustomerDetailPage({ params }: { params: { key: st
             <p className="text-xs text-ink-mute">Quoted</p>
           </div>
           <div>
-            <p className="text-lg font-bold text-emerald-600">{money(summary.won)}</p>
+            <p className="text-lg font-bold text-ok">{money(summary.won)}</p>
             <p className="text-xs text-ink-mute">Won</p>
           </div>
           <div>

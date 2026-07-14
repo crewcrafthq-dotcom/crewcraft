@@ -34,8 +34,8 @@ export function toast(message: string, kind: ToastKind = 'success') {
 
 const ICON: Record<ToastKind, typeof Check> = { success: Check, error: CircleAlert, info: Info };
 const TONE: Record<ToastKind, string> = {
-  success: 'text-emerald-600',
-  error: 'text-red-600',
+  success: 'text-ok',
+  error: 'text-bad',
   info: 'text-accent-bright',
 };
 

@@ -1,5 +1,6 @@
 import {
   BellRing,
+  BookOpen,
   Calculator,
   CalendarClock,
   Camera,
@@ -29,6 +30,7 @@ const MAP: Record<ToolIconKey, React.ComponentType<LucideProps>> = {
   esign: PenLine,
   customers: Users2,
   analytics: TrendingUp,
+  pricebook: BookOpen,
   voice: Mic,
   supplements: ClipboardList,
   followup: Send,

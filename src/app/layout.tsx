@@ -40,14 +40,15 @@ const poppins = localFont({
   display: 'swap',
 });
 
+const TITLE = 'Toolbelt by Crewcraft — Software Tools for Contractors';
 const DESCRIPTION =
-  'Type the job in plain English and send a branded estimate in under a minute. Built for HVAC, plumbing, electrical & roofing contractors. 3 free, no credit card.';
+  'Estimates, invoices, e-sign, payments, follow-ups, customers — the whole paperwork side of a trade business in one flat-price toolbelt. Built for HVAC, plumbing, electrical & roofing. 3 free estimates, no credit card.';
 
 export const metadata: Metadata = {
   // Makes every relative URL (canonical, OG image) absolute against the live domain.
   metadataBase: new URL('https://crewcraftapp.com'),
   title: {
-    default: 'Toolbelt by Crewcraft — Estimates in 60 seconds',
+    default: TITLE,
     template: '%s · Toolbelt by Crewcraft',
   },
   description: DESCRIPTION,
@@ -60,13 +61,15 @@ export const metadata: Metadata = {
     statusBarStyle: 'black-translucent',
   },
   keywords: [
+    'contractor software',
+    'software for contractors',
     'contractor estimate app',
+    'contractor invoicing software',
     'estimating software for contractors',
-    'HVAC estimate software',
-    'plumbing estimate app',
-    'electrical estimate software',
-    'roofing estimate app',
-    'AI estimate builder',
+    'HVAC contractor software',
+    'plumbing contractor software',
+    'electrical contractor software',
+    'roofing contractor software',
     'quote software for contractors',
   ],
   alternates: { canonical: '/' },
@@ -74,14 +77,14 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://crewcraftapp.com',
     siteName: 'Toolbelt by Crewcraft',
-    title: 'Toolbelt by Crewcraft — Estimates in 60 seconds',
+    title: TITLE,
     description: DESCRIPTION,
     locale: 'en_US',
     images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Toolbelt by Crewcraft' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Toolbelt by Crewcraft — Estimates in 60 seconds',
+    title: TITLE,
     description: DESCRIPTION,
     images: ['/og.png'],
   },
@@ -96,8 +99,12 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable} ${barlow.variable}`}>
+    <html lang="en" className={`${inter.variable} ${poppins.variable} ${barlow.variable}`} suppressHydrationWarning>
       <body className="min-h-screen font-sans">
+        {/* Apply the saved theme before first paint — no light/dark flash. */}
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`try{if(localStorage.getItem('toolbelt-theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}`}
+        </Script>
         {/* Scroll-reveal sections must never be a blank page for no-JS visitors/crawlers. */}
         <noscript>
           <style>{`.reveal,.reveal-child{opacity:1 !important;transform:none !important}`}</style>

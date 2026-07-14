@@ -52,14 +52,17 @@ unlimited estimates — `isOwnerEmail` in `src/lib/config.ts`).
    Supabase clients (`src/lib/supabase/server.ts`, `admin.ts`) pin fetch to
    `cache: 'no-store'` — Next's Data Cache once served stale accepted-state to
    homeowners. Keep it that way.
-3. **One "Paper & Blueprint" light theme** (July 2026 redesign, owner-approved):
-   warm paper canvas + navy ink via the `paper.*`/`ink.*` Tailwind tokens
-   (renamed from the old `night`/`mist` dark system), Barlow Condensed display
-   headings, blueprint grid + `.hazard` stripe accents. The public customer
-   page keeps its `bg-cream text-navy` look — now visually consistent with the
-   app. Each trade has its own accent via CSS vars (`src/lib/trades.ts`),
-   tuned for the light canvas. Text colors like emerald/red use the `-600`+
-   shades — `-400` is unreadable on paper.
+3. **Two switchable themes, one token set** (July 2026): "Paper & Blueprint"
+   light (default) and "Jobsite Dark" — every `paper.*`/`ink.*`/`hairline`/
+   shadow token resolves through CSS variables defined in `globals.css`
+   (`:root` = light, `[data-theme="dark"]` = the original night palette).
+   The switch lives in Settings (`ThemeToggle`, localStorage key
+   `toolbelt-theme`, applied pre-paint by the `theme-init` script in
+   layout.tsx). Trade accents carry light+dark tunings via `themeVars()`
+   (`src/lib/trades.ts`). For status text use the themed `text-ok`/`text-bad`
+   tokens, never raw emerald/red shades (they only read on one theme). The
+   public customer page keeps its static `bg-cream text-navy` look. Barlow
+   Condensed uppercase display headings, blueprint grid + `.hazard` stripes.
 4. **AI output is parsed + zod-validated** (`parseGenerated`,
    `parseGeneratedTiers` in `src/lib/ai/generate.ts` — unit-tested) with
    friendly fallback copy. The model's arithmetic is never used.
@@ -86,11 +89,18 @@ checkout for deposits/balances with webhook auto-mark-paid
 quiet estimates and overdue invoices, max 2, per-document toggle) · Customers
 (derived CRM) · Analytics (win rate, quoted vs won) · review-request emails
 (`businesses.review_link`) · get-paid fallbacks (`payment_link`,
-`payment_instructions`) · trade tools under `/apps/*`: Load Calc Helper
-(NEC 220.82-style, `src/lib/load-calc.ts`, unit-tested), Water Heater Quote
-Pack + Maintenance Plan Builder (presets in `src/lib/app-presets.ts` → draft
-estimate via `src/app/apps/actions.ts`, same free-tier gate as /estimates/new),
-Material Order Sheet (printable materials list from an estimate).
+`payment_instructions`) · voice dictation in the estimate builder
+(`VoiceButton`, Web Speech API, renders nothing when unsupported) · trade
+tools under `/apps/*`: Load Calc Helper (NEC 220.82-style,
+`src/lib/load-calc.ts`, unit-tested), Water Heater Quote Pack + Maintenance
+Plan Builder (presets in `src/lib/app-presets.ts` → draft estimate via
+`src/app/apps/actions.ts`, same free-tier gate as /estimates/new), Material
+Order Sheet (printable materials list), Supplement Drafter (AI letter via
+`/api/ai/supplement`), Photo Report Builder (client-side branded PDF —
+photos never uploaded). Desktop app chrome is a sidebar (`AppSidebar`,
+data-driven from `liveTradeTools()` in `src/lib/marketing.ts`); mobile stays
+top-bar. Brand positioning is **platform-first** ("software tools for
+contractors"), not estimates-first.
 
 ## Marketing site & ads
 

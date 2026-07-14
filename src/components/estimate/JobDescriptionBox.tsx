@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/Field';
 import { cn } from '@/lib/cn';
 import { AI_MAX_PHOTOS } from '@/lib/config';
 import type { EditorPhoto } from './photos';
+import { VoiceButton } from './VoiceButton';
 
 interface Props {
   value: string;
@@ -39,8 +40,6 @@ export function JobDescriptionBox({
 
   return (
     <div>
-      {/* Voice input stays a v2 feature — the seam is this box; no dead mic
-          button in the meantime (it read as broken). */}
       <Textarea
         aria-label="Job description"
         placeholder="Describe the job in plain words — e.g. “Replace a 40-gallon gas water heater in the garage, haul off the old one.”"
@@ -75,7 +74,7 @@ export function JobDescriptionBox({
                 type="button"
                 onClick={() => onRemovePhoto(p.key)}
                 aria-label="Remove photo"
-                className="absolute -right-1.5 -top-1.5 grid h-5 w-5 place-items-center rounded-full bg-paper-700 text-ink-soft shadow hover:text-red-600"
+                className="absolute -right-1.5 -top-1.5 grid h-5 w-5 place-items-center rounded-full bg-paper-700 text-ink-soft shadow hover:text-bad"
               >
                 <X className="h-3 w-3" />
               </button>
@@ -98,6 +97,10 @@ export function JobDescriptionBox({
           <Camera />
           {photos.length > 0 ? `Photos (${photos.length}/${AI_MAX_PHOTOS})` : 'Add photos'}
         </Button>
+        <VoiceButton
+          disabled={loading}
+          onAppend={(t) => onChange(value.trim() ? `${value.trim()} ${t}` : t)}
+        />
         <button
           type="button"
           onClick={() => onTiersMode(!tiersMode)}
@@ -119,7 +122,7 @@ export function JobDescriptionBox({
           : 'Prices come back as suggestions — review and edit them. Snap photos of the equipment and the AI reads them too.'}
       </p>
 
-      {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
+      {error ? <p className="mt-2 text-sm text-bad">{error}</p> : null}
     </div>
   );
 }

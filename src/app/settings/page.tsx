@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { BadgeCheck, CreditCard, Landmark } from 'lucide-react';
+import { BadgeCheck, CreditCard, Landmark, SunMoon } from 'lucide-react';
 
 import { AppShell } from '@/components/AppShell';
 import { BusinessForm } from '@/components/BusinessForm';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { Card } from '@/components/ui/Card';
 import { buttonClasses } from '@/components/ui/Button';
 import { getSession } from '@/lib/auth';
@@ -65,7 +66,7 @@ export default async function SettingsPage() {
               className={
                 'grid h-10 w-10 flex-none place-items-center rounded-xl ' +
                 (business.stripe_charges_enabled
-                  ? 'bg-emerald-500/15 text-emerald-600'
+                  ? 'bg-emerald-500/15 text-ok'
                   : 'bg-paper-700 text-ink-soft')
               }
             >
@@ -91,6 +92,25 @@ export default async function SettingsPage() {
               {business.stripe_account_id ? 'Finish Stripe setup' : 'Connect Stripe'}
             </a>
           ) : null}
+        </div>
+      </Card>
+
+      {/* Appearance — light "Paper" vs dark "Jobsite" theme */}
+      <Card className="mb-6 p-5">
+        <div className="flex items-center gap-3">
+          <span className="grid h-10 w-10 flex-none place-items-center rounded-xl bg-paper-700 text-ink-soft">
+            <SunMoon className="h-5 w-5" />
+          </span>
+          <div>
+            <h2 className="font-semibold text-ink">Appearance</h2>
+            <p className="text-sm text-ink-soft">
+              Paper is easier to read in daylight; Jobsite is easier on the eyes at night. Saved on
+              this device.
+            </p>
+          </div>
+        </div>
+        <div className="mt-4">
+          <ThemeToggle />
         </div>
       </Card>
 

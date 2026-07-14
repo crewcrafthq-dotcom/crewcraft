@@ -41,7 +41,7 @@ const LINKS = [
 export function NavLinks() {
   const path = usePathname();
   return (
-    <nav className="hidden items-center gap-1 sm:flex">
+    <nav className="hidden items-center gap-1 sm:flex lg:hidden">
       {LINKS.map((l) => {
         const active = l.match(path);
         const Icon = l.icon;

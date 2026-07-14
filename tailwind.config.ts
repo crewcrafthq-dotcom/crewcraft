@@ -17,26 +17,29 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // ── Paper system (light) ────────────────────────────────────────
+        // ── Themed surfaces — values live in globals.css (:root / [data-theme=dark]) ──
         paper: {
-          950: '#101B2C', // the one dark well: modal scrims, ink blocks
-          900: '#F2EBE0', // page canvas — estimate-paper beige (matches the PDF)
-          850: '#E9E0D0', // sunken sections
-          800: '#FCFAF5', // card / surface (warm white)
-          750: '#F5EFE4', // surface hover
-          700: '#EAE1D1', // raised chips
-          600: '#D8CBB5', // strong border / pressed
-          DEFAULT: '#F2EBE0',
+          950: 'rgb(var(--paper-950) / <alpha-value>)',
+          900: 'rgb(var(--paper-900) / <alpha-value>)',
+          850: 'rgb(var(--paper-850) / <alpha-value>)',
+          800: 'rgb(var(--paper-800) / <alpha-value>)',
+          750: 'rgb(var(--paper-750) / <alpha-value>)',
+          700: 'rgb(var(--paper-700) / <alpha-value>)',
+          600: 'rgb(var(--paper-600) / <alpha-value>)',
+          DEFAULT: 'rgb(var(--paper-900) / <alpha-value>)',
         },
         ink: {
-          DEFAULT: '#16263A', // primary text — navy ink
-          soft: '#41526B', // secondary text
-          mute: '#5E6F89', // tertiary / meta (≥4.5:1 on paper-900)
+          DEFAULT: 'rgb(var(--ink) / <alpha-value>)',
+          soft: 'rgb(var(--ink-soft) / <alpha-value>)',
+          mute: 'rgb(var(--ink-mute) / <alpha-value>)',
         },
         hairline: {
-          DEFAULT: 'rgba(22,38,58,0.12)',
-          strong: 'rgba(22,38,58,0.22)',
+          DEFAULT: 'var(--hairline)',
+          strong: 'var(--hairline-strong)',
         },
+        // status colors that flip shade with the theme (600s on paper, 400s on night)
+        ok: 'rgb(var(--ok) / <alpha-value>)',
+        bad: 'rgb(var(--bad) / <alpha-value>)',
         accent: {
           DEFAULT: 'rgb(var(--accent) / <alpha-value>)',
           fg: 'rgb(var(--accent-fg) / <alpha-value>)', // ink on an accent fill
@@ -64,10 +67,10 @@ const config: Config = {
       },
       borderRadius: { xl: '0.875rem', '2xl': '1.125rem', '3xl': '1.5rem', '4xl': '2rem' },
       boxShadow: {
-        // paper depth: soft navy shadows, like a sheet lifted off the desk
-        card: '0 1px 2px rgba(22,38,58,0.05), 0 10px 28px -16px rgba(22,38,58,0.18)',
-        lift: '0 2px 4px rgba(22,38,58,0.06), 0 26px 52px -22px rgba(22,38,58,0.28)',
-        // accent shadow for primary CTAs and highlights
+        // themed depth — values live in globals.css per theme
+        card: 'var(--shadow-card)',
+        lift: 'var(--shadow-lift)',
+        // accent shadow for primary CTAs and highlights (accent var is themed)
         accent: '0 8px 22px -10px rgb(var(--accent) / 0.45)',
         glow: '0 0 0 1px rgb(var(--accent) / 0.25), 0 10px 30px -10px rgb(var(--accent) / 0.4)',
         'glow-sm': '0 0 18px -8px rgb(var(--accent) / 0.4)',

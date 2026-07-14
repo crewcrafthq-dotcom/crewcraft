@@ -6,10 +6,10 @@ export function FinalCta() {
       <div className="relative rounded-3xl border border-hairline bg-paper-800 p-8 text-center shadow-lift sm:p-12">
         <div aria-hidden className="hazard absolute inset-x-0 top-0 h-1.5 rounded-t-3xl opacity-80" />
         <h2 className="text-3xl font-bold leading-tight text-ink sm:text-4xl">
-          Quote the next job before you leave the driveway.
+          Put the whole belt on before the next job.
         </h2>
         <p className="mt-3 text-lg text-ink-soft">
-          Type it, send it, get back to work. Three free, no card.
+          Quote it, e-sign it, invoice it, get paid — starting with three free estimates, no card.
         </p>
         <div className="mt-7 flex justify-center">
           <StartFreeButton />

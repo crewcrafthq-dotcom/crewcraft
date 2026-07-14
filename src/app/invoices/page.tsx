@@ -110,7 +110,7 @@ export default async function InvoicesPage() {
                     {inv.due_date ? (
                       <>
                         Due {shortDate(inv.due_date)}
-                        {isOverdue ? <span className="text-red-600"> · overdue</span> : null}
+                        {isOverdue ? <span className="text-bad"> · overdue</span> : null}
                       </>
                     ) : (
                       shortDate(inv.created_at)

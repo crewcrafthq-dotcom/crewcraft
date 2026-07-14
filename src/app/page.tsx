@@ -41,7 +41,7 @@ const JSON_LD = {
       operatingSystem: 'Web',
       url: 'https://crewcraftapp.com',
       description:
-        'Type the job in plain English and send a branded estimate in under a minute. Built for HVAC, plumbing, electrical & roofing contractors.',
+        'The contractor’s toolbelt: AI estimates, e-sign, invoices, online payments, follow-ups, customers and analytics — one flat price. Built for HVAC, plumbing, electrical & roofing.',
       publisher: { '@id': 'https://crewcraftapp.com/#org' },
       offers: [
         { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD' },

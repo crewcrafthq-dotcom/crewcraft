@@ -11,12 +11,12 @@ export function AppLineup() {
       <div className="max-w-2xl">
         <p className="eyebrow">What’s on the belt</p>
         <h2 className="mt-2 text-3xl font-bold leading-tight text-ink sm:text-4xl">
-          Five tools today. More coming.
+          Fourteen live tools. One flat price.
         </h2>
         <p className="mt-3 text-lg text-ink-soft">
-          Apps you use and automations that run for you — plus a live tool built for your trade
-          (see your trade’s belt above). Marked honestly so you know what’s ready, and one
-          subscription covers all of it, current and future.
+          Apps you use and automations that run for you — the paperwork side of the business,
+          covered end to end, plus tools built for your specific trade (see your trade’s belt
+          above). One subscription covers all of it, current and future.
         </p>
       </div>
 
@@ -80,7 +80,8 @@ export function AppLineup() {
 
       <p className="mt-6 text-sm text-ink-mute">
         Plus trade tools live today: Load Calc Helper, Water Heater Quote Pack, Maintenance Plan
-        Builder, Material Order Sheet — every one included in every paid plan.
+        Builder, Material Order Sheet, Supplement Drafter, Photo Report Builder — every one
+        included in every paid plan.
       </p>
     </section>
   );

@@ -139,7 +139,7 @@ export default async function PriceBookPage() {
                     <button
                       type="submit"
                       aria-label={`Delete ${item.description}`}
-                      className="grid h-8 w-8 place-items-center rounded-lg text-ink-mute transition hover:bg-paper-700 hover:text-red-600"
+                      className="grid h-8 w-8 place-items-center rounded-lg text-ink-mute transition hover:bg-paper-700 hover:text-bad"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>

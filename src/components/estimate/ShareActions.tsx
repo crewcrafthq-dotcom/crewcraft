@@ -204,7 +204,7 @@ export function ShareActions({ estimate, hasCustomerEmail, hasReviewLink, saveNo
 
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
         <Button variant="secondary" onClick={copyLink} disabled={busy !== null}>
-          {copied ? <Check className="text-emerald-600" /> : <Copy />}
+          {copied ? <Check className="text-ok" /> : <Copy />}
           {copied ? 'Copied' : 'Copy link'}
         </Button>
         <Button variant="secondary" onClick={download} disabled={busy !== null}>
@@ -272,17 +272,17 @@ export function ShareActions({ estimate, hasCustomerEmail, hasReviewLink, saveNo
         <div className="flex flex-wrap gap-2">
           {invoice ? (
             <Button variant="secondary" size="sm" onClick={() => changeStatus('paid')}>
-              <BadgeCheck className="text-emerald-600" />
+              <BadgeCheck className="text-ok" />
               Paid
             </Button>
           ) : (
             <>
               <Button variant="secondary" size="sm" onClick={() => changeStatus('accepted')}>
-                <CheckCircle2 className="text-emerald-600" />
+                <CheckCircle2 className="text-ok" />
                 Accepted
               </Button>
               <Button variant="secondary" size="sm" onClick={() => changeStatus('declined')}>
-                <XCircle className="text-red-600" />
+                <XCircle className="text-bad" />
                 Declined
               </Button>
             </>
@@ -297,7 +297,7 @@ export function ShareActions({ estimate, hasCustomerEmail, hasReviewLink, saveNo
       {/* the job is won — what's next */}
       {(!invoice && localStatus === 'accepted') || (invoice && localStatus === 'paid') ? (
         <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/10 p-4">
-          <p className="text-sm font-semibold text-emerald-600">
+          <p className="text-sm font-semibold text-ok">
             {invoice ? 'Paid — nice work.' : 'Job won — keep it moving.'}
           </p>
           <div className="mt-3 flex flex-wrap gap-2">

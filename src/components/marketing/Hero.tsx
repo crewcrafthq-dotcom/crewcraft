@@ -69,18 +69,16 @@ export function Hero() {
             </span>
 
             <h1 className="mt-5 text-[2.9rem] font-bold uppercase leading-[0.95] text-ink sm:text-6xl lg:text-[4.5rem]">
-              Type the job.
-              <br className="hidden sm:block" /> Send a branded estimate in{' '}
+              Every tool the{' '}
               <span className="bg-gradient-to-r from-accent to-accent-bright bg-clip-text text-transparent">
-                under a minute
-              </span>
-              .
+                paperwork
+              </span>{' '}
+              side of your business needs.
             </h1>
 
             <p className="mt-5 max-w-md text-lg leading-relaxed text-ink-soft">
-              Toolbelt kills the after-hours paperwork. The quote’s written, totaled, and sent
-              before you leave the driveway — then it gets e-signed, invoiced, and followed up
-              without you.
+              Estimates in 60 seconds, e-signed online, invoiced automatically, paid through your
+              Stripe, followed up without you — fourteen live tools on one belt, one flat price.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -97,7 +95,7 @@ export function Hero() {
             </div>
 
             <div className="absolute -left-4 -top-4 hidden animate-float items-center gap-2.5 rounded-xl border border-hairline-strong bg-paper-800/95 px-3.5 py-2.5 shadow-lift backdrop-blur sm:flex">
-              <span className="grid h-8 w-8 place-items-center rounded-lg bg-emerald-500/15 text-emerald-600">
+              <span className="grid h-8 w-8 place-items-center rounded-lg bg-emerald-500/15 text-ok">
                 <Eye className="h-4 w-4" />
               </span>
               <div>

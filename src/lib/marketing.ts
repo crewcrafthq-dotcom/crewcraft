@@ -69,6 +69,7 @@ export type ToolIconKey =
   | 'invoices'
   | 'customers'
   | 'analytics'
+  | 'pricebook'
   | 'voice'
   | 'supplements'
   | 'followup'
@@ -99,15 +100,16 @@ export interface ToolItem {
 
 /** What's on the belt for every trade. Statuses are honest — live means live. */
 export const APP_LINEUP: ToolItem[] = [
-  { name: 'Toolbelt Estimates', tagline: 'Type the job — or snap photos — and send a branded, e-signable estimate.', status: 'live', icon: 'estimates', kind: 'app', href: '/estimates' },
+  { name: 'Toolbelt Estimates', tagline: 'Type it, dictate it, or snap photos — send a branded, e-signable estimate.', status: 'live', icon: 'estimates', kind: 'app', href: '/estimates' },
   { name: 'Invoices', tagline: 'Accepted estimates become invoices — automatically, if you want.', status: 'live', icon: 'invoices', kind: 'app', href: '/invoices' },
   { name: 'Follow-up Engine', tagline: 'Quotes and overdue invoices that chase themselves so you don’t.', status: 'live', icon: 'followup', kind: 'automation' },
   { name: 'Customers', tagline: 'Every customer and job history, built from your paperwork.', status: 'live', icon: 'customers', kind: 'app', href: '/customers' },
   { name: 'Analytics', tagline: 'Win rate, average ticket, quoted vs won.', status: 'live', icon: 'analytics', kind: 'app', href: '/analytics' },
-  { name: 'Toolbelt Voice', tagline: 'Talk it out, get the paperwork.', status: 'next', icon: 'voice', kind: 'app' },
-  { name: 'Toolbelt Supplements', tagline: 'Roofing insurance supplements, done faster.', status: 'next', icon: 'supplements', kind: 'app' },
+  { name: 'Price Book', tagline: 'Your real rates and materials — the AI prices every draft with them.', status: 'live', icon: 'pricebook', kind: 'app', href: '/pricebook' },
+  { name: 'Toolbelt Voice', tagline: 'Dictate the job — the mic lives right in the estimate builder.', status: 'live', icon: 'voice', kind: 'app', href: '/estimates' },
+  { name: 'Toolbelt Supplements', tagline: 'Insurance supplement letters, drafted in a minute.', status: 'live', icon: 'supplements', kind: 'app', href: '/apps/supplements' },
+  { name: 'Review-Getter', tagline: 'Turn finished jobs into 5-star reviews.', status: 'live', icon: 'reviews', kind: 'automation' },
   { name: 'Toolbelt Scheduling', tagline: 'Book the job, keep the week straight.', status: 'next', icon: 'scheduling', kind: 'app' },
-  { name: 'Review-Getter', tagline: 'Turn finished jobs into 5-star reviews.', status: 'next', icon: 'reviews', kind: 'automation' },
 ];
 
 export interface TradeSectionContent {
@@ -157,7 +159,7 @@ export const TRADE_SECTIONS: Record<Trade, TradeSectionContent> = {
       { name: 'Water Heater Quote Pack', tagline: 'Tank vs tankless, good-better-best, side by side.', status: 'live', icon: 'waterheater', kind: 'app', href: '/apps/water-heater' },
       { name: 'After-Hours Auto-Reply', tagline: '2am “my pipe burst” texts get an instant answer with your emergency rate.', status: 'planned', icon: 'afterhours', kind: 'automation' },
       { name: 'Permit Tracker', tagline: 'Which job is waiting on which permit — without the sticky notes.', status: 'planned', icon: 'permits', kind: 'app' },
-      { name: 'Review-Getter', tagline: 'Finished jobs turn into 5-star reviews on their own.', status: 'next', icon: 'reviews', kind: 'automation' },
+      { name: 'Review-Getter', tagline: 'Finished jobs turn into 5-star reviews on their own.', status: 'live', icon: 'reviews', kind: 'automation' },
     ],
   },
   electrical: {
@@ -189,12 +191,31 @@ export const TRADE_SECTIONS: Record<Trade, TradeSectionContent> = {
     tools: [
       { name: 'Estimate Builder', tagline: '22 squares, typed in plain English, sent from the driveway.', status: 'live', icon: 'estimates', kind: 'app', href: '/estimates' },
       { name: 'Material Order Sheet', tagline: 'Estimate → supplier order list, no re-typing at the counter.', status: 'live', icon: 'materials', kind: 'app', href: '/apps/order-sheet' },
-      { name: 'Toolbelt Supplements', tagline: 'Insurance supplements, drafted in minutes instead of nights.', status: 'next', icon: 'supplements', kind: 'app' },
+      { name: 'Supplement Drafter', tagline: 'Insurance supplement letters, drafted in a minute instead of at midnight.', status: 'live', icon: 'supplements', kind: 'app', href: '/apps/supplements' },
+      { name: 'Photo Report Builder', tagline: 'Roof photos into a clean, captioned PDF the homeowner trusts.', status: 'live', icon: 'photos', kind: 'app', href: '/apps/photo-report' },
       { name: 'Storm Response Pack', tagline: 'Hail hits: instant auto-replies and a landing page for the flood of calls.', status: 'planned', icon: 'storm', kind: 'automation' },
-      { name: 'Photo Report Builder', tagline: 'Roof photos into a clean, captioned PDF the homeowner trusts.', status: 'planned', icon: 'photos', kind: 'app' },
     ],
   },
 };
+
+/**
+ * Every live, linkable trade tool across all four trades (deduped) — feeds the
+ * app sidebar and the dashboard's cross-trade section. Estimate Builder is
+ * excluded (it's the flagship, listed with the core apps).
+ */
+export function liveTradeTools(): (ToolItem & { trade: Trade })[] {
+  const seen = new Set<string>();
+  const out: (ToolItem & { trade: Trade })[] = [];
+  for (const trade of Object.keys(TRADE_SECTIONS) as Trade[]) {
+    for (const tool of TRADE_SECTIONS[trade].tools) {
+      if (tool.status !== 'live' || !tool.href) continue;
+      if (tool.href === '/estimates' || seen.has(tool.href)) continue;
+      seen.add(tool.href);
+      out.push({ ...tool, trade });
+    }
+  }
+  return out;
+}
 
 export interface PricingTier {
   key: 'free' | 'proMonthly' | 'founding' | 'proAnnual';

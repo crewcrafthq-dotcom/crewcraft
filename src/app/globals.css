@@ -3,20 +3,85 @@
 @tailwind utilities;
 
 /*
- * Toolbelt (by Crewcraft) — "Paper & Blueprint" light industrial system.
- * Warm estimate-paper canvas, navy ink, blueprint grid texture, per-trade
- * accent as CSS variables (R G B channels) — the same family the estimate PDF
- * uses, so the site looks like the paperwork it produces. :root default =
- * HVAC orange; [data-trade] wrappers override (see lib/trades.ts).
- * --accent-bright is the accent tone used for accent-colored TEXT on paper.
+ * Toolbelt (by Crewcraft) — one token set, two themes.
+ *
+ * "Paper & Blueprint" (light, default): warm estimate-paper canvas + navy ink,
+ * matching the PDF the product generates. "Jobsite Dark": the deep night
+ * canvas, switchable from Settings. Every color the app uses resolves through
+ * the CSS variables below, so <html data-theme="dark"> retints everything —
+ * components never know which theme is active.
+ *
+ * Trade accents carry BOTH tunings: themeVars() (lib/trades.ts) writes the
+ * light set (--al…) and dark set (--ad…) on a [data-trade] wrapper; the
+ * indirection rules below pick the right one for the active theme.
  */
 :root {
-  --accent: 232 114 42; /* HVAC orange (matches the PDF accent) */
-  --accent-fg: 255 255 255; /* ink that sits on an accent fill */
-  --accent-bright: 179 80 18; /* accent-colored text on paper (AA on beige) */
-  --accent-deep: 194 87 26;
-  --accent-soft: 247 226 210;
+  /* Paper & Blueprint (light) */
+  --paper-950: 16 27 44; /* the one dark well: scrims, ink blocks */
+  --paper-900: 242 235 224; /* page canvas */
+  --paper-850: 233 224 208; /* sunken sections */
+  --paper-800: 252 250 245; /* cards */
+  --paper-750: 245 239 228; /* hover */
+  --paper-700: 234 225 209; /* raised chips */
+  --paper-600: 216 203 181; /* strong border / pressed */
+  --ink: 22 38 58;
+  --ink-soft: 65 82 107;
+  --ink-mute: 94 111 137;
+  --hairline: rgba(22, 38, 58, 0.12);
+  --hairline-strong: rgba(22, 38, 58, 0.22);
+  --shadow-card: 0 1px 2px rgba(22, 38, 58, 0.05), 0 10px 28px -16px rgba(22, 38, 58, 0.18);
+  --shadow-lift: 0 2px 4px rgba(22, 38, 58, 0.06), 0 26px 52px -22px rgba(22, 38, 58, 0.28);
+  --grid-line: rgba(37, 84, 141, 0.07);
+  --ok: 5 150 105; /* emerald-600 — readable on paper */
+  --bad: 220 38 38; /* red-600 */
+  --selection-ink: #16263a;
+
+  /* Trade accent defaults (HVAC) — light set + dark set */
+  --al: 232 114 42; --afl: 255 255 255; --abl: 179 80 18; --adl: 194 87 26; --asl: 247 226 210;
+  --ad: 255 122 47; --afd: 10 14 26; --abd: 255 160 105; --add: 194 87 26; --asd: 247 226 210;
   color-scheme: light;
+}
+
+/* Theme indirection: the active theme picks the light or dark accent set. */
+:root,
+[data-trade] {
+  --accent: var(--al);
+  --accent-fg: var(--afl);
+  --accent-bright: var(--abl);
+  --accent-deep: var(--adl);
+  --accent-soft: var(--asl);
+}
+
+[data-theme='dark'] {
+  /* Jobsite Dark — the original night system */
+  --paper-950: 6 9 15;
+  --paper-900: 10 14 26;
+  --paper-850: 13 19 34;
+  --paper-800: 17 26 46;
+  --paper-750: 21 33 57;
+  --paper-700: 26 39 64;
+  --paper-600: 36 51 80;
+  --ink: 244 247 253;
+  --ink-soft: 192 203 224;
+  --ink-mute: 142 157 185;
+  --hairline: rgba(255, 255, 255, 0.08);
+  --hairline-strong: rgba(255, 255, 255, 0.14);
+  --shadow-card: 0 1px 0 0 rgba(255, 255, 255, 0.05) inset, 0 12px 34px -14px rgba(0, 0, 0, 0.7);
+  --shadow-lift: 0 1px 0 0 rgba(255, 255, 255, 0.06) inset, 0 30px 60px -22px rgba(0, 0, 0, 0.8);
+  --grid-line: rgba(120, 165, 255, 0.055);
+  --ok: 52 211 153; /* emerald-400 — readable on night */
+  --bad: 248 113 113; /* red-400 */
+  --selection-ink: #ffffff;
+  color-scheme: dark;
+}
+
+[data-theme='dark'],
+[data-theme='dark'] [data-trade] {
+  --accent: var(--ad);
+  --accent-fg: var(--afd);
+  --accent-bright: var(--abd);
+  --accent-deep: var(--add);
+  --accent-soft: var(--asd);
 }
 
 @layer base {
@@ -26,10 +91,10 @@
   }
   body {
     @apply bg-paper-900 text-ink antialiased;
-    /* quiet warm aurora — a hint of accent at the top of the sheet */
+    /* quiet aurora — a hint of accent at the top of the sheet, both themes */
     background-image:
-      radial-gradient(900px 520px at 82% -10%, rgb(var(--accent) / 0.08), transparent 60%),
-      radial-gradient(720px 480px at 8% 2%, rgba(37, 84, 141, 0.05), transparent 58%);
+      radial-gradient(900px 520px at 82% -10%, rgb(var(--accent) / 0.09), transparent 60%),
+      radial-gradient(720px 480px at 8% 2%, rgba(59, 110, 190, 0.05), transparent 58%);
     background-attachment: fixed;
     font-feature-settings: 'kern', 'ss01', 'cv02', 'cv11';
   }
@@ -49,8 +114,8 @@
     font-family: inherit;
   }
   ::selection {
-    background: rgb(var(--accent) / 0.25);
-    color: #16263a;
+    background: rgb(var(--accent) / 0.3);
+    color: var(--selection-ink);
   }
 }
 
@@ -85,11 +150,11 @@
     mask-composite: exclude;
     pointer-events: none;
   }
-  /* faint blueprint grid — navy drafting lines on the paper canvas */
+  /* faint blueprint grid — drafting lines tuned per theme via --grid-line */
   .grid-bg {
     background-image:
-      linear-gradient(rgba(37, 84, 141, 0.07) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(37, 84, 141, 0.07) 1px, transparent 1px);
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 34px 34px;
   }
   /* hazard stripe — thin safety-tape accent for the few spots that earn it */

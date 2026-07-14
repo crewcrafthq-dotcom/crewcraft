@@ -1,0 +1,128 @@
+'use client';
+
+import { useState } from 'react';
+import { Copy, Download, Sparkles } from 'lucide-react';
+
+import { Button } from '@/components/ui/Button';
+import { Input, Label, Textarea } from '@/components/ui/Field';
+import { toast } from '@/components/ui/toast';
+
+export function SupplementClient() {
+  const [insurer, setInsurer] = useState('');
+  const [claimNumber, setClaimNumber] = useState('');
+  const [propertyAddress, setPropertyAddress] = useState('');
+  const [items, setItems] = useState('');
+  const [letter, setLetter] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function draft() {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/ai/supplement', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ insurer, claimNumber, propertyAddress, items }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || !json.letter) {
+        setError(json.error ?? 'Could not draft the letter.');
+        return;
+      }
+      setLetter(json.letter);
+    } catch {
+      setError('Could not draft the letter — check your connection.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(letter);
+      toast('Letter copied.');
+    } catch {
+      toast('Could not copy on this device.', 'error');
+    }
+  }
+
+  function download() {
+    const blob = new Blob([letter], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `supplement${claimNumber ? `-${claimNumber}` : ''}.txt`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  return (
+    <div className="grid items-start gap-5 lg:grid-cols-2">
+      {/* claim details */}
+      <div className="space-y-4 rounded-2xl border border-hairline bg-paper-800 p-5 shadow-card sm:p-6">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <Label htmlFor="insurer">Insurance carrier</Label>
+            <Input id="insurer" placeholder="e.g. State Farm" value={insurer} onChange={(e) => setInsurer(e.target.value)} />
+          </div>
+          <div>
+            <Label htmlFor="claim">Claim #</Label>
+            <Input id="claim" placeholder="e.g. 55-1234-X89" value={claimNumber} onChange={(e) => setClaimNumber(e.target.value)} />
+          </div>
+        </div>
+        <div>
+          <Label htmlFor="address">Property address</Label>
+          <Input id="address" placeholder="Street, city" value={propertyAddress} onChange={(e) => setPropertyAddress(e.target.value)} />
+        </div>
+        <div>
+          <Label htmlFor="items">What the adjuster missed (one per line, reason optional)</Label>
+          <Textarea
+            id="items"
+            rows={7}
+            placeholder={'Drip edge — required by code on all eaves/rakes\nStarter strip — manufacturer wind warranty\nSteep charge — 10/12 pitch\nIce & water shield at valleys'}
+            value={items}
+            onChange={(e) => setItems(e.target.value)}
+          />
+        </div>
+        {error ? <p className="text-sm text-bad">{error}</p> : null}
+        <Button onClick={draft} disabled={loading || !items.trim()} className="w-full sm:w-auto">
+          <Sparkles className={loading ? 'animate-pulse' : ''} />
+          {loading ? 'Drafting…' : 'Draft the letter'}
+        </Button>
+      </div>
+
+      {/* the letter */}
+      <div className="rounded-2xl border border-hairline bg-paper-800 p-5 shadow-card sm:p-6">
+        {letter ? (
+          <>
+            <div className="mb-3 flex flex-wrap gap-2">
+              <Button variant="secondary" size="sm" onClick={copy}>
+                <Copy /> Copy
+              </Button>
+              <Button variant="secondary" size="sm" onClick={download}>
+                <Download /> Download .txt
+              </Button>
+            </div>
+            <Textarea
+              aria-label="Drafted letter — edit freely"
+              rows={22}
+              value={letter}
+              onChange={(e) => setLetter(e.target.value)}
+              className="font-mono text-sm leading-relaxed"
+            />
+            <p className="mt-2 text-xs text-ink-mute">
+              A draft, not a filing — check every claim detail before sending.
+            </p>
+          </>
+        ) : (
+          <div className="grid min-h-[280px] place-items-center text-center">
+            <p className="max-w-xs text-sm text-ink-mute">
+              The drafted letter lands here — edit it in place, then copy it into an email or print
+              it on your letterhead.
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

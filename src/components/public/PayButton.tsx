@@ -42,7 +42,7 @@ export function PayButton({ token, label }: { token: string; label: string }) {
         <CreditCard />
         {busy ? 'One sec…' : label}
       </button>
-      {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
+      {error ? <p className="mt-2 text-sm text-bad">{error}</p> : null}
     </div>
   );
 }

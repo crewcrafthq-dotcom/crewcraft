@@ -251,7 +251,7 @@ export function EstimateEditor({
         {/* customer response — the e-sign record */}
         {!invoice && estimate.status === 'accepted' && estimate.signed_name ? (
           <Card className="border-emerald-500/25 bg-emerald-500/10 p-5">
-            <p className="flex items-center gap-2 font-semibold text-emerald-600">
+            <p className="flex items-center gap-2 font-semibold text-ok">
               <CheckCircle2 className="h-[18px] w-[18px]" />
               Accepted by {estimate.signed_name}
             </p>
@@ -261,7 +261,7 @@ export function EstimateEditor({
               </p>
             ) : null}
             {estimate.deposit_paid_at ? (
-              <p className="mt-1 text-sm font-medium text-emerald-600">
+              <p className="mt-1 text-sm font-medium text-ok">
                 Deposit paid online {shortDate(estimate.deposit_paid_at)}.
               </p>
             ) : null}
@@ -269,7 +269,7 @@ export function EstimateEditor({
         ) : null}
         {!invoice && estimate.status === 'declined' ? (
           <Card className="border-red-500/25 bg-red-500/10 p-5">
-            <p className="flex items-center gap-2 font-semibold text-red-600">
+            <p className="flex items-center gap-2 font-semibold text-bad">
               <XCircle className="h-[18px] w-[18px]" />
               Declined{estimate.declined_at ? ` on ${shortDate(estimate.declined_at)}` : ''}
             </p>
@@ -307,7 +307,7 @@ export function EstimateEditor({
                 <Input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
               </Field>
               {estimate.paid_at ? (
-                <div className="self-end pb-2 text-sm text-emerald-600">
+                <div className="self-end pb-2 text-sm text-ok">
                   Paid {shortDate(estimate.paid_at)}
                 </div>
               ) : null}
@@ -468,8 +468,8 @@ export function EstimateEditor({
           <div className="text-sm">
             <span className="text-ink-mute">Total</span>{' '}
             <span className="text-base font-bold text-ink">{money(totals.total)}</span>
-            {saveError ? <span className="ml-3 text-red-600">{saveError}</span> : null}
-            {saved ? <span className="ml-3 font-medium text-emerald-600">Saved</span> : null}
+            {saveError ? <span className="ml-3 text-bad">{saveError}</span> : null}
+            {saved ? <span className="ml-3 font-medium text-ok">Saved</span> : null}
           </div>
           <Button onClick={saveNow} disabled={saving}>
             <Save />

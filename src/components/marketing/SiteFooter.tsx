@@ -30,7 +30,8 @@ export function SiteFooter() {
           <div className="sm:col-span-2 lg:col-span-1">
             <ToolbeltLockup />
             <p className="mt-3 max-w-xs text-sm text-ink-soft">
-              The contractor’s set of tools for killing after-hours paperwork.
+              Software tools for contractors — estimates, invoices, payments, follow-ups, and the
+              rest of the paperwork, on one belt.
             </p>
             <p className="mt-3 text-sm font-semibold text-ink-mute">From the Crewcraft crew.</p>
           </div>

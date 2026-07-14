@@ -98,7 +98,7 @@ export function LineItemsEditor({ rows, onChange }: Props) {
                   type="button"
                   onClick={() => remove(row.key)}
                   aria-label="Delete line"
-                  className={iconBtn + ' mt-1.5 hover:text-red-600'}
+                  className={iconBtn + ' mt-1.5 hover:text-bad'}
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>

@@ -124,7 +124,7 @@ export function LoadCalcClient() {
                   type="button"
                   onClick={() => removeAppliance(i)}
                   aria-label={`Remove ${a.name}`}
-                  className="grid h-9 w-9 flex-none cursor-pointer place-items-center rounded-lg text-ink-mute transition hover:bg-paper-750 hover:text-red-600"
+                  className="grid h-9 w-9 flex-none cursor-pointer place-items-center rounded-lg text-ink-mute transition hover:bg-paper-750 hover:text-bad"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
