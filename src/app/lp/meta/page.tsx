@@ -106,29 +106,22 @@ export default function MetaAdPage() {
           </div>
         </section>
 
-        {/* proof */}
+        {/* what it actually does */}
         <section className="mx-auto max-w-5xl px-5 py-12 sm:px-6 sm:py-16">
           <h2 className="text-2xl font-bold uppercase text-ink sm:text-3xl">
-            Contractors who got their evenings back
+            It doesn’t stop at the estimate
           </h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
-            {(['hvac', 'electrical', 'roofing'] as const).map((t) => {
-              const c = TRADE_CONTENT[t];
-              return (
-                <figure key={t} className="rounded-2xl border border-hairline bg-paper-800 p-5 shadow-card">
-                  <blockquote className="font-medium leading-relaxed text-ink">
-                    “{c.testimonial.quote}”
-                  </blockquote>
-                  <figcaption className="mt-4 text-sm font-semibold text-ink">
-                    {c.testimonial.name}
-                    <span className="font-normal text-ink-mute">
-                      {' · '}
-                      {c.testimonial.trade}, {c.testimonial.city}
-                    </span>
-                  </figcaption>
-                </figure>
-              );
-            })}
+            {[
+              ['They e-sign it online', 'The customer types their name to accept — the signature lands on the PDF, you get an email.'],
+              ['They can pay the deposit', 'Connect your Stripe and accepted estimates show a pay button. Money reconciles itself.'],
+              ['It follows up for you', 'Quiet quotes and overdue invoices get a polite nudge automatically. Jobs stop going cold.'],
+            ].map(([title, body]) => (
+              <div key={title} className="rounded-2xl border border-hairline bg-paper-800 p-5 shadow-card">
+                <h3 className="font-bold text-ink">{title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{body}</p>
+              </div>
+            ))}
           </div>
 
           {/* built for the trades */}

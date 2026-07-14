@@ -3,7 +3,7 @@ import { APP_LINEUP } from '@/lib/marketing';
 import { StartFreeButton } from './StartFree';
 
 export function AppLineup() {
-  const flagship = APP_LINEUP.find((a) => a.status === 'live')!;
+  const [flagship, ...rest] = APP_LINEUP.filter((a) => a.status === 'live');
   const next = APP_LINEUP.filter((a) => a.status !== 'live');
 
   return (
@@ -11,12 +11,12 @@ export function AppLineup() {
       <div className="max-w-2xl">
         <p className="eyebrow">What’s on the belt</p>
         <h2 className="mt-2 text-3xl font-bold leading-tight text-ink sm:text-4xl">
-          Five tools live. The belt keeps filling.
+          Five tools today. More coming.
         </h2>
         <p className="mt-3 text-lg text-ink-soft">
-          The Estimate Builder for every trade, a live tool built for yours (see your trade’s belt
-          above), and more on the way — marked honestly so you know what’s ready. One subscription
-          covers all of it, current and future.
+          Apps you use and automations that run for you — plus a live tool built for your trade
+          (see your trade’s belt above). Marked honestly so you know what’s ready, and one
+          subscription covers all of it, current and future.
         </p>
       </div>
 
@@ -39,8 +39,29 @@ export function AppLineup() {
         <StartFreeButton size="md" label="Start free" className="w-full sm:w-auto" />
       </div>
 
+      {/* the rest of the live belt */}
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {rest.map((tool) => (
+          <div key={tool.name} className="rounded-2xl border border-hairline bg-paper-800 p-5 shadow-card">
+            <div className="flex items-start justify-between">
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-accent/10 text-accent-bright">
+                <ToolIcon icon={tool.icon} className="h-5 w-5" />
+              </span>
+              <span className="rounded-full bg-accent/10 px-2 py-0.5 text-xs font-bold text-accent-bright">
+                Live now
+              </span>
+            </div>
+            <h3 className="mt-4 font-bold text-ink">{tool.name}</h3>
+            <p className="mt-1 text-sm text-ink-soft">{tool.tagline}</p>
+            <p className="mt-2 text-[10px] font-semibold uppercase tracking-wider text-ink-mute">
+              {tool.kind === 'automation' ? 'Automation — runs for you' : 'App — you drive it'}
+            </p>
+          </div>
+        ))}
+      </div>
+
       {/* coming next */}
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {next.map((tool) => (
           <div key={tool.name} className="rounded-2xl border border-dashed border-hairline bg-paper-800/60 p-5">
             <div className="flex items-start justify-between">
@@ -53,16 +74,13 @@ export function AppLineup() {
             </div>
             <h3 className="mt-4 font-bold text-ink-soft">{tool.name}</h3>
             <p className="mt-1 text-sm text-ink-mute">{tool.tagline}</p>
-            <p className="mt-2 text-[10px] font-semibold uppercase tracking-wider text-ink-mute">
-              {tool.kind === 'automation' ? 'Automation — runs for you' : 'App — you drive it'}
-            </p>
           </div>
         ))}
       </div>
 
       <p className="mt-6 text-sm text-ink-mute">
-        Live today: Estimate Builder, Load Calc Helper, Water Heater Quote Pack, Maintenance Plan
-        Builder, Material Order Sheet. Every one included in every paid plan.
+        Plus trade tools live today: Load Calc Helper, Water Heater Quote Pack, Maintenance Plan
+        Builder, Material Order Sheet — every one included in every paid plan.
       </p>
     </section>
   );

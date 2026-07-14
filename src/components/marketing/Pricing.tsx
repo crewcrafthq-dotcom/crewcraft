@@ -4,11 +4,19 @@ import { cn } from '@/lib/cn';
 import { PRICING_TIERS } from '@/lib/marketing';
 import { StartFreeButton } from './StartFree';
 
-/**
- * The four tiers from lib/marketing — Free is a real card (the #1 objection is
- * price; the answer belongs in the grid), and each paid tier earns its spot
- * with different benefits instead of three identical feature lists.
- */
+// Every plan is the same full product — the strip below the cards says so once.
+// The cards differentiate on billing and the perks we can genuinely keep.
+const PRODUCT_FEATURES = [
+  'AI line items from text or photos',
+  'Good / Better / Best options',
+  'Customer e-sign on every estimate',
+  'Invoices + auto-invoice on acceptance',
+  'Online payments via your Stripe',
+  'Auto follow-ups & overdue chasing',
+  'Customers, analytics & price book',
+  'Trade tools: load calc, quote packs & more',
+];
+
 export function Pricing() {
   return (
     <section id="pricing" className="mx-auto max-w-6xl px-5 py-16 sm:px-6 sm:py-24">
@@ -74,6 +82,23 @@ export function Pricing() {
             />
           </div>
         ))}
+      </div>
+
+      {/* one product, one feature list — every plan gets all of it */}
+      <div className="mt-8 rounded-2xl border border-hairline bg-paper-800 p-6 shadow-card sm:p-7">
+        <p className="text-sm font-bold uppercase tracking-wide text-ink-mute">
+          Every plan includes all of it
+        </p>
+        <ul className="mt-4 grid gap-x-6 gap-y-2.5 sm:grid-cols-2 lg:grid-cols-4">
+          {PRODUCT_FEATURES.map((f) => (
+            <li key={f} className="flex items-center gap-2.5 text-sm text-ink-soft">
+              <span className="grid h-5 w-5 flex-none place-items-center rounded-full bg-accent/10 text-accent-bright">
+                <Check className="h-3.5 w-3.5" />
+              </span>
+              {f}
+            </li>
+          ))}
+        </ul>
       </div>
 
       <p className="mt-6 text-center text-sm text-ink-mute">

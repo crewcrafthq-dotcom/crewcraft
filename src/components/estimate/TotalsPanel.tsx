@@ -39,7 +39,7 @@ export function TotalsPanel({ totals, taxRate, onTaxRate, deposit, onDeposit }: 
       </div>
 
       <div className="flex items-center justify-between pt-1">
-        <div className="flex items-center gap-2 text-ink-soft">
+        <div className="flex flex-wrap items-center gap-2 text-ink-soft">
           <span>Deposit</span>
           <div className="flex items-center">
             <span className="text-ink-mute">$</span>
@@ -52,6 +52,18 @@ export function TotalsPanel({ totals, taxRate, onTaxRate, deposit, onDeposit }: 
               placeholder="0.00"
             />
           </div>
+          {/* one-tap deposit presets — contractors think in percentages */}
+          {([25, 30, 50] as const).map((pct) => (
+            <button
+              key={pct}
+              type="button"
+              onClick={() => onDeposit(String(Math.round(totals.total * pct) / 100))}
+              disabled={totals.total <= 0}
+              className="rounded-lg border border-hairline px-2 py-1 text-xs font-semibold text-ink-mute transition hover:bg-paper-700 hover:text-ink disabled:opacity-40"
+            >
+              {pct}%
+            </button>
+          ))}
         </div>
         <span className="font-medium text-accent-bright">{money(totals.depositDue)}</span>
       </div>

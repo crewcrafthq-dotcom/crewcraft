@@ -1,12 +1,28 @@
-# Crewcraft Estimate Builder
+# Crewcraft
 
-Turn a plain-English job into a clean, branded estimate PDF in under a minute.
-A contractor types what the job is, the AI drafts itemized labor + materials, and
-they send a polished estimate the homeowner opens on their phone.
+Software for HVAC, plumbing, electrical, and roofing contractors, built around
+one flow: describe a job in plain English (or snap photos of it), send a
+branded estimate the homeowner opens on their phone, get it signed, invoiced,
+and paid.
 
-This is the first software product for [Crewcraft](https://crewcraft.ai) — the
-done-for-you version of the estimate prompts they already sell to HVAC, plumbing,
-electrical, and roofing contractors.
+This started as the Estimate Builder — the done-for-you version of the estimate
+prompts [Crewcraft](https://crewcraft.ai) already sells — and has grown into a
+small toolbelt:
+
+- **Estimate Builder** — AI drafts itemized labor + materials from a plain-English
+  description and/or job-site photos; optional Good/Better/Best three-option mode.
+- **Accept & e-sign** — homeowners approve (typed-name signature) or decline right
+  on the public estimate page; the contractor is emailed and the signature lands
+  on the PDF.
+- **Invoices** — one tap converts an accepted estimate; due dates, PAID stamp,
+  outstanding/overdue tracking, "pay online" link for deposits and balances.
+- **Follow-ups** — manual one-tap reminders plus an optional daily cron that
+  nudges quiet customers after 3 days (max twice, per-estimate toggle).
+- **Customers** — CRM-lite built automatically from the paperwork: history,
+  quoted/won/collected per customer.
+- **Analytics** — win rate, average ticket, quoted vs won by month, pipeline.
+- **Price Book** — saved rates and materials; the AI prices every draft with them.
+- **Review requests** — post-job "leave us a review" email with your Google link.
 
 ## Stack
 
@@ -38,25 +54,32 @@ through step-by-step in **[SETUP.md](./SETUP.md)**.
 | `npm run build` / `start` | Production build / serve |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | `next lint` |
-| `npm run test` | Vitest — totals math + AI JSON parser |
-| `npm run pdf:smoke` | Render a sample PDF to `./scratch/` |
+| `npm run test` | Vitest — totals math, AI JSON parsers, customer grouping |
+| `npm run pdf:smoke` | Render sample estimate + invoice PDFs to `./scratch/` |
 
 ## How it's laid out
 
 ```
 src/
   app/                 # routes (App Router)
-    api/               # ai/generate, estimates/*/pdf|send, public/*/pdf, stripe/*
-    estimates/[id]/    # the editor
-    e/[token]/         # public, read-only estimate (no login)
+    api/               # ai/generate, estimates/*/(pdf|send|remind|review-request),
+                       # public/*/(pdf|respond), pricebook, cron/reminders, stripe/*
+    estimates/[id]/    # the estimate editor
+    invoices/          # invoice list + editor (same editor component, invoice mode)
+    customers/         # CRM-lite list + per-customer history
+    analytics/         # win rate, quoted vs won, pipeline
+    pricebook/         # saved rates & materials
+    e/[token]/         # public estimate/invoice page (no login; accept/e-sign lives here)
   components/          # UI primitives, BusinessForm, estimate editor parts
   lib/
-    ai/                # §5 system prompt + parse/validate (parseGenerated is unit-tested)
-    pdf/               # @react-pdf document + font registration + render
+    ai/                # §5 system prompt + parse/validate (parsers are unit-tested)
+    pdf/               # @react-pdf document (estimate + invoice) + fonts + render
+    email/             # Resend seam + all templates (estimate, invoice, reminder, review)
     estimates.ts       # computeTotals — the single source of truth for all math
+    customers.ts       # derives the customer roll-up from documents (unit-tested)
     supabase/          # browser / server / service-role clients
     trades.ts          # per-trade accent tokens (CSS vars + PDF hex)
-supabase/migrations/   # schema, RLS, storage bucket
+supabase/migrations/   # schema, RLS, storage bucket, apps expansion (0004)
 ```
 
 ## Design notes
@@ -71,7 +94,8 @@ supabase/migrations/   # schema, RLS, storage bucket
   and the contractor can enter items by hand. Assumptions are surfaced above the
   line items for review.
 
-## Out of scope (v1)
+## Out of scope (for now)
 
-Voice input (a clean seam is left on the job-description box), invoicing/payment
-collection, scheduling, CRM, teams, template libraries, photo attachments.
+Voice input (a clean seam is left on the job-description box), scheduling,
+teams, template libraries, and in-app card processing (payments run through the
+contractor's own payment link — e.g. a Stripe Payment Link — set in Settings).

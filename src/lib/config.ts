@@ -10,6 +10,19 @@ export const AI_MODEL_FALLBACK = 'claude-haiku-4-5';
 /** Free tier: 3 estimates total, then the paywall (§6). Not per month. */
 export const FREE_ESTIMATE_LIMIT = 3;
 
+/** Follow-up reminders: nudge after N quiet days, at most MAX times. */
+export const REMINDER_AFTER_DAYS = 3;
+export const REMINDER_MAX = 2;
+
+/** Invoices default to net-14. */
+export const INVOICE_DUE_DAYS = 14;
+
+/** Estimates advertise a validity window (shown on the public page + PDF). */
+export const ESTIMATE_VALID_DAYS = 30;
+
+/** AI photo input: keep request bodies sane. */
+export const AI_MAX_PHOTOS = 4;
+
 /** Stripe price ids, wired from env so this code carries no secrets. */
 export const STRIPE_PRICES = {
   proMonthly: process.env.STRIPE_PRICE_PRO_MONTHLY ?? '',
@@ -35,4 +48,19 @@ export function appUrl(): string {
 /** A Stripe subscription that counts as paid. */
 export function isPaidStatus(status: string | null | undefined): boolean {
   return status === 'active' || status === 'trialing';
+}
+
+/**
+ * Owner/admin allowlist: comma-separated emails in the OWNER_EMAILS env var
+ * get unlimited estimates without a subscription (SERVER ONLY). Survives
+ * Stripe webhook syncs because it never touches the plan columns.
+ */
+export function isOwnerEmail(email: string | null | undefined): boolean {
+  const raw = process.env.OWNER_EMAILS ?? '';
+  if (!email || !raw) return false;
+  return raw
+    .split(',')
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean)
+    .includes(email.toLowerCase());
 }

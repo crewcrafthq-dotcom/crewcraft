@@ -11,10 +11,13 @@ import {
   ListChecks,
   Mic,
   Package,
+  PenLine,
   PhoneIncoming,
   Receipt,
   Send,
   Star,
+  TrendingUp,
+  Users2,
   Wrench,
   type LucideProps,
 } from 'lucide-react';
@@ -23,6 +26,9 @@ import type { ToolIconKey } from '@/lib/marketing';
 
 const MAP: Record<ToolIconKey, React.ComponentType<LucideProps>> = {
   estimates: FileText,
+  esign: PenLine,
+  customers: Users2,
+  analytics: TrendingUp,
   voice: Mic,
   supplements: ClipboardList,
   followup: Send,

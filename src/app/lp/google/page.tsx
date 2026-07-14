@@ -211,27 +211,20 @@ export default function GoogleAdPage() {
           </div>
         </section>
 
-        {/* proof + final */}
+        {/* beyond the quote + final */}
         <section className="bg-paper-850">
           <div className="mx-auto max-w-5xl px-5 py-12 sm:px-6 sm:py-16">
             <div className="grid gap-4 sm:grid-cols-3">
-              {(['plumbing', 'hvac', 'electrical'] as const).map((t) => {
-                const c = TRADE_CONTENT[t];
-                return (
-                  <figure key={t} className="rounded-2xl border border-hairline bg-paper-800 p-5 shadow-card">
-                    <blockquote className="text-sm font-medium leading-relaxed text-ink">
-                      “{c.testimonial.quote}”
-                    </blockquote>
-                    <figcaption className="mt-3 text-xs font-semibold text-ink">
-                      {c.testimonial.name}
-                      <span className="font-normal text-ink-mute">
-                        {' · '}
-                        {c.testimonial.trade}, {c.testimonial.city}
-                      </span>
-                    </figcaption>
-                  </figure>
-                );
-              })}
+              {[
+                ['Customer e-sign', 'Every estimate link has an accept button — typed-name signature, straight onto the PDF.'],
+                ['Invoices & payments', 'Accepted estimates become invoices, and your Stripe takes the deposit online.'],
+                ['Automatic follow-ups', 'Quiet quotes and overdue invoices get chased for you, politely, on a schedule.'],
+              ].map(([title, body]) => (
+                <div key={title} className="rounded-2xl border border-hairline bg-paper-800 p-5 shadow-card">
+                  <h3 className="text-sm font-bold text-ink">{title}</h3>
+                  <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">{body}</p>
+                </div>
+              ))}
             </div>
 
             <div className="mt-10 text-center">

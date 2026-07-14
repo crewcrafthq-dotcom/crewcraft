@@ -45,7 +45,7 @@ export function WhyToolbelt() {
       <div className="mx-auto max-w-2xl text-center">
         <p className="eyebrow">Why Toolbelt</p>
         <h2 className="mt-2 text-3xl font-bold leading-tight text-ink sm:text-4xl">
-          Why choose Toolbelt
+          Built for the truck, not the back office.
         </h2>
         <p className="mt-3 text-lg text-ink-soft">
           The competition sells you a do-everything system. Toolbelt does the one thing you dread —

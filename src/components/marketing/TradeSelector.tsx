@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Quote } from 'lucide-react';
+import { ArrowDown, ArrowRight, Keyboard } from 'lucide-react';
 
 import { TradeIcon } from '@/components/TradeIcon';
 import { cn } from '@/lib/cn';
@@ -57,22 +57,28 @@ export function TradeSelector() {
           })}
         </div>
 
-        {/* example + testimonial swap to the trade */}
+        {/* what you type → the estimate that comes back, per trade */}
         <div className="mt-9 grid items-center gap-6 lg:grid-cols-2">
+          <div>
+            <div className="rounded-2xl border border-hairline bg-paper-800 p-6 shadow-card sm:p-8">
+              <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-ink-mute">
+                <Keyboard className="h-4 w-4" />
+                You type this
+              </p>
+              <p className="mt-4 rounded-xl border border-hairline bg-paper-850 p-4 font-medium leading-relaxed text-ink sm:text-lg">
+                “{c.job}”
+              </p>
+              <p className="mt-4 flex items-center gap-2 text-sm text-ink-soft">
+                <ArrowDown className="h-4 w-4 flex-none text-accent-bright lg:hidden" />
+                <ArrowRight className="hidden h-4 w-4 flex-none text-accent-bright lg:block" />
+                <span>
+                  …and it comes back as this estimate — priced, itemized, ready to send. About a
+                  minute, start to finish.
+                </span>
+              </p>
+            </div>
+          </div>
           <EstimatePreview trade={trade} className="mx-auto w-full max-w-md min-w-0" />
-          <figure className="rounded-2xl border border-hairline bg-paper-800 p-6 shadow-card sm:p-8">
-            <Quote className="h-8 w-8 text-accent" />
-            <blockquote className="mt-4 text-xl font-medium leading-snug text-ink sm:text-2xl">
-              “{c.testimonial.quote}”
-            </blockquote>
-            <figcaption className="mt-5 text-sm font-semibold text-ink">
-              {c.testimonial.name}
-              <span className="font-normal text-ink-mute">
-                {' · '}
-                {c.testimonial.trade}, {c.testimonial.city}
-              </span>
-            </figcaption>
-          </figure>
         </div>
       </div>
     </section>

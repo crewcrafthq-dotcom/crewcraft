@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
 import { Button } from '@/components/ui/Button';
-import { Input, Label } from '@/components/ui/Field';
+import { Input, Label, Textarea } from '@/components/ui/Field';
 import { cn } from '@/lib/cn';
 import { getTheme, themeVars } from '@/lib/trades';
 import { TRADES, type Business, type Trade } from '@/lib/types';
@@ -17,9 +17,11 @@ interface Props {
   action: Action;
   initial?: Partial<Business>;
   submitLabel: string;
+  /** Settings-only extras: get-paid + review link. Onboarding stays lean. */
+  extended?: boolean;
 }
 
-export function BusinessForm({ action, initial, submitLabel }: Props) {
+export function BusinessForm({ action, initial, submitLabel, extended }: Props) {
   const [state, formAction] = useFormState(action, {});
   const [trade, setTrade] = useState<Trade>((initial?.trade as Trade) ?? 'hvac');
   const [logoPreview, setLogoPreview] = useState<string | null>(initial?.logo_url ?? null);
@@ -117,6 +119,61 @@ export function BusinessForm({ action, initial, submitLabel }: Props) {
             placeholder="95"
           />
         </div>
+
+        {extended ? (
+          <fieldset className="space-y-5 border-t border-hairline pt-6">
+            <legend className="sr-only">Getting paid & reviews</legend>
+            <div>
+              <h3 className="font-semibold text-ink">Getting paid & reviews</h3>
+              <p className="mt-1 text-sm text-ink-mute">
+                These power the “Pay online” button customers see on accepted estimates and
+                invoices, and the one-tap review request.
+              </p>
+            </div>
+            <Text
+              name="payment_link"
+              label="Payment link (optional — fallback when Stripe isn't connected)"
+              type="url"
+              defaultValue={initial?.payment_link ?? ''}
+              placeholder="https://buy.stripe.com/… or your payment page"
+            />
+            <div>
+              <Label htmlFor="payment_instructions">Payment instructions (optional)</Label>
+              <Textarea
+                id="payment_instructions"
+                name="payment_instructions"
+                rows={2}
+                defaultValue={initial?.payment_instructions ?? ''}
+                placeholder={'e.g. "Zelle or check to Acme Heating — (555) 123-4567"'}
+              />
+            </div>
+            <Text
+              name="review_link"
+              label="Review link (optional)"
+              type="url"
+              defaultValue={initial?.review_link ?? ''}
+              placeholder="https://g.page/r/…/review — your Google review link"
+            />
+            <input type="hidden" name="auto_invoice_present" value="1" />
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-hairline bg-paper-850 p-4">
+              <input
+                type="checkbox"
+                name="auto_invoice"
+                defaultChecked={Boolean(initial?.auto_invoice)}
+                className="mt-0.5 h-5 w-5 accent-[rgb(var(--accent))]"
+              />
+              <span>
+                <span className="block text-sm font-semibold text-ink">
+                  Auto-invoice when a customer accepts
+                </span>
+                <span className="mt-0.5 block text-sm text-ink-mute">
+                  The moment an estimate is e-signed, the invoice is created and emailed to the
+                  customer with a 14-day due date — no tap needed from you.
+                </span>
+              </span>
+            </label>
+          </fieldset>
+        ) : null}
 
         {state.error ? <p className="text-sm text-red-700">{state.error}</p> : null}
         {state.ok ? <p className="text-sm text-accent-bright">Saved.</p> : null}

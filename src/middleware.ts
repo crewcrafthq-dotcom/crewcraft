@@ -12,6 +12,6 @@ export const config = {
      * Stripe webhook (/api/stripe/webhook) needs a raw body, so skip /api there
      * and let the route handler verify the signature itself.
      */
-    '/((?!_next/static|_next/image|favicon.ico|api/stripe/webhook|api/public|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|api/stripe/webhook|api/stripe/connect-webhook|api/public|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)',
   ],
 };

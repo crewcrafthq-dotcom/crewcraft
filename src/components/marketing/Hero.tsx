@@ -78,8 +78,9 @@ export function Hero() {
             </h1>
 
             <p className="mt-5 max-w-md text-lg leading-relaxed text-ink-soft">
-              Toolbelt kills the after-hours paperwork. The quote’s written, totaled, and ready to
-              send before you leave the driveway.
+              Toolbelt kills the after-hours paperwork. The quote’s written, totaled, and sent
+              before you leave the driveway — then it gets e-signed, invoiced, and followed up
+              without you.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">

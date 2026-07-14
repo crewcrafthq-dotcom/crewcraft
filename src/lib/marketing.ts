@@ -11,7 +11,6 @@ export interface TradeContent {
   job: string; // plain-English job a contractor would type
   lines: PreviewLine[];
   total: string;
-  testimonial: { quote: string; name: string; trade: string; city: string };
 }
 
 /** Per-trade example used by the hero, trade selector, and output showcase. */
@@ -24,12 +23,6 @@ export const TRADE_CONTENT: Record<Trade, TradeContent> = {
       { category: 'materials', desc: 'Evaporator coil', amount: '$420.00' },
     ],
     total: '$2,910.00',
-    testimonial: {
-      quote: 'I quote jobs from the driveway now. Used to be an hour of typing after dinner.',
-      name: 'Mike R.',
-      trade: 'HVAC',
-      city: 'Tulsa',
-    },
   },
   plumbing: {
     job: 'Replace a 40-gallon gas water heater in the garage, haul off the old one.',
@@ -39,12 +32,6 @@ export const TRADE_CONTENT: Record<Trade, TradeContent> = {
       { category: 'materials', desc: 'Fittings & gas connector', amount: '$85.00' },
     ],
     total: '$1,125.00',
-    testimonial: {
-      quote: 'Customers say it looks like I hired a designer. I typed three sentences.',
-      name: 'Dave P.',
-      trade: 'Plumbing',
-      city: 'Akron',
-    },
   },
   electrical: {
     job: 'Swap a 100A panel for 200A service, bring grounding up to code, coordinate the permit.',
@@ -54,12 +41,6 @@ export const TRADE_CONTENT: Record<Trade, TradeContent> = {
       { category: 'materials', desc: 'Breakers & grounding kit', amount: '$180.00' },
     ],
     total: '$1,480.00',
-    testimonial: {
-      quote: 'Sent the estimate before I left the driveway. Closed it that night.',
-      name: 'Carlos M.',
-      trade: 'Electrical',
-      city: 'Fresno',
-    },
   },
   roofing: {
     job: 'Tear off and replace 22 squares of architectural shingles, new flashing and 2 sheets of decking.',
@@ -69,12 +50,6 @@ export const TRADE_CONTENT: Record<Trade, TradeContent> = {
       { category: 'materials', desc: 'Flashing & decking', amount: '$360.00' },
     ],
     total: '$6,960.00',
-    testimonial: {
-      quote: 'Even just the estimates gave me my weekends back. Three sentences and it’s done.',
-      name: 'Tanya W.',
-      trade: 'Roofing',
-      city: 'Raleigh',
-    },
   },
 };
 
@@ -90,11 +65,14 @@ export type ToolStatus = 'live' | 'next' | 'planned';
 
 export type ToolIconKey =
   | 'estimates'
+  | 'esign'
+  | 'invoices'
+  | 'customers'
+  | 'analytics'
   | 'voice'
   | 'supplements'
   | 'followup'
   | 'reviews'
-  | 'invoices'
   | 'scheduling'
   | 'maintenance'
   | 'reminders'
@@ -119,15 +97,17 @@ export interface ToolItem {
   href?: string;
 }
 
-/** What's on the belt for every trade. Estimates is the flagship; the rest are honest about status. */
+/** What's on the belt for every trade. Statuses are honest — live means live. */
 export const APP_LINEUP: ToolItem[] = [
-  { name: 'Toolbelt Estimates', tagline: 'Type the job, send a branded estimate.', status: 'live', icon: 'estimates', kind: 'app' },
+  { name: 'Toolbelt Estimates', tagline: 'Type the job — or snap photos — and send a branded, e-signable estimate.', status: 'live', icon: 'estimates', kind: 'app', href: '/estimates' },
+  { name: 'Invoices', tagline: 'Accepted estimates become invoices — automatically, if you want.', status: 'live', icon: 'invoices', kind: 'app', href: '/invoices' },
+  { name: 'Follow-up Engine', tagline: 'Quotes and overdue invoices that chase themselves so you don’t.', status: 'live', icon: 'followup', kind: 'automation' },
+  { name: 'Customers', tagline: 'Every customer and job history, built from your paperwork.', status: 'live', icon: 'customers', kind: 'app', href: '/customers' },
+  { name: 'Analytics', tagline: 'Win rate, average ticket, quoted vs won.', status: 'live', icon: 'analytics', kind: 'app', href: '/analytics' },
   { name: 'Toolbelt Voice', tagline: 'Talk it out, get the paperwork.', status: 'next', icon: 'voice', kind: 'app' },
-  { name: 'Toolbelt Invoices', tagline: 'Accepted estimate → invoice → paid.', status: 'next', icon: 'invoices', kind: 'app' },
-  { name: 'Follow-up Engine', tagline: 'Quotes that chase themselves so you don’t.', status: 'next', icon: 'followup', kind: 'automation' },
-  { name: 'Review-Getter', tagline: 'Turn finished jobs into 5-star reviews.', status: 'next', icon: 'reviews', kind: 'automation' },
-  { name: 'Toolbelt Scheduling', tagline: 'Book the job, keep the week straight.', status: 'next', icon: 'scheduling', kind: 'app' },
   { name: 'Toolbelt Supplements', tagline: 'Roofing insurance supplements, done faster.', status: 'next', icon: 'supplements', kind: 'app' },
+  { name: 'Toolbelt Scheduling', tagline: 'Book the job, keep the week straight.', status: 'next', icon: 'scheduling', kind: 'app' },
+  { name: 'Review-Getter', tagline: 'Turn finished jobs into 5-star reviews.', status: 'next', icon: 'reviews', kind: 'automation' },
 ];
 
 export interface TradeSectionContent {
@@ -158,9 +138,9 @@ export const TRADE_SECTIONS: Record<Trade, TradeSectionContent> = {
     tools: [
       { name: 'Estimate Builder', tagline: 'Type the changeout, send the branded quote.', status: 'live', icon: 'estimates', kind: 'app', href: '/estimates' },
       { name: 'Maintenance Plan Builder', tagline: 'Turn one-off tune-ups into recurring revenue.', status: 'live', icon: 'maintenance', kind: 'app', href: '/apps/maintenance-plan' },
+      { name: 'Follow-up Engine', tagline: 'Unanswered quotes get a nudge — automatically.', status: 'live', icon: 'followup', kind: 'automation' },
       { name: 'Seasonal Tune-Up Reminders', tagline: '“Time for your spring check” goes out by itself — and books the calendar.', status: 'planned', icon: 'reminders', kind: 'automation' },
       { name: 'Equipment & Filter Log', tagline: 'Every unit you’ve touched: model, serial, filter size, refrigerant.', status: 'planned', icon: 'log', kind: 'app' },
-      { name: 'Follow-up Engine', tagline: 'Unanswered quotes get a nudge on day 2 and day 5.', status: 'next', icon: 'followup', kind: 'automation' },
     ],
   },
   plumbing: {
@@ -192,9 +172,9 @@ export const TRADE_SECTIONS: Record<Trade, TradeSectionContent> = {
     tools: [
       { name: 'Estimate Builder', tagline: 'Describe the panel swap, send the branded quote.', status: 'live', icon: 'estimates', kind: 'app', href: '/estimates' },
       { name: 'Load Calc Helper', tagline: 'A quick service-load sanity check before you commit to a number.', status: 'live', icon: 'loadcalc', kind: 'app', href: '/apps/load-calc' },
+      { name: 'Follow-up Engine', tagline: 'Quotes chase themselves so you can stay on the tools.', status: 'live', icon: 'followup', kind: 'automation' },
       { name: 'Permit & Inspection Tracker', tagline: 'Every job’s permit status and inspection date, with reminders.', status: 'planned', icon: 'permits', kind: 'automation' },
-      { name: 'Good-Better-Best Options', tagline: 'One job, three option tiers, one tap.', status: 'planned', icon: 'options', kind: 'app' },
-      { name: 'Follow-up Engine', tagline: 'Quotes chase themselves so you can stay on the tools.', status: 'next', icon: 'followup', kind: 'automation' },
+      { name: 'Good-Better-Best Options', tagline: 'One job, three option tiers, one tap.', status: 'live', icon: 'options', kind: 'app', href: '/estimates' },
     ],
   },
   roofing: {
@@ -232,8 +212,9 @@ export interface PricingTier {
 
 /**
  * The four tiers, one source of truth for the landing page and /billing.
- * Every claim here is either enforced in code (the 3-estimate gate) or a
- * commitment we can keep by hand (support, betas, roadmap votes, price lock).
+ * Every plan gets the full product (see the shared strip on the pricing
+ * section); tiers differ on billing and the perks we can genuinely keep:
+ * price lock, support priority, early access, roadmap say.
  */
 export const PRICING_TIERS: PricingTier[] = [
   {
@@ -245,9 +226,9 @@ export const PRICING_TIERS: PricingTier[] = [
     blurb: 'Kick the tires on a real job. No card, no timer.',
     features: [
       '3 estimates, yours to keep',
-      'AI labor & material line items',
-      'Branded PDF + shareable link',
-      'Email sending + open tracking',
+      'AI line items — typed or from photos',
+      'Branded PDF + e-signable link',
+      'Customer accept & online payment',
       'No credit card required',
     ],
     featured: false,
@@ -262,9 +243,9 @@ export const PRICING_TIERS: PricingTier[] = [
     blurb: 'For the busy season — or all year. No contract.',
     features: [
       'Unlimited estimates',
-      'AI line items, branded PDF + tracking',
+      'E-sign, invoices & auto follow-ups',
+      'Customers, analytics & price book',
       'Every new Toolbelt app as it ships',
-      'Email support',
       'Cancel anytime',
     ],
     featured: false,
@@ -333,5 +314,9 @@ export const FAQ: { q: string; a: string }[] = [
   {
     q: 'What do I need to start?',
     a: 'Your company name and your logo. Add your license and rates once, and they land on every estimate after that.',
+  },
+  {
+    q: 'Can customers accept and pay online?',
+    a: 'Yes. Every estimate link has an accept button — the customer types their name to e-sign, you get an email, and the signature lands on the PDF. Add your payment link in Settings and accepted estimates show a "Pay online" button for the deposit.',
   },
 ];

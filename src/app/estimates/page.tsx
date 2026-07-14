@@ -14,8 +14,8 @@ import { AppShell } from '@/components/AppShell';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Card } from '@/components/ui/Card';
 import { buttonClasses } from '@/components/ui/Button';
-import { getSession } from '@/lib/auth';
-import { FREE_ESTIMATE_LIMIT, isPaidStatus } from '@/lib/config';
+import { getSession, isUsedEstimate } from '@/lib/auth';
+import { FREE_ESTIMATE_LIMIT, isOwnerEmail, isPaidStatus } from '@/lib/config';
 import { money, shortDate } from '@/lib/format';
 import { createClient } from '@/lib/supabase/server';
 import type { Estimate } from '@/lib/types';
@@ -34,11 +34,17 @@ export default async function EstimatesPage() {
     .from('estimates')
     .select('id, customer_name, total, status, created_at, updated_at')
     .eq('user_id', user.id)
+    .eq('kind', 'estimate')
     .order('updated_at', { ascending: false });
 
   const estimates = (data ?? []) as Row[];
-  const paid = isPaidStatus(business.subscription_status);
-  const remaining = Math.max(0, FREE_ESTIMATE_LIMIT - estimates.length);
+  // Owners never see the free-tier banner or the paywall.
+  const paid = isPaidStatus(business.subscription_status) || isOwnerEmail(user.email);
+  // Untouched empty drafts don't burn free estimates (matches countEstimates).
+  const usedCount = estimates.filter((e) =>
+    isUsedEstimate({ status: e.status, total: e.total, customer_name: e.customer_name }),
+  ).length;
+  const remaining = Math.max(0, FREE_ESTIMATE_LIMIT - usedCount);
 
   const openCount = estimates.filter((e) => ['draft', 'sent', 'viewed'].includes(e.status)).length;
   const acceptedCount = estimates.filter((e) => e.status === 'accepted').length;

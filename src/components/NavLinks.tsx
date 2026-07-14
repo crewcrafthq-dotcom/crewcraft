@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutGrid, FileText } from 'lucide-react';
+import { LayoutGrid, FileText, Receipt, TrendingUp, Users2 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
 const LINKS = [
@@ -17,6 +17,24 @@ const LINKS = [
     label: 'Estimates',
     icon: FileText,
     match: (p: string) => p.startsWith('/estimates'),
+  },
+  {
+    href: '/invoices',
+    label: 'Invoices',
+    icon: Receipt,
+    match: (p: string) => p.startsWith('/invoices'),
+  },
+  {
+    href: '/customers',
+    label: 'Customers',
+    icon: Users2,
+    match: (p: string) => p.startsWith('/customers'),
+  },
+  {
+    href: '/analytics',
+    label: 'Analytics',
+    icon: TrendingUp,
+    match: (p: string) => p.startsWith('/analytics'),
   },
 ];
 

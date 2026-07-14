@@ -49,7 +49,7 @@ export async function writeBusinessFromForm(formData: FormData): Promise<WriteRe
     logoUrl = supabase.storage.from('logos').getPublicUrl(path).data.publicUrl;
   }
 
-  const fields = {
+  const fields: Record<string, unknown> = {
     trade,
     name,
     license: str(formData, 'license'),
@@ -59,6 +59,17 @@ export async function writeBusinessFromForm(formData: FormData): Promise<WriteRe
     default_tax_rate: num(formData, 'default_tax_rate'),
     default_labor_rate: num(formData, 'default_labor_rate'),
   };
+
+  // Get-paid + review settings only exist on the settings form (not onboarding)
+  // — write them only when the form actually carried them.
+  for (const key of ['review_link', 'payment_link', 'payment_instructions'] as const) {
+    if (formData.has(key)) fields[key] = str(formData, key);
+  }
+  // Checkbox: a sentinel field marks the form as carrying it, since an
+  // unchecked box submits nothing at all.
+  if (formData.has('auto_invoice_present')) {
+    fields.auto_invoice = formData.get('auto_invoice') === 'on';
+  }
 
   const { data: existing } = await supabase
     .from('businesses')

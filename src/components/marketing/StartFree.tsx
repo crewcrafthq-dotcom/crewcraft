@@ -1,6 +1,9 @@
+'use client';
+
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { trackEvent } from '@/lib/analytics';
 
 type Tone = 'accent' | 'solid' | 'outline';
 
@@ -28,6 +31,7 @@ export function StartFreeButton({
   return (
     <Link
       href="/login?mode=signup"
+      onClick={() => trackEvent('start_free_click', { label })}
       className={cn(
         'group inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg font-semibold transition duration-200 ease-out-soft',
         'active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-paper-900',

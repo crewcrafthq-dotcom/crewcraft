@@ -1,30 +1,56 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { ArrowRight, CalendarClock, FileText, PartyPopper, Receipt, TriangleAlert, Users2 } from 'lucide-react';
+import {
+  ArrowRight,
+  BookOpen,
+  CalendarClock,
+  Calculator,
+  FileText,
+  Flame,
+  Package,
+  PartyPopper,
+  Receipt,
+  TrendingUp,
+  TriangleAlert,
+  Users2,
+  Wrench,
+} from 'lucide-react';
 
 import { AppShell } from '@/components/AppShell';
-import { ToolIcon } from '@/components/ToolIcon';
 import { getSession } from '@/lib/auth';
-import { TRADE_SECTIONS, type ToolItem } from '@/lib/marketing';
-import { getTheme } from '@/lib/trades';
+import { buildCustomers, type CustomerDoc } from '@/lib/customers';
+import { money } from '@/lib/format';
 import { createClient } from '@/lib/supabase/server';
+import type { Trade } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
-const SOON = [
-  { name: 'Invoices', desc: 'Turn an accepted estimate into an invoice and get paid.', icon: Receipt },
-  { name: 'Scheduling', desc: 'Book the job and keep your week straight.', icon: CalendarClock },
-  { name: 'Customers', desc: 'Every customer and job in one place.', icon: Users2 },
-];
-
-// Available to every trade, not just roofing (materials exist on every quote).
-const ORDER_SHEET: ToolItem = {
-  name: 'Material Order Sheet',
-  tagline: 'Estimate → supplier order list, no re-typing at the counter.',
-  status: 'live',
-  icon: 'materials',
-  kind: 'app',
-  href: '/apps/order-sheet',
+// One live trade tool per trade, next to the universal apps.
+const TRADE_APPS: Record<Trade, { name: string; desc: string; href: string; icon: typeof Wrench }> = {
+  hvac: {
+    name: 'Maintenance Plan Builder',
+    desc: 'Three ready-made maintenance agreements — pick one, brand it, send it.',
+    href: '/apps/maintenance-plan',
+    icon: Wrench,
+  },
+  plumbing: {
+    name: 'Water Heater Quote Pack',
+    desc: 'Tank vs tankless, good-better-best — three quotes, one tap each.',
+    href: '/apps/water-heater',
+    icon: Flame,
+  },
+  electrical: {
+    name: 'Load Calc Helper',
+    desc: 'Quick NEC-style service load check before you quote the panel.',
+    href: '/apps/load-calc',
+    icon: Calculator,
+  },
+  roofing: {
+    name: 'Material Order Sheet',
+    desc: 'Turn an estimate into a printable supplier order list.',
+    href: '/apps/order-sheet',
+    icon: Package,
+  },
 };
 
 export default async function DashboardPage({
@@ -37,19 +63,76 @@ export default async function DashboardPage({
   if (!business) redirect('/onboarding');
 
   const supabase = createClient();
-  const { count } = await supabase
-    .from('estimates')
-    .select('id', { count: 'exact', head: true })
-    .eq('user_id', user.id);
-  const estimateCount = count ?? 0;
+  const [{ data: docs }, { count: priceBookCount }] = await Promise.all([
+    supabase
+      .from('estimates')
+      .select(
+        'id, kind, customer_name, customer_email, customer_phone, customer_address, status, total, created_at, updated_at',
+      )
+      .eq('user_id', user.id),
+    supabase
+      .from('price_book_items')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id),
+  ]);
 
-  const tradeLabel = getTheme(business.trade).label;
-  const tradeTools = TRADE_SECTIONS[business.trade].tools.filter(
-    (t) => t.name !== 'Estimate Builder',
-  );
-  const liveTools = tradeTools.filter((t) => t.status === 'live' && t.href);
-  if (business.trade !== 'roofing') liveTools.push(ORDER_SHEET);
-  const upcoming = tradeTools.filter((t) => t.status !== 'live');
+  const all = (docs ?? []) as CustomerDoc[];
+  const estimates = all.filter((d) => d.kind === 'estimate');
+  const invoices = all.filter((d) => d.kind === 'invoice');
+  const customers = buildCustomers(all);
+
+  const accepted = estimates.filter((e) => e.status === 'accepted').length;
+  const declined = estimates.filter((e) => e.status === 'declined').length;
+  const decided = accepted + declined;
+  const winRateMeta = decided > 0 ? `Win rate ${Math.round((accepted / decided) * 100)}%` : 'No data yet';
+  const outstanding = invoices
+    .filter((i) => i.status !== 'paid')
+    .reduce((s, i) => s + (i.total || 0), 0);
+
+  const tradeApp = TRADE_APPS[business.trade];
+
+  const apps = [
+    {
+      name: 'Estimate Builder',
+      desc: 'Turn a plain-English job (or a few photos) into a branded estimate in under a minute.',
+      href: '/estimates',
+      icon: FileText,
+      meta: `${estimates.length} ${estimates.length === 1 ? 'estimate' : 'estimates'}`,
+    },
+    { ...tradeApp, meta: `Built for ${business.trade === 'hvac' ? 'HVAC' : business.trade}` },
+    {
+      name: 'Invoices',
+      desc: 'One tap turns an accepted estimate into an invoice. Track what’s owed and what’s paid.',
+      href: '/invoices',
+      icon: Receipt,
+      meta: outstanding > 0 ? `${money(outstanding)} outstanding` : `${invoices.length} total`,
+    },
+    {
+      name: 'Customers',
+      desc: 'Every customer and job in one place — built automatically from your paperwork.',
+      href: '/customers',
+      icon: Users2,
+      meta: `${customers.length} ${customers.length === 1 ? 'customer' : 'customers'}`,
+    },
+    {
+      name: 'Analytics',
+      desc: 'Win rate, average ticket, quoted vs won. Know which jobs are worth chasing.',
+      href: '/analytics',
+      icon: TrendingUp,
+      meta: winRateMeta,
+    },
+    {
+      name: 'Price Book',
+      desc: 'Save your real rates and materials — the AI prices every draft with them.',
+      href: '/pricebook',
+      icon: BookOpen,
+      meta: `${priceBookCount ?? 0} ${priceBookCount === 1 ? 'item' : 'items'} saved`,
+    },
+  ];
+  // Order sheets work for every trade; roofing already has it as its trade app.
+  if (business.trade !== 'roofing') {
+    apps.push({ ...TRADE_APPS.roofing, meta: 'Works with any estimate' });
+  }
 
   return (
     <AppShell trade={business.trade} businessName={business.name}>
@@ -84,120 +167,54 @@ export default async function DashboardPage({
         <p className="mt-1.5 text-ink-soft">Pick a tool to get to work.</p>
       </header>
 
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-mute">
-        Your apps — live
-      </h2>
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-mute">Your apps</h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {/* Flagship */}
-        <Link
-          href="/estimates"
-          className="group block animate-fade-up rounded-2xl border border-hairline bg-paper-800 p-5 shadow-card card-interactive"
-        >
-          <div className="flex items-start justify-between">
-            <span className="grid h-12 w-12 place-items-center rounded-xl bg-accent text-accent-fg shadow-accent">
-              <FileText className="h-6 w-6" />
-            </span>
-            <span className="rounded-full bg-accent/10 px-2.5 py-1 text-xs font-semibold text-accent-bright">
-              Live
-            </span>
-          </div>
-          <h3 className="mt-4 text-lg font-bold text-ink">Estimate Builder</h3>
-          <p className="mt-1 text-sm text-ink-soft">
-            Turn a plain-English job into a clean, branded estimate in under a minute.
-          </p>
-          <div className="mt-4 flex items-center justify-between border-t border-hairline pt-3 text-sm">
-            <span className="text-ink-mute">
-              {estimateCount} {estimateCount === 1 ? 'estimate' : 'estimates'}
-            </span>
-            <span className="inline-flex items-center gap-1 font-semibold text-accent-bright">
-              Open
-              <ArrowRight className="h-4 w-4 transition duration-150 group-hover:translate-x-0.5" />
-            </span>
-          </div>
-        </Link>
-
-        {/* Live trade tools */}
-        {liveTools.map((tool) => (
-          <Link
-            key={tool.name}
-            href={tool.href!}
-            className="group block animate-fade-up rounded-2xl border border-hairline bg-paper-800 p-5 shadow-card card-interactive"
-          >
-            <div className="flex items-start justify-between">
-              <span className="grid h-12 w-12 place-items-center rounded-xl bg-accent text-accent-fg shadow-accent">
-                <ToolIcon icon={tool.icon} className="h-6 w-6" />
-              </span>
-              <span className="rounded-full bg-accent/10 px-2.5 py-1 text-xs font-semibold text-accent-bright">
-                Live
-              </span>
-            </div>
-            <h3 className="mt-4 text-lg font-bold text-ink">{tool.name}</h3>
-            <p className="mt-1 text-sm text-ink-soft">{tool.tagline}</p>
-            <div className="mt-4 flex items-center justify-between border-t border-hairline pt-3 text-sm">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-ink-mute">
-                {tool.kind === 'automation' ? 'Automation' : 'App'} · built for {tradeLabel}
-              </span>
-              <span className="inline-flex items-center gap-1 font-semibold text-accent-bright">
-                Open
-                <ArrowRight className="h-4 w-4 transition duration-150 group-hover:translate-x-0.5" />
-              </span>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      <h2 className="mb-3 mt-8 text-sm font-semibold uppercase tracking-wide text-ink-mute">
-        On the way
-      </h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {upcoming.map((tool) => (
-          <div
-            key={tool.name}
-            className="rounded-2xl border border-dashed border-hairline bg-paper-800/50 p-5"
-          >
-            <div className="flex items-start justify-between">
-              <span className="grid h-12 w-12 place-items-center rounded-xl bg-paper-700 text-ink-mute">
-                <ToolIcon icon={tool.icon} className="h-6 w-6" />
-              </span>
-              <span className="rounded-full bg-paper-700 px-2.5 py-1 text-xs font-semibold text-ink-mute">
-                {tool.status === 'next' ? 'Coming next' : 'Planned'}
-              </span>
-            </div>
-            <h3 className="mt-4 text-lg font-bold text-ink-soft">{tool.name}</h3>
-            <p className="mt-1 text-sm text-ink-mute">{tool.tagline}</p>
-            <p className="mt-2 text-[10px] font-semibold uppercase tracking-wider text-ink-mute">
-              {tool.kind === 'automation' ? 'Automation — runs for you' : 'App — you drive it'}
-            </p>
-          </div>
-        ))}
-        {SOON.map((app) => {
+        {apps.map((app) => {
           const Icon = app.icon;
           return (
-            <div
+            <Link
               key={app.name}
-              className="rounded-2xl border border-dashed border-hairline bg-paper-800/50 p-5"
+              href={app.href}
+              className="group block animate-fade-up rounded-2xl border border-hairline bg-paper-800 p-5 shadow-card card-interactive"
             >
               <div className="flex items-start justify-between">
-                <span className="grid h-12 w-12 place-items-center rounded-xl bg-paper-700 text-ink-mute">
+                <span className="grid h-12 w-12 place-items-center rounded-xl bg-accent text-accent-fg shadow-accent">
                   <Icon className="h-6 w-6" />
                 </span>
-                <span className="rounded-full bg-paper-700 px-2.5 py-1 text-xs font-semibold text-ink-mute">
-                  Soon
+                <span className="rounded-full bg-accent/10 px-2.5 py-1 text-xs font-semibold text-accent-bright">
+                  Live
                 </span>
               </div>
-              <h3 className="mt-4 text-lg font-bold text-ink-soft">{app.name}</h3>
-              <p className="mt-1 text-sm text-ink-mute">{app.desc}</p>
-            </div>
+              <h3 className="mt-4 text-lg font-bold text-ink">{app.name}</h3>
+              <p className="mt-1 text-sm text-ink-soft">{app.desc}</p>
+              <div className="mt-4 flex items-center justify-between border-t border-hairline pt-3 text-sm">
+                <span className="text-ink-mute">{app.meta}</span>
+                <span className="inline-flex items-center gap-1 font-semibold text-accent-bright">
+                  Open
+                  <ArrowRight className="h-4 w-4 transition duration-150 group-hover:translate-x-0.5" />
+                </span>
+              </div>
+            </Link>
           );
         })}
+
+        {/* Roadmap */}
+        <div className="rounded-2xl border border-dashed border-hairline bg-paper-800/50 p-5">
+          <div className="flex items-start justify-between">
+            <span className="grid h-12 w-12 place-items-center rounded-xl bg-paper-700 text-ink-mute">
+              <CalendarClock className="h-6 w-6" />
+            </span>
+            <span className="rounded-full bg-paper-700 px-2.5 py-1 text-xs font-semibold text-ink-mute">
+              Soon
+            </span>
+          </div>
+          <h3 className="mt-4 text-lg font-bold text-ink-soft">Scheduling</h3>
+          <p className="mt-1 text-sm text-ink-mute">Book the job and keep your week straight.</p>
+        </div>
       </div>
 
       <p className="mt-6 text-sm text-ink-mute">
-        More tools are on the way — built for the trades, not for spreadsheets. Want one bumped up
-        the list?{' '}
-        <a href="mailto:hello@crewcraftapp.com" className="font-medium text-ink-soft underline hover:text-ink">
-          Tell us.
-        </a>
+        More tools are on the way — built for the trades, not for spreadsheets.
       </p>
     </AppShell>
   );

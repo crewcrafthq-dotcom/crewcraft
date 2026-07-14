@@ -5,6 +5,7 @@ import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toast';
+import { ServiceWorker } from '@/components/ServiceWorker';
 
 // Google Ads conversion tracking (gtag.js). The base tag lets Google detect the
 // site; the signup conversion event is fired from the post-signup flow.
@@ -51,6 +52,13 @@ export const metadata: Metadata = {
   },
   description: DESCRIPTION,
   applicationName: 'Toolbelt by Crewcraft',
+  // Installable PWA: iOS home-screen app metadata (manifest is auto-linked from
+  // app/manifest.ts).
+  appleWebApp: {
+    capable: true,
+    title: 'Toolbelt',
+    statusBarStyle: 'black-translucent',
+  },
   keywords: [
     'contractor estimate app',
     'estimating software for contractors',
@@ -96,6 +104,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </noscript>
         {children}
         <Toaster />
+        <ServiceWorker />
         <Analytics />
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}

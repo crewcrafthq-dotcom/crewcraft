@@ -27,6 +27,7 @@ export default async function OrderSheetIndexPage() {
     .from('estimates')
     .select('id, customer_name, status, total, updated_at')
     .eq('user_id', user.id)
+    .eq('kind', 'estimate')
     .order('updated_at', { ascending: false })
     .limit(50);
   const estimates = (data ?? []) as Pick<
