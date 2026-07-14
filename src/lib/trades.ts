@@ -15,11 +15,11 @@ export interface TradeTheme {
   accent: string; // fill / primary accent (hex — used by the PDF)
   accentFg: string; // text that sits on an accent fill (PDF)
   accentDeep: string; // accent-colored text on a light background (PDF / legacy)
-  accentRgb: string; // web fill — brightened to glow on dark
-  accentFgRgb: string; // ink on an accent fill (dark: near-black for all trades)
+  accentRgb: string; // web fill — same hex as the PDF accent, as R G B channels
+  accentFgRgb: string; // ink on an accent fill (white; navy for electrical amber)
   accentDeepRgb: string;
-  accentSoftRgb: string; // faint tint background (legacy light)
-  accentBrightRgb: string; // accent-colored TEXT on dark
+  accentSoftRgb: string; // faint tint background
+  accentBrightRgb: string; // accent-colored TEXT on the paper canvas (AA on beige)
 }
 
 const THEMES: Record<Trade, TradeTheme> = {
@@ -30,11 +30,11 @@ const THEMES: Record<Trade, TradeTheme> = {
     accent: '#E8722A',
     accentFg: '#FFFFFF',
     accentDeep: '#C2571A',
-    accentRgb: '255 122 47',
-    accentFgRgb: '10 14 26',
+    accentRgb: '232 114 42',
+    accentFgRgb: '255 255 255',
     accentDeepRgb: '194 87 26',
     accentSoftRgb: '247 226 210',
-    accentBrightRgb: '255 160 105',
+    accentBrightRgb: '179 80 18',
   },
   plumbing: {
     trade: 'plumbing',
@@ -43,11 +43,11 @@ const THEMES: Record<Trade, TradeTheme> = {
     accent: '#0F8A8A',
     accentFg: '#FFFFFF',
     accentDeep: '#0B6E6E',
-    accentRgb: '34 211 197',
-    accentFgRgb: '10 14 26',
+    accentRgb: '15 138 138',
+    accentFgRgb: '255 255 255',
     accentDeepRgb: '11 110 110',
     accentSoftRgb: '214 236 236',
-    accentBrightRgb: '94 234 212',
+    accentBrightRgb: '10 105 105',
   },
   electrical: {
     trade: 'electrical',
@@ -56,11 +56,11 @@ const THEMES: Record<Trade, TradeTheme> = {
     accent: '#FFB400',
     accentFg: '#16263A', // navy on amber — never white
     accentDeep: '#D29100', // deeper amber for text on beige
-    accentRgb: '255 194 75',
-    accentFgRgb: '10 14 26',
+    accentRgb: '255 180 0',
+    accentFgRgb: '22 38 58',
     accentDeepRgb: '210 145 0',
     accentSoftRgb: '252 239 201',
-    accentBrightRgb: '255 209 130',
+    accentBrightRgb: '148 100 0',
   },
   roofing: {
     trade: 'roofing',
@@ -69,11 +69,11 @@ const THEMES: Record<Trade, TradeTheme> = {
     accent: '#C0362C',
     accentFg: '#FFFFFF',
     accentDeep: '#9B2A22',
-    accentRgb: '255 92 114',
-    accentFgRgb: '10 14 26',
+    accentRgb: '192 54 44',
+    accentFgRgb: '255 255 255',
     accentDeepRgb: '155 42 34',
     accentSoftRgb: '242 216 213',
-    accentBrightRgb: '255 138 152',
+    accentBrightRgb: '158 43 34',
   },
 };
 

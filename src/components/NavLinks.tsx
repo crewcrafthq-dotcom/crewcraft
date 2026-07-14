@@ -6,7 +6,12 @@ import { LayoutGrid, FileText } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
 const LINKS = [
-  { href: '/dashboard', label: 'Apps', icon: LayoutGrid, match: (p: string) => p === '/dashboard' },
+  {
+    href: '/dashboard',
+    label: 'Apps',
+    icon: LayoutGrid,
+    match: (p: string) => p === '/dashboard' || p.startsWith('/apps'),
+  },
   {
     href: '/estimates',
     label: 'Estimates',
@@ -29,8 +34,8 @@ export function NavLinks() {
             className={cn(
               'inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition duration-150',
               active
-                ? 'bg-night-700 text-mist'
-                : 'text-mist-soft hover:bg-night-700/60 hover:text-mist',
+                ? 'bg-paper-700 text-ink'
+                : 'text-ink-soft hover:bg-paper-700/60 hover:text-ink',
             )}
           >
             <Icon className="h-4 w-4" />

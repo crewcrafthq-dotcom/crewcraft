@@ -2,10 +2,10 @@ import * as React from 'react';
 import { cn } from '@/lib/cn';
 
 const inputBase =
-  'w-full rounded-xl border border-hairline bg-night-850 px-4 text-mist placeholder:text-mist-mute ' +
+  'w-full rounded-xl border border-hairline bg-paper-850 px-4 text-ink placeholder:text-ink-mute ' +
   'transition duration-150 ease-out-soft ' +
   'hover:border-hairline-strong ' +
-  'focus:bg-night-800 focus:outline-none focus:border-accent focus:ring-4 focus:ring-accent/15';
+  'focus:bg-paper-800 focus:outline-none focus:border-accent focus:ring-4 focus:ring-accent/15';
 
 export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   ({ className, ...props }, ref) => (

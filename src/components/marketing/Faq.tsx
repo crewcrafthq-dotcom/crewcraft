@@ -11,7 +11,7 @@ export function Faq() {
 
   return (
     <section id="faq" className="mx-auto max-w-3xl px-5 py-16 sm:px-6 sm:py-24">
-      <h2 className="text-center text-3xl font-bold leading-tight text-mist sm:text-4xl">
+      <h2 className="text-center text-3xl font-bold leading-tight text-ink sm:text-4xl">
         Straight answers.
       </h2>
 
@@ -22,7 +22,7 @@ export function Faq() {
             <div
               key={item.q}
               className={cn(
-                'overflow-hidden rounded-2xl border bg-night-800 shadow-card transition-colors',
+                'overflow-hidden rounded-2xl border bg-paper-800 shadow-card transition-colors',
                 isOpen ? 'border-accent/40' : 'border-hairline',
               )}
             >
@@ -30,7 +30,7 @@ export function Faq() {
                 type="button"
                 onClick={() => setOpen(isOpen ? null : i)}
                 aria-expanded={isOpen}
-                className="flex w-full cursor-pointer items-center justify-between gap-4 p-5 text-left font-semibold text-mist"
+                className="flex w-full cursor-pointer items-center justify-between gap-4 p-5 text-left font-semibold text-ink"
               >
                 {item.q}
                 <span
@@ -38,7 +38,7 @@ export function Faq() {
                     'grid h-7 w-7 flex-none place-items-center rounded-full border transition-all duration-300',
                     isOpen
                       ? 'rotate-45 border-accent bg-accent text-accent-fg'
-                      : 'border-hairline-strong text-mist-mute',
+                      : 'border-hairline-strong text-ink-mute',
                   )}
                 >
                   <Plus className="h-4 w-4" strokeWidth={2.5} />
@@ -51,7 +51,7 @@ export function Faq() {
                 style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
               >
                 <div className="overflow-hidden">
-                  <p className="px-5 pb-5 leading-relaxed text-mist-soft">{item.a}</p>
+                  <p className="px-5 pb-5 leading-relaxed text-ink-soft">{item.a}</p>
                 </div>
               </div>
             </div>

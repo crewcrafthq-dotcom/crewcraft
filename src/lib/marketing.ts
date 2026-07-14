@@ -1,3 +1,4 @@
+import type { PlanKey } from '@/lib/config';
 import type { Trade } from '@/lib/types';
 
 export interface PreviewLine {
@@ -85,50 +86,241 @@ export const TRADE_BUSINESS: Record<Trade, { name: string; license: string; cust
   roofing: { name: 'Ridgeline Roofing', license: 'GC 33120', customer: 'Pat W.' },
 };
 
+export type ToolStatus = 'live' | 'next' | 'planned';
+
+export type ToolIconKey =
+  | 'estimates'
+  | 'voice'
+  | 'supplements'
+  | 'followup'
+  | 'reviews'
+  | 'invoices'
+  | 'scheduling'
+  | 'maintenance'
+  | 'reminders'
+  | 'log'
+  | 'waterheater'
+  | 'afterhours'
+  | 'permits'
+  | 'loadcalc'
+  | 'options'
+  | 'storm'
+  | 'photos'
+  | 'materials';
+
 export interface ToolItem {
   name: string;
   tagline: string;
-  status: 'live' | 'next';
-  icon: 'estimates' | 'voice' | 'supplements' | 'followup' | 'reviews';
+  status: ToolStatus;
+  icon: ToolIconKey;
+  /** `app` = you open it and use it; `automation` = it runs for you. */
+  kind: 'app' | 'automation';
+  /** In-app route for live tools (dashboard links to it). */
+  href?: string;
 }
 
-/** What's on the belt. Estimates is the flagship; the rest are honest about status. */
+/** What's on the belt for every trade. Estimates is the flagship; the rest are honest about status. */
 export const APP_LINEUP: ToolItem[] = [
-  { name: 'Toolbelt Estimates', tagline: 'Type the job, send a branded estimate.', status: 'live', icon: 'estimates' },
-  { name: 'Toolbelt Voice', tagline: 'Talk it out, get the paperwork.', status: 'next', icon: 'voice' },
-  { name: 'Toolbelt Supplements', tagline: 'Roofing insurance supplements, done faster.', status: 'next', icon: 'supplements' },
-  { name: 'Follow-up Engine', tagline: 'Quotes that chase themselves so you don’t.', status: 'next', icon: 'followup' },
-  { name: 'Review-Getter', tagline: 'Turn finished jobs into 5-star reviews.', status: 'next', icon: 'reviews' },
+  { name: 'Toolbelt Estimates', tagline: 'Type the job, send a branded estimate.', status: 'live', icon: 'estimates', kind: 'app' },
+  { name: 'Toolbelt Voice', tagline: 'Talk it out, get the paperwork.', status: 'next', icon: 'voice', kind: 'app' },
+  { name: 'Toolbelt Invoices', tagline: 'Accepted estimate → invoice → paid.', status: 'next', icon: 'invoices', kind: 'app' },
+  { name: 'Follow-up Engine', tagline: 'Quotes that chase themselves so you don’t.', status: 'next', icon: 'followup', kind: 'automation' },
+  { name: 'Review-Getter', tagline: 'Turn finished jobs into 5-star reviews.', status: 'next', icon: 'reviews', kind: 'automation' },
+  { name: 'Toolbelt Scheduling', tagline: 'Book the job, keep the week straight.', status: 'next', icon: 'scheduling', kind: 'app' },
+  { name: 'Toolbelt Supplements', tagline: 'Roofing insurance supplements, done faster.', status: 'next', icon: 'supplements', kind: 'app' },
 ];
 
-export const PRICING = {
-  free: {
-    name: 'Free',
-    price: '$0',
-    cadence: 'forever',
-    line: '3 estimates total — a real taste, no timer.',
-    features: ['3 estimates', 'AI line items', 'Branded PDF + link', 'No credit card'],
+export interface TradeSectionContent {
+  /** Anchor id — also the ad deep-link target (#hvac, #plumbing, …). */
+  id: Trade;
+  headline: string;
+  sub: string;
+  /** Job types the AI already writes well — real trade language. */
+  knows: string[];
+  /** The trade's belt: shared flagship + tools specific to this trade. */
+  tools: ToolItem[];
+}
+
+/**
+ * Per-trade deep-dive sections. Statuses are honest: `live` ships today,
+ * `next` is in the build queue, `planned` is on the roadmap.
+ */
+export const TRADE_SECTIONS: Record<Trade, TradeSectionContent> = {
+  hvac: {
+    id: 'hvac',
+    headline: 'Quote the changeout from the driveway.',
+    sub: 'Condenser swaps, coil replacements, full system changeouts — the work is standard. Writing it up shouldn’t eat your evening.',
+    knows: [
+      'Changeouts and full system swaps — condenser, coil, lineset, haul-off',
+      'Repairs priced clean: capacitors, blower motors, refrigerant charges',
+      'Tune-ups and maintenance visits that read like a plan, not a favor',
+    ],
+    tools: [
+      { name: 'Estimate Builder', tagline: 'Type the changeout, send the branded quote.', status: 'live', icon: 'estimates', kind: 'app', href: '/estimates' },
+      { name: 'Maintenance Plan Builder', tagline: 'Turn one-off tune-ups into recurring revenue.', status: 'live', icon: 'maintenance', kind: 'app', href: '/apps/maintenance-plan' },
+      { name: 'Seasonal Tune-Up Reminders', tagline: '“Time for your spring check” goes out by itself — and books the calendar.', status: 'planned', icon: 'reminders', kind: 'automation' },
+      { name: 'Equipment & Filter Log', tagline: 'Every unit you’ve touched: model, serial, filter size, refrigerant.', status: 'planned', icon: 'log', kind: 'app' },
+      { name: 'Follow-up Engine', tagline: 'Unanswered quotes get a nudge on day 2 and day 5.', status: 'next', icon: 'followup', kind: 'automation' },
+    ],
   },
-  pro: {
-    name: 'Pro',
-    price: '$29',
-    cadence: '/mo',
-    annual: '$24/mo billed annually',
-    line: 'Unlimited estimates. One flat price.',
-    features: ['Unlimited estimates', 'Branded PDF + shareable link', 'Email + view tracking', 'Cancel anytime'],
+  plumbing: {
+    id: 'plumbing',
+    headline: 'Price the water heater while you’re still in the garage.',
+    sub: 'Water heaters, repipes, service calls — quoted and sent before the homeowner has finished googling “how much should this cost.”',
+    knows: [
+      'Water heaters — tank and tankless, haul-off and permit included',
+      'Repipes and remodels broken into phases a homeowner can follow',
+      'Service calls itemized so “while you’re here” becomes a line item, not a favor',
+    ],
+    tools: [
+      { name: 'Estimate Builder', tagline: 'Three sentences in the garage → a quote in their inbox.', status: 'live', icon: 'estimates', kind: 'app', href: '/estimates' },
+      { name: 'Water Heater Quote Pack', tagline: 'Tank vs tankless, good-better-best, side by side.', status: 'live', icon: 'waterheater', kind: 'app', href: '/apps/water-heater' },
+      { name: 'After-Hours Auto-Reply', tagline: '2am “my pipe burst” texts get an instant answer with your emergency rate.', status: 'planned', icon: 'afterhours', kind: 'automation' },
+      { name: 'Permit Tracker', tagline: 'Which job is waiting on which permit — without the sticky notes.', status: 'planned', icon: 'permits', kind: 'app' },
+      { name: 'Review-Getter', tagline: 'Finished jobs turn into 5-star reviews on their own.', status: 'next', icon: 'reviews', kind: 'automation' },
+    ],
   },
-  founding: {
-    name: 'Founding',
-    price: '$19',
-    cadence: '/mo for life',
-    line: 'First 100 contractors lock this rate for good.',
+  electrical: {
+    id: 'electrical',
+    headline: 'Panel swap quoted before the ladder’s back on the truck.',
+    sub: 'Panel upgrades, EV chargers, remodel rough-ins — scoped, itemized, and in the customer’s inbox while the competition is still “getting back to them.”',
+    knows: [
+      'Panel upgrades — 100A to 200A, grounding, permit coordination',
+      'EV charger installs with the load assumptions spelled out in writing',
+      'Remodel rough-ins and fixture packages, room by room',
+    ],
+    tools: [
+      { name: 'Estimate Builder', tagline: 'Describe the panel swap, send the branded quote.', status: 'live', icon: 'estimates', kind: 'app', href: '/estimates' },
+      { name: 'Load Calc Helper', tagline: 'A quick service-load sanity check before you commit to a number.', status: 'live', icon: 'loadcalc', kind: 'app', href: '/apps/load-calc' },
+      { name: 'Permit & Inspection Tracker', tagline: 'Every job’s permit status and inspection date, with reminders.', status: 'planned', icon: 'permits', kind: 'automation' },
+      { name: 'Good-Better-Best Options', tagline: 'One job, three option tiers, one tap.', status: 'planned', icon: 'options', kind: 'app' },
+      { name: 'Follow-up Engine', tagline: 'Quotes chase themselves so you can stay on the tools.', status: 'next', icon: 'followup', kind: 'automation' },
+    ],
+  },
+  roofing: {
+    id: 'roofing',
+    headline: 'Measure, price, and send before you’re off the roof.',
+    sub: 'Tear-offs by the square, storm scopes, repairs with photos — the paperwork trade. Toolbelt exists to un-paperwork it.',
+    knows: [
+      'Tear-off and re-roof by the square — shingles, underlayment, flashing, decking',
+      'Storm-damage scopes that hold up next to an adjuster’s',
+      'Repairs documented so the homeowner understands what they’re paying for',
+    ],
+    tools: [
+      { name: 'Estimate Builder', tagline: '22 squares, typed in plain English, sent from the driveway.', status: 'live', icon: 'estimates', kind: 'app', href: '/estimates' },
+      { name: 'Material Order Sheet', tagline: 'Estimate → supplier order list, no re-typing at the counter.', status: 'live', icon: 'materials', kind: 'app', href: '/apps/order-sheet' },
+      { name: 'Toolbelt Supplements', tagline: 'Insurance supplements, drafted in minutes instead of nights.', status: 'next', icon: 'supplements', kind: 'app' },
+      { name: 'Storm Response Pack', tagline: 'Hail hits: instant auto-replies and a landing page for the flood of calls.', status: 'planned', icon: 'storm', kind: 'automation' },
+      { name: 'Photo Report Builder', tagline: 'Roof photos into a clean, captioned PDF the homeowner trusts.', status: 'planned', icon: 'photos', kind: 'app' },
+    ],
   },
 };
+
+export interface PricingTier {
+  key: 'free' | 'proMonthly' | 'founding' | 'proAnnual';
+  name: string;
+  tag: string;
+  price: string;
+  unit: string;
+  blurb: string;
+  features: string[];
+  featured: boolean;
+  badge: string;
+  /** Stripe price to check out with — absent on the free tier. */
+  checkout?: PlanKey;
+}
+
+/**
+ * The four tiers, one source of truth for the landing page and /billing.
+ * Every claim here is either enforced in code (the 3-estimate gate) or a
+ * commitment we can keep by hand (support, betas, roadmap votes, price lock).
+ */
+export const PRICING_TIERS: PricingTier[] = [
+  {
+    key: 'free',
+    name: 'Free',
+    tag: 'Try it',
+    price: '$0',
+    unit: 'forever',
+    blurb: 'Kick the tires on a real job. No card, no timer.',
+    features: [
+      '3 estimates, yours to keep',
+      'AI labor & material line items',
+      'Branded PDF + shareable link',
+      'Email sending + open tracking',
+      'No credit card required',
+    ],
+    featured: false,
+    badge: '',
+  },
+  {
+    key: 'proMonthly',
+    name: 'Pro',
+    tag: 'Monthly',
+    price: '$29',
+    unit: '/mo',
+    blurb: 'For the busy season — or all year. No contract.',
+    features: [
+      'Unlimited estimates',
+      'AI line items, branded PDF + tracking',
+      'Every new Toolbelt app as it ships',
+      'Email support',
+      'Cancel anytime',
+    ],
+    featured: false,
+    badge: '',
+    checkout: 'proMonthly',
+  },
+  {
+    key: 'founding',
+    name: 'Founding',
+    tag: 'Lifetime rate',
+    price: '$19',
+    unit: '/mo for life',
+    blurb: 'First 100 contractors. The lowest price we’ll ever offer.',
+    features: [
+      'Everything in Pro Annual',
+      '$19/mo locked for as long as you stay',
+      'Every future app included — price never moves',
+      'Direct line to the builders',
+      'Vote on which tool we build next',
+    ],
+    featured: true,
+    badge: 'Best deal · first 100',
+    checkout: 'founding',
+  },
+  {
+    key: 'proAnnual',
+    name: 'Pro Annual',
+    tag: 'Best value',
+    price: '$24',
+    unit: '/mo',
+    blurb: 'Billed yearly ($288) — two months free.',
+    features: [
+      'Everything in Pro',
+      '2 months free vs monthly',
+      'Priority support — front of the line',
+      'Early access to new apps & betas',
+      'Your price locked for the year',
+    ],
+    featured: false,
+    badge: '',
+    checkout: 'proAnnual',
+  },
+];
 
 export const FAQ: { q: string; a: string }[] = [
   {
     q: 'Does this replace ServiceTitan, Jobber, or Housecall Pro?',
     a: 'No. It does the one thing those make slow — estimates. Use it alongside whatever you already run. Most guys keep their software and use Toolbelt just to quote.',
+  },
+  {
+    q: 'Is there really a free plan?',
+    a: 'Yes. 3 estimates, free, no credit card — and they never expire. Quote three real jobs and see if the estimates win work before you pay a dollar.',
+  },
+  {
+    q: 'Which trades does it cover?',
+    a: 'HVAC, plumbing, electrical, and roofing today — the AI knows how each trade splits labor and materials, and your estimates carry your trade’s look. Another trade? Start free anyway; the estimates still work, and telling us your trade bumps it up the roadmap.',
   },
   {
     q: 'Is the AI making up prices?',

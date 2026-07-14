@@ -41,10 +41,10 @@ export function BusinessForm({ action, initial, submitLabel }: Props) {
                   key={t}
                   onClick={() => setTrade(t)}
                   className={cn(
-                    'flex items-center gap-3 rounded-xl border bg-night-800 p-3 text-left transition',
+                    'flex items-center gap-3 rounded-xl border bg-paper-800 p-3 text-left transition',
                     selected
                       ? 'border-accent ring-2 ring-accent/30'
-                      : 'border-hairline hover:bg-night-700',
+                      : 'border-hairline hover:bg-paper-700',
                   )}
                 >
                   <span
@@ -53,7 +53,7 @@ export function BusinessForm({ action, initial, submitLabel }: Props) {
                   />
                   <span>
                     <span className="block text-sm font-semibold">{theme.label}</span>
-                    <span className="block text-xs text-mist-mute">{theme.blurb}</span>
+                    <span className="block text-xs text-ink-mute">{theme.blurb}</span>
                   </span>
                 </button>
               );
@@ -75,7 +75,7 @@ export function BusinessForm({ action, initial, submitLabel }: Props) {
                 className="h-14 w-14 rounded-lg border border-hairline bg-white object-contain"
               />
             ) : (
-              <div className="flex h-14 w-14 flex-none items-center justify-center rounded-lg border border-dashed border-hairline text-xs text-mist-mute">
+              <div className="flex h-14 w-14 flex-none items-center justify-center rounded-lg border border-dashed border-hairline text-xs text-ink-mute">
                 Logo
               </div>
             )}
@@ -88,7 +88,7 @@ export function BusinessForm({ action, initial, submitLabel }: Props) {
                 const file = e.target.files?.[0];
                 setLogoPreview(file ? URL.createObjectURL(file) : initial?.logo_url ?? null);
               }}
-              className="block w-full text-sm text-mist-soft file:mr-3 file:rounded-lg file:border-0 file:bg-night-700 file:px-3 file:py-2 file:text-sm file:font-medium file:text-mist"
+              className="block w-full text-sm text-ink-soft file:mr-3 file:rounded-lg file:border-0 file:bg-paper-700 file:px-3 file:py-2 file:text-sm file:font-medium file:text-ink"
             />
           </div>
         </div>

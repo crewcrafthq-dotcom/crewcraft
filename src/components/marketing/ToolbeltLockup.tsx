@@ -16,8 +16,8 @@ export function ToolbeltLockup({
   endorse?: boolean;
   className?: string;
 }) {
-  const word = onLight ? 'text-night-900' : 'text-mist';
-  const sub = onLight ? 'text-night-600' : 'text-mist-mute';
+  const word = onLight ? 'text-paper-900' : 'text-ink';
+  const sub = onLight ? 'text-paper-600' : 'text-ink-mute';
 
   return (
     <span className={cn('inline-flex items-center gap-2.5', className)}>

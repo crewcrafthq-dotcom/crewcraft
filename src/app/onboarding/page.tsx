@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 
 import { Brand } from '@/components/Brand';
 import { BusinessForm } from '@/components/BusinessForm';
+import { SignupConversion } from '@/components/SignupConversion';
 import { Card } from '@/components/ui/Card';
 import { getSession } from '@/lib/auth';
 import { createBusinessAction } from './actions';
@@ -15,11 +16,12 @@ export default async function OnboardingPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-5 py-10">
+      <SignupConversion />
       <header className="mb-7">
         <Brand />
         <p className="eyebrow mt-6">Step 1 of 1</p>
-        <h1 className="mt-1 text-display-sm font-bold text-mist">Set up your business</h1>
-        <p className="mt-1.5 text-mist-soft">
+        <h1 className="mt-1 text-display-sm font-bold text-ink">Set up your business</h1>
+        <p className="mt-1.5 text-ink-soft">
           This lands on every estimate — your logo, license, and rates. You can change it any time.
         </p>
       </header>

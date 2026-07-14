@@ -26,7 +26,7 @@ export function MobileMenu({ links }: { links: { label: string; href: string }[]
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Open menu"
-        className="grid h-10 w-10 cursor-pointer place-items-center rounded-lg text-mist transition hover:bg-night-800"
+        className="grid h-10 w-10 cursor-pointer place-items-center rounded-lg text-ink transition hover:bg-paper-800"
       >
         <Menu className="h-6 w-6" />
       </button>
@@ -43,7 +43,7 @@ export function MobileMenu({ links }: { links: { label: string; href: string }[]
       {/* panel */}
       <aside
         className={cn(
-          'fixed right-0 top-0 z-50 flex h-full w-[80%] max-w-xs flex-col border-l border-hairline bg-night-900 p-6 shadow-lift transition-transform duration-300 ease-out-soft',
+          'fixed right-0 top-0 z-50 flex h-full w-[80%] max-w-xs flex-col border-l border-hairline bg-paper-900 p-6 shadow-lift transition-transform duration-300 ease-out-soft',
           open ? 'translate-x-0' : 'translate-x-full',
         )}
       >
@@ -53,7 +53,7 @@ export function MobileMenu({ links }: { links: { label: string; href: string }[]
             type="button"
             onClick={() => setOpen(false)}
             aria-label="Close menu"
-            className="grid h-10 w-10 cursor-pointer place-items-center rounded-lg text-mist transition hover:bg-night-800"
+            className="grid h-10 w-10 cursor-pointer place-items-center rounded-lg text-ink transition hover:bg-paper-800"
           >
             <X className="h-6 w-6" />
           </button>
@@ -65,7 +65,7 @@ export function MobileMenu({ links }: { links: { label: string; href: string }[]
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="rounded-lg px-3 py-3 text-base font-medium text-mist-soft transition hover:bg-night-800 hover:text-mist"
+              className="rounded-lg px-3 py-3 text-base font-medium text-ink-soft transition hover:bg-paper-800 hover:text-ink"
             >
               {l.label}
             </Link>
@@ -73,7 +73,7 @@ export function MobileMenu({ links }: { links: { label: string; href: string }[]
           <Link
             href="/login"
             onClick={() => setOpen(false)}
-            className="rounded-lg px-3 py-3 text-base font-medium text-mist-soft transition hover:bg-night-800 hover:text-mist"
+            className="rounded-lg px-3 py-3 text-base font-medium text-ink-soft transition hover:bg-paper-800 hover:text-ink"
           >
             Log in
           </Link>

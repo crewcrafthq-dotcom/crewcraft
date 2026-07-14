@@ -13,6 +13,7 @@ export default function robots(): MetadataRoute.Robots {
         '/billing',
         '/settings',
         '/onboarding',
+        '/apps/',
         '/api/',
         '/auth/',
         '/e/',

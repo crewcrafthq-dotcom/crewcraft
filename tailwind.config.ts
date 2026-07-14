@@ -1,57 +1,60 @@
 import type { Config } from 'tailwindcss';
 
 /**
- * Toolbelt (by Crewcraft) design tokens — DARK SaaS system.
+ * Toolbelt (by Crewcraft) design tokens — "Paper & Blueprint" light industrial.
  *
- * `night.*`  = background layers (page → surface → raised → hover).
- * `mist.*`   = text on dark (primary → soft → mute), all ≥4.5:1 on night.
- * `hairline` = subtle 1px borders.
- * The per-trade accent still arrives as CSS variables (R G B channels) on a
- * [data-trade] wrapper (see globals.css + lib/trades.ts) and is tuned to glow
- * on dark. Legacy `cream`/`navy`/`line` remain until every page is migrated.
+ * `paper.*`  = background layers, warm estimate-paper beige (page → card → chip).
+ *              950 is the one dark well (modal scrims, rare ink blocks).
+ * `ink.*`    = navy text (primary → soft → mute), all ≥4.5:1 on paper.
+ * `hairline` = subtle 1px navy borders.
+ * The per-trade accent arrives as CSS variables (R G B channels) on a
+ * [data-trade] wrapper (see globals.css + lib/trades.ts), tuned for a light
+ * canvas — same family as the estimate PDF, so ad → site → PDF feel like one
+ * brand. Display headings are Barlow Condensed (industrial, DIN-like).
  */
 const config: Config = {
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        // ── Dark system ────────────────────────────────────────────────
-        night: {
-          950: '#06090F', // deepest wells / footer base
-          900: '#0A0E1A', // page canvas
-          850: '#0D1322', // sunken
-          800: '#111A2E', // card / surface
-          750: '#152139', // surface hover
-          700: '#1A2740', // raised
-          600: '#243350', // strong border / pressed
-          DEFAULT: '#0A0E1A',
+        // ── Paper system (light) ────────────────────────────────────────
+        paper: {
+          950: '#101B2C', // the one dark well: modal scrims, ink blocks
+          900: '#F2EBE0', // page canvas — estimate-paper beige (matches the PDF)
+          850: '#E9E0D0', // sunken sections
+          800: '#FCFAF5', // card / surface (warm white)
+          750: '#F5EFE4', // surface hover
+          700: '#EAE1D1', // raised chips
+          600: '#D8CBB5', // strong border / pressed
+          DEFAULT: '#F2EBE0',
         },
-        mist: {
-          DEFAULT: '#F4F7FD', // primary text
-          soft: '#AEBCD6', // secondary text (4.6:1 on night-800)
-          mute: '#7C8AA6', // tertiary / meta (4.5:1 on night-900)
+        ink: {
+          DEFAULT: '#16263A', // primary text — navy ink
+          soft: '#41526B', // secondary text
+          mute: '#5E6F89', // tertiary / meta (≥4.5:1 on paper-900)
         },
         hairline: {
-          DEFAULT: 'rgba(255,255,255,0.08)',
-          strong: 'rgba(255,255,255,0.14)',
+          DEFAULT: 'rgba(22,38,58,0.12)',
+          strong: 'rgba(22,38,58,0.22)',
         },
         accent: {
           DEFAULT: 'rgb(var(--accent) / <alpha-value>)',
           fg: 'rgb(var(--accent-fg) / <alpha-value>)', // ink on an accent fill
-          bright: 'rgb(var(--accent-bright) / <alpha-value>)', // accent text on dark
-          tint: 'rgb(var(--accent) / 0.12)', // faint accent fill on dark
-          deep: 'rgb(var(--accent-deep) / <alpha-value>)', // legacy: accent text on light
-          soft: 'rgb(var(--accent-soft) / <alpha-value>)', // legacy: light tint
+          bright: 'rgb(var(--accent-bright) / <alpha-value>)', // accent-colored text on paper
+          tint: 'rgb(var(--accent) / 0.12)', // faint accent fill
+          deep: 'rgb(var(--accent-deep) / <alpha-value>)', // deeper accent text
+          soft: 'rgb(var(--accent-soft) / <alpha-value>)', // light accent tint
         },
 
-        // ── Legacy (light) — kept until full migration ─────────────────
+        // ── Legacy aliases (estimate preview + older app surfaces) ──────
         cream: { DEFAULT: '#F1EADF', sunken: '#F6F1E8', card: '#FFFFFF', deep: '#ECE3D5' },
         navy: { DEFAULT: '#16263A', soft: '#48586B', muted: '#6B7482', deep: '#0E1A2B' },
         line: '#E8DFD1',
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        // Industrial condensed display face (Jobsite Dark v2) — headings only.
+        display: ['var(--font-barlow)', 'var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         'display-sm': ['1.875rem', { lineHeight: '2.2rem', letterSpacing: '-0.02em' }],
@@ -61,13 +64,13 @@ const config: Config = {
       },
       borderRadius: { xl: '0.875rem', '2xl': '1.125rem', '3xl': '1.5rem', '4xl': '2rem' },
       boxShadow: {
-        // dark depth: crisp inner top-light + deep drop
-        card: '0 1px 0 0 rgba(255,255,255,0.05) inset, 0 12px 34px -14px rgba(0,0,0,0.7)',
-        lift: '0 1px 0 0 rgba(255,255,255,0.06) inset, 0 30px 60px -22px rgba(0,0,0,0.8)',
-        // accent glow for primary CTAs and highlights
-        accent: '0 10px 30px -8px rgb(var(--accent) / 0.5)',
-        glow: '0 0 0 1px rgb(var(--accent) / 0.30), 0 12px 40px -10px rgb(var(--accent) / 0.55)',
-        'glow-sm': '0 0 24px -6px rgb(var(--accent) / 0.5)',
+        // paper depth: soft navy shadows, like a sheet lifted off the desk
+        card: '0 1px 2px rgba(22,38,58,0.05), 0 10px 28px -16px rgba(22,38,58,0.18)',
+        lift: '0 2px 4px rgba(22,38,58,0.06), 0 26px 52px -22px rgba(22,38,58,0.28)',
+        // accent shadow for primary CTAs and highlights
+        accent: '0 8px 22px -10px rgb(var(--accent) / 0.45)',
+        glow: '0 0 0 1px rgb(var(--accent) / 0.25), 0 10px 30px -10px rgb(var(--accent) / 0.4)',
+        'glow-sm': '0 0 18px -8px rgb(var(--accent) / 0.4)',
       },
       transitionTimingFunction: {
         'out-soft': 'cubic-bezier(0.22, 1, 0.36, 1)',

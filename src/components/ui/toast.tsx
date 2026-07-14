@@ -34,8 +34,8 @@ export function toast(message: string, kind: ToastKind = 'success') {
 
 const ICON: Record<ToastKind, typeof Check> = { success: Check, error: CircleAlert, info: Info };
 const TONE: Record<ToastKind, string> = {
-  success: 'text-emerald-400',
-  error: 'text-red-400',
+  success: 'text-emerald-600',
+  error: 'text-red-600',
   info: 'text-accent-bright',
 };
 
@@ -54,15 +54,15 @@ export function Toaster() {
           <div
             key={t.id}
             role="status"
-            className="pointer-events-auto flex animate-toast-in items-center gap-3 rounded-xl border border-hairline-strong bg-night-800/95 px-4 py-3 shadow-lift backdrop-blur"
+            className="pointer-events-auto flex animate-toast-in items-center gap-3 rounded-xl border border-hairline-strong bg-paper-800/95 px-4 py-3 shadow-lift backdrop-blur"
           >
             <Icon className={cn('h-5 w-5 flex-none', TONE[t.kind])} />
-            <p className="flex-1 text-sm font-medium text-mist">{t.message}</p>
+            <p className="flex-1 text-sm font-medium text-ink">{t.message}</p>
             <button
               type="button"
               onClick={() => dismiss(t.id)}
               aria-label="Dismiss"
-              className="cursor-pointer text-mist-mute transition hover:text-mist"
+              className="cursor-pointer text-ink-mute transition hover:text-ink"
             >
               <X className="h-4 w-4" />
             </button>

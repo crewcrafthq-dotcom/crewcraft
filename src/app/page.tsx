@@ -14,6 +14,7 @@ import { SiteFooter } from '@/components/marketing/SiteFooter';
 import { SocialProof } from '@/components/marketing/SocialProof';
 import { Stats } from '@/components/marketing/Stats';
 import { StickyCtaBar } from '@/components/marketing/StickyCtaBar';
+import { TradeSections } from '@/components/marketing/TradeSections';
 import { TradeSelector } from '@/components/marketing/TradeSelector';
 import { WhyToolbelt } from '@/components/marketing/WhyToolbelt';
 import { getSession } from '@/lib/auth';
@@ -29,7 +30,7 @@ const JSON_LD = {
       '@id': 'https://crewcraftapp.com/#org',
       name: 'Crewcraft',
       url: 'https://crewcraftapp.com',
-      logo: 'https://crewcraftapp.com/og.png',
+      logo: 'https://crewcraftapp.com/icon-512.png',
     },
     {
       '@type': 'SoftwareApplication',
@@ -41,6 +42,7 @@ const JSON_LD = {
         'Type the job in plain English and send a branded estimate in under a minute. Built for HVAC, plumbing, electrical & roofing contractors.',
       publisher: { '@id': 'https://crewcraftapp.com/#org' },
       offers: [
+        { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD' },
         { '@type': 'Offer', name: 'Founding', price: '19', priceCurrency: 'USD' },
         { '@type': 'Offer', name: 'Pro Monthly', price: '29', priceCurrency: 'USD' },
         { '@type': 'Offer', name: 'Pro Annual', price: '288', priceCurrency: 'USD' },
@@ -67,6 +69,7 @@ export default async function LandingPage() {
         <Reveal><HowItWorks /></Reveal>
         <WhyToolbelt />
         <Reveal><TradeSelector /></Reveal>
+        <TradeSections />
         <Reveal><OutputShowcase /></Reveal>
         <Reveal><SocialProof /></Reveal>
         <Reveal><AppLineup /></Reveal>

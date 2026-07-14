@@ -44,10 +44,10 @@ export function WhyToolbelt() {
       />
       <div className="mx-auto max-w-2xl text-center">
         <p className="eyebrow">Why Toolbelt</p>
-        <h2 className="mt-2 text-3xl font-bold leading-tight text-mist sm:text-4xl">
+        <h2 className="mt-2 text-3xl font-bold leading-tight text-ink sm:text-4xl">
           Why choose Toolbelt
         </h2>
-        <p className="mt-3 text-lg text-mist-soft">
+        <p className="mt-3 text-lg text-ink-soft">
           The competition sells you a do-everything system. Toolbelt does the one thing you dread —
           and makes it a minute of your day.
         </p>
@@ -60,13 +60,13 @@ export function WhyToolbelt() {
             <div
               key={r.title}
               style={{ '--i': i } as React.CSSProperties}
-              className="reveal-child card-dark card-interactive group p-6"
+              className="reveal-child card-paper card-interactive group p-6"
             >
               <span className="grid h-11 w-11 place-items-center rounded-xl bg-accent/10 text-accent-bright ring-1 ring-accent/20 transition group-hover:bg-accent group-hover:text-accent-fg">
                 <Icon className="h-5 w-5" />
               </span>
-              <h3 className="mt-4 text-lg font-bold text-mist">{r.title}</h3>
-              <p className="mt-2 leading-relaxed text-mist-soft">{r.body}</p>
+              <h3 className="mt-4 text-lg font-bold text-ink">{r.title}</h3>
+              <p className="mt-2 leading-relaxed text-ink-soft">{r.body}</p>
             </div>
           );
         })}

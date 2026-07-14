@@ -60,7 +60,7 @@ export function DemoModal() {
         type="button"
         aria-label="Close demo"
         onClick={closeDemo}
-        className="absolute inset-0 animate-fade-in cursor-default bg-night-950/85 backdrop-blur-sm"
+        className="absolute inset-0 animate-fade-in cursor-default bg-paper-950/85 backdrop-blur-sm"
       />
 
       {/* X button, top-left of the screen (as requested) */}
@@ -68,13 +68,13 @@ export function DemoModal() {
         type="button"
         onClick={closeDemo}
         aria-label="Close demo"
-        className="fixed left-4 top-4 z-[80] inline-flex h-11 w-11 items-center justify-center rounded-full border border-hairline-strong bg-night-800/90 text-mist shadow-lift backdrop-blur transition hover:border-accent/40 hover:bg-night-700"
+        className="fixed left-4 top-4 z-[80] inline-flex h-11 w-11 items-center justify-center rounded-full border border-hairline-strong bg-paper-800/90 text-ink shadow-lift backdrop-blur transition hover:border-accent/40 hover:bg-paper-700"
       >
         <X className="h-5 w-5" />
       </button>
 
       <div className="relative w-full max-w-xl animate-fade-up">
-        <div className="gradient-border overflow-hidden rounded-3xl bg-night-850/80 p-2 shadow-lift sm:p-3">
+        <div className="gradient-border overflow-hidden rounded-3xl bg-paper-850/80 p-2 shadow-lift sm:p-3">
           {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
           <video
             src="/showcase.mp4"
@@ -96,7 +96,7 @@ export function WatchDemoButton() {
     <button
       type="button"
       onClick={openDemo}
-      className="inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-xl border border-hairline-strong bg-night-800/70 px-6 font-semibold text-mist backdrop-blur transition duration-200 hover:border-accent/40 hover:bg-night-700"
+      className="inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-lg border border-hairline-strong bg-paper-800/70 px-6 font-semibold text-ink backdrop-blur transition duration-200 hover:border-accent/40 hover:bg-paper-700"
     >
       <PlayCircle className="h-5 w-5 text-accent-bright" />
       Watch the 35-second demo

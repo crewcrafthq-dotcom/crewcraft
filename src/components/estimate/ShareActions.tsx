@@ -99,13 +99,13 @@ export function ShareActions({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <span className="font-semibold text-mist">Send it</span>
+        <span className="font-semibold text-ink">Send it</span>
         <StatusBadge status={localStatus} />
       </div>
 
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
         <Button variant="secondary" onClick={copyLink} disabled={busy !== null}>
-          {copied ? <Check className="text-emerald-400" /> : <Copy />}
+          {copied ? <Check className="text-emerald-600" /> : <Copy />}
           {copied ? 'Copied' : 'Copy link'}
         </Button>
         <Button variant="secondary" onClick={download} disabled={busy !== null}>
@@ -119,14 +119,14 @@ export function ShareActions({
       </div>
 
       <div className="border-t border-hairline pt-4">
-        <p className="mb-2 text-sm text-mist-soft">Mark this estimate:</p>
+        <p className="mb-2 text-sm text-ink-soft">Mark this estimate:</p>
         <div className="flex flex-wrap gap-2">
           <Button variant="secondary" size="sm" onClick={() => changeStatus('accepted')}>
-            <CheckCircle2 className="text-emerald-400" />
+            <CheckCircle2 className="text-emerald-600" />
             Accepted
           </Button>
           <Button variant="secondary" size="sm" onClick={() => changeStatus('declined')}>
-            <XCircle className="text-red-400" />
+            <XCircle className="text-red-600" />
             Declined
           </Button>
           <Button variant="ghost" size="sm" onClick={() => changeStatus('draft')}>

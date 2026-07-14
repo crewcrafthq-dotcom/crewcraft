@@ -3,17 +3,20 @@
 @tailwind utilities;
 
 /*
- * Toolbelt (by Crewcraft) — DARK SaaS design system.
- * Deep navy-black canvas, layered surfaces, per-trade accent as CSS variables
- * (R G B channels) tuned to glow on dark. :root default = HVAC orange;
- * [data-trade] wrappers override (see lib/trades.ts). --accent-bright is the
- * lighter accent used for accent-colored TEXT on dark.
+ * Toolbelt (by Crewcraft) — "Paper & Blueprint" light industrial system.
+ * Warm estimate-paper canvas, navy ink, blueprint grid texture, per-trade
+ * accent as CSS variables (R G B channels) — the same family the estimate PDF
+ * uses, so the site looks like the paperwork it produces. :root default =
+ * HVAC orange; [data-trade] wrappers override (see lib/trades.ts).
+ * --accent-bright is the accent tone used for accent-colored TEXT on paper.
  */
 :root {
-  --accent: 255 122 47; /* HVAC orange, brightened for dark */
-  --accent-fg: 10 14 26; /* ink that sits on an accent fill */
-  --accent-bright: 255 158 99; /* accent text on dark */
-  color-scheme: dark;
+  --accent: 232 114 42; /* HVAC orange (matches the PDF accent) */
+  --accent-fg: 255 255 255; /* ink that sits on an accent fill */
+  --accent-bright: 179 80 18; /* accent-colored text on paper (AA on beige) */
+  --accent-deep: 194 87 26;
+  --accent-soft: 247 226 210;
+  color-scheme: light;
 }
 
 @layer base {
@@ -22,16 +25,22 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-night-900 text-mist antialiased;
-    /* ambient accent aurora — quiet, top-weighted, fixed so it doesn't scroll */
+    @apply bg-paper-900 text-ink antialiased;
+    /* quiet warm aurora — a hint of accent at the top of the sheet */
     background-image:
-      radial-gradient(900px 520px at 82% -10%, rgb(var(--accent) / 0.14), transparent 60%),
-      radial-gradient(720px 480px at 8% 2%, rgba(59, 130, 246, 0.08), transparent 58%);
+      radial-gradient(900px 520px at 82% -10%, rgb(var(--accent) / 0.08), transparent 60%),
+      radial-gradient(720px 480px at 8% 2%, rgba(37, 84, 141, 0.05), transparent 58%);
     background-attachment: fixed;
     font-feature-settings: 'kern', 'ss01', 'cv02', 'cv11';
   }
+  /* Headlines speak in the condensed industrial voice (Barlow Condensed). */
+  h1,
+  h2 {
+    font-family: var(--font-barlow), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: 0;
+  }
   :focus-visible {
-    @apply outline-none ring-2 ring-accent/70 ring-offset-2 ring-offset-night-900;
+    @apply outline-none ring-2 ring-accent/70 ring-offset-2 ring-offset-paper-900;
   }
   input,
   select,
@@ -40,21 +49,21 @@
     font-family: inherit;
   }
   ::selection {
-    background: rgb(var(--accent) / 0.3);
-    color: #fff;
+    background: rgb(var(--accent) / 0.25);
+    color: #16263a;
   }
 }
 
 @layer components {
   .field-label {
-    @apply mb-1.5 block text-sm font-medium text-mist-soft;
+    @apply mb-1.5 block text-sm font-medium text-ink-soft;
   }
   .eyebrow {
     @apply text-xs font-semibold uppercase tracking-[0.16em] text-accent-bright;
   }
-  /* elevated dark card */
-  .card-dark {
-    @apply rounded-3xl border border-hairline bg-night-800 shadow-card;
+  /* elevated paper card */
+  .card-paper {
+    @apply rounded-3xl border border-hairline bg-paper-800 shadow-card;
   }
   /* hover-lift for interactive cards */
   .card-interactive {
@@ -70,16 +79,26 @@
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(140deg, rgb(var(--accent) / 0.55), rgba(255, 255, 255, 0.06) 40%, transparent 70%);
+    background: linear-gradient(140deg, rgb(var(--accent) / 0.5), rgba(22, 38, 58, 0.08) 40%, transparent 70%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
   }
-  /* faint dotted grid texture for hero/section backdrops */
+  /* faint blueprint grid — navy drafting lines on the paper canvas */
   .grid-bg {
-    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 26px 26px;
+    background-image:
+      linear-gradient(rgba(37, 84, 141, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37, 84, 141, 0.07) 1px, transparent 1px);
+    background-size: 34px 34px;
+  }
+  /* hazard stripe — thin safety-tape accent for the few spots that earn it */
+  .hazard {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgb(var(--accent)) 0 10px,
+      transparent 10px 20px
+    );
   }
   /* nav link: accent underline that grows left→right on hover */
   .nav-underline {

@@ -177,7 +177,7 @@ export function EstimateEditor({
       <div className="mb-4 flex items-center justify-between">
         <Link
           href="/estimates"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-mist-soft transition hover:text-mist"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-soft transition hover:text-ink"
         >
           <ArrowLeft className="h-4 w-4" />
           Estimates
@@ -244,7 +244,7 @@ export function EstimateEditor({
             <SectionTitle icon={ClipboardList} accent>
               Assumptions to confirm
             </SectionTitle>
-            <ul className="space-y-1.5 text-sm text-mist-soft">
+            <ul className="space-y-1.5 text-sm text-ink-soft">
               {assumptions.map((a, i) => (
                 <li key={i} className="flex gap-2">
                   <span className="mt-1.5 h-1.5 w-1.5 flex-none rounded-full bg-accent" />
@@ -298,11 +298,11 @@ export function EstimateEditor({
       </div>
 
       {/* sticky save bar */}
-      <div className="fixed inset-x-0 bottom-0 z-10 border-t border-hairline bg-night-900/90 backdrop-blur-md">
+      <div className="fixed inset-x-0 bottom-0 z-10 border-t border-hairline bg-paper-900/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="text-sm">
-            <span className="text-mist-mute">Total</span>{' '}
-            <span className="text-base font-bold text-mist">{money(totals.total)}</span>
+            <span className="text-ink-mute">Total</span>{' '}
+            <span className="text-base font-bold text-ink">{money(totals.total)}</span>
             {saveError ? <span className="ml-3 text-red-600">{saveError}</span> : null}
             {saved ? <span className="ml-3 font-medium text-emerald-600">Saved</span> : null}
           </div>
@@ -328,10 +328,10 @@ function SectionTitle({
   return (
     <h2
       className={
-        'mb-4 flex items-center gap-2 font-semibold ' + (accent ? 'text-accent-bright' : 'text-mist')
+        'mb-4 flex items-center gap-2 font-semibold ' + (accent ? 'text-accent-bright' : 'text-ink')
       }
     >
-      <Icon className={'h-[18px] w-[18px] ' + (accent ? 'text-accent-bright' : 'text-mist-mute')} />
+      <Icon className={'h-[18px] w-[18px] ' + (accent ? 'text-accent-bright' : 'text-ink-mute')} />
       {children}
     </h2>
   );

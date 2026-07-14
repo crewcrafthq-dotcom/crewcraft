@@ -18,10 +18,11 @@ export function StickyCtaBar() {
   return (
     <div
       className={cn(
-        'fixed inset-x-0 bottom-0 z-40 border-t border-hairline bg-night-900/95 p-3 backdrop-blur-md transition-transform duration-300 ease-out-soft lg:hidden',
+        'fixed inset-x-0 bottom-0 z-40 border-t border-hairline bg-paper-900/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md transition-transform duration-300 ease-out-soft lg:hidden',
         show ? 'translate-y-0' : 'translate-y-full',
       )}
     >
+      <div aria-hidden className="hazard absolute inset-x-0 top-0 h-1 opacity-70" />
       <StartFreeButton size="md" className="w-full" withArrow={false} />
     </div>
   );

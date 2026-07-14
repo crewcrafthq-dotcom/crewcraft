@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Barlow_Condensed, Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
@@ -15,6 +15,15 @@ const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800'],
   variable: '--font-inter',
+  display: 'swap',
+});
+
+// Barlow Condensed for display headings — the DIN-like industrial voice of the
+// "Jobsite Dark" theme. Headlines only; body copy stays Inter.
+const barlow = Barlow_Condensed({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--font-barlow',
   display: 'swap',
 });
 
@@ -72,15 +81,19 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0A0E1A',
+  themeColor: '#F2EBE0',
   width: 'device-width',
   initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
+    <html lang="en" className={`${inter.variable} ${poppins.variable} ${barlow.variable}`}>
       <body className="min-h-screen font-sans">
+        {/* Scroll-reveal sections must never be a blank page for no-JS visitors/crawlers. */}
+        <noscript>
+          <style>{`.reveal,.reveal-child{opacity:1 !important;transform:none !important}`}</style>
+        </noscript>
         {children}
         <Toaster />
         <Analytics />

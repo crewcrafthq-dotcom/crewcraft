@@ -17,10 +17,10 @@ export function OutputShowcase() {
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
           <div>
             <p className="eyebrow">The estimate they get</p>
-            <h2 className="mt-2 text-3xl font-bold leading-tight text-mist sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-bold leading-tight text-ink sm:text-4xl">
               Looks like you hired a designer.
             </h2>
-            <p className="mt-4 text-lg leading-relaxed text-mist-soft">
+            <p className="mt-4 text-lg leading-relaxed text-ink-soft">
               The kind of quote that makes a homeowner trust the number — and you, before you’ve
               even started the job.
             </p>
@@ -30,7 +30,7 @@ export function OutputShowcase() {
                   <span className="grid h-6 w-6 flex-none place-items-center rounded-full bg-accent/10 text-accent-bright">
                     <Check className="h-4 w-4" />
                   </span>
-                  <span className="text-mist">{line}</span>
+                  <span className="text-ink">{line}</span>
                 </li>
               ))}
             </ul>
