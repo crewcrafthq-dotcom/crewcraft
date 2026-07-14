@@ -95,6 +95,27 @@ const invoice: EstimateWithItems = {
   source_estimate_id: 'e1',
 };
 
+// Pagination stress test: enough long-description rows to spill onto a second
+// (and third) page. Regression guard for rows/totals clipping across a page
+// break — every row and the totals box must land whole on one page.
+const LONG_DESC =
+  'Furnish and install per manufacturer specification, including removal and disposal of existing equipment, protection of finished surfaces, and cleanup of the work area on completion';
+const stress: EstimateWithItems = {
+  ...estimate,
+  id: 'e2',
+  line_items: Array.from({ length: 26 }, (_, i) => ({
+    id: `s${i}`,
+    estimate_id: 'e2',
+    category: (i < 9 ? 'labor' : i < 20 ? 'materials' : 'other') as 'labor',
+    description: `${i + 1}. ${LONG_DESC}`,
+    quantity: 1 + (i % 3),
+    unit: i < 9 ? 'hr' : 'ea',
+    unit_price: 85 + i * 7,
+    line_total: (1 + (i % 3)) * (85 + i * 7),
+    sort_order: i,
+  })),
+};
+
 async function main() {
   const outDir = path.join(process.cwd(), 'scratch');
   mkdirSync(outDir, { recursive: true });
@@ -105,6 +126,7 @@ async function main() {
     ['estimate-smoke.pdf', estimate, 'en'],
     ['invoice-smoke.pdf', invoice, 'en'],
     ['estimate-ro-smoke.pdf', estimate, 'ro'],
+    ['estimate-stress-smoke.pdf', stress, 'en'],
   ];
 
   for (const [name, doc, lang] of jobs) {

@@ -234,9 +234,15 @@ export function EstimatePdf({ business, estimate, strings = PDF_STRINGS.en, loca
           </View>
         ) : null}
 
-        {/* line items */}
+        {/* line items.
+            Page-break rules: each ROW is atomic (wrap={false} — a row that
+            doesn't fit moves whole to the next page, so a price is never cut
+            in half), while groups are allowed to flow across pages (a group
+            forced whole overflows the page and clips once it grows past one
+            page). minPresenceAhead keeps the table header and group labels
+            from stranding at the bottom of a page with nothing under them. */}
         <View>
-          <View style={styles.thead}>
+          <View style={styles.thead} minPresenceAhead={72}>
             <Text style={[styles.th, styles.cDesc]}>{strings.description}</Text>
             <Text style={[styles.th, styles.cQty]}>{strings.qty}</Text>
             <Text style={[styles.th, styles.cUnit]}>{strings.unit}</Text>
@@ -245,12 +251,15 @@ export function EstimatePdf({ business, estimate, strings = PDF_STRINGS.en, loca
           </View>
 
           {groups.map((group) => (
-            <View key={group.category} wrap={false}>
-              <Text style={[styles.groupLabel, { color: theme.accentDeep }]}>
+            <View key={group.category}>
+              <Text
+                style={[styles.groupLabel, { color: theme.accentDeep }]}
+                minPresenceAhead={48}
+              >
                 {categoryLabel[group.category]}
               </Text>
               {group.items.map((item) => (
-                <View key={item.id} style={styles.row}>
+                <View key={item.id} style={styles.row} wrap={false}>
                   <Text style={styles.cDesc}>{item.description}</Text>
                   <Text style={styles.cQty}>{trimNum(item.quantity)}</Text>
                   <Text style={styles.cUnit}>{item.unit}</Text>
@@ -262,8 +271,9 @@ export function EstimatePdf({ business, estimate, strings = PDF_STRINGS.en, loca
           ))}
         </View>
 
-        {/* totals */}
-        <View style={styles.totalsWrap}>
+        {/* totals — one atomic block: subtotal, tax, the TOTAL bar, and any
+            deposit/balance lines always land together on the same page */}
+        <View style={styles.totalsWrap} wrap={false}>
           <View style={styles.totalsBox}>
             <View style={styles.tRow}>
               <Text style={styles.tLabel}>{strings.subtotal}</Text>
@@ -292,9 +302,9 @@ export function EstimatePdf({ business, estimate, strings = PDF_STRINGS.en, loca
           </View>
         </View>
 
-        {/* customer acceptance (e-sign) */}
+        {/* customer acceptance (e-sign) — atomic: a signature never splits */}
         {!invoice && estimate.status === 'accepted' && estimate.signed_name ? (
-          <View style={styles.signBlock}>
+          <View style={styles.signBlock} wrap={false}>
             <Text style={styles.eyebrow}>{up(strings.acceptedBy)}</Text>
             <Text style={styles.signName}>{estimate.signed_name}</Text>
             {estimate.accepted_at ? (
@@ -303,10 +313,10 @@ export function EstimatePdf({ business, estimate, strings = PDF_STRINGS.en, loca
           </View>
         ) : null}
 
-        {/* terms */}
+        {/* terms — the label stays with at least the first lines of text */}
         {estimate.notes ? (
           <View style={styles.terms}>
-            <Text style={styles.eyebrow}>{up(strings.notesTerms)}</Text>
+            <Text style={styles.eyebrow} minPresenceAhead={36}>{up(strings.notesTerms)}</Text>
             <Text style={styles.termsText}>{estimate.notes}</Text>
           </View>
         ) : null}
