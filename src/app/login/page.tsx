@@ -94,16 +94,16 @@ export default function LoginPage() {
       }
 
       // ── Log in with password ───────────────────────────────────────────
-      const { error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password,
+      // Goes through our own route so failed attempts are rate-limited
+      // server-side (brute-force cool-off) before Supabase ever sees them.
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), password }),
       });
-      if (error) {
-        setError(
-          /confirm/i.test(error.message)
-            ? 'Confirm your email first — check your inbox.'
-            : 'Email or password is wrong.',
-        );
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(json.error ?? 'Email or password is wrong.');
         return;
       }
       router.push('/dashboard');

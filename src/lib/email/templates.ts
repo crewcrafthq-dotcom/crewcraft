@@ -38,8 +38,10 @@ function paragraph(html: string): string {
 }
 
 function button({ href, label, accent, accentFg }: ButtonArgs): string {
+  // href is escaped too: a stored link containing a quote must not be able to
+  // break out of the attribute and inject markup into customer emails.
   return `<tr><td style="padding:8px 0 20px;">
-    <a href="${href}" style="display:inline-block;background:${accent};color:${accentFg};text-decoration:none;font-weight:600;font-size:15px;padding:12px 22px;border-radius:10px;">${escapeHtml(label)}</a>
+    <a href="${escapeHtml(href)}" style="display:inline-block;background:${accent};color:${accentFg};text-decoration:none;font-weight:600;font-size:15px;padding:12px 22px;border-radius:10px;">${escapeHtml(label)}</a>
   </td></tr>`;
 }
 
@@ -247,4 +249,125 @@ function escapeHtml(s: string): string {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
+
+// ── Seasonal tune-up reminder (service_reminders cron) ──────────────────
+
+interface ServiceReminderArgs {
+  businessName: string;
+  customerName: string;
+  phone: string | null;
+  accent: string;
+  accentFg: string;
+}
+
+export function serviceReminderEmailHtml({
+  businessName,
+  customerName,
+  phone,
+  accent,
+  accentFg,
+}: ServiceReminderArgs): string {
+  const hi = customerName ? `Hi ${escapeHtml(customerName)},` : 'Hi,';
+  const call = phone
+    ? paragraph(`Call or text <strong>${escapeHtml(phone)}</strong> and we’ll get you on the schedule.`)
+    : paragraph('Reply to this email and we’ll get you on the schedule.');
+  return emailShell(
+    heading('Time for your seasonal tune-up') +
+      paragraph(
+        `${hi}<br/><br/>
+        It's been a while since your last service — a seasonal tune-up keeps the system efficient,
+        catches small problems before they're big ones, and protects the warranty.`,
+      ) +
+      call +
+      signoff(businessName),
+  );
+}
+
+// ── Storm / emergency lead page ─────────────────────────────────────────
+
+interface LeadNotifyArgs {
+  businessName: string;
+  lead: { name: string; phone: string | null; email: string | null; address: string | null; message: string | null };
+  accent: string;
+  accentFg: string;
+}
+
+/** To the contractor: a new lead just came in from your public lead page. */
+export function leadNotifyEmailHtml({ businessName, lead, accent, accentFg }: LeadNotifyArgs): string {
+  const row = (label: string, v: string | null) =>
+    v ? `<strong>${label}:</strong> ${escapeHtml(v)}<br/>` : '';
+  const tel = lead.phone ? lead.phone.replace(/[^+0-9]/g, '') : '';
+  return emailShell(
+    heading('New lead from your lead page') +
+      paragraph(
+        row('Name', lead.name) +
+          row('Phone', lead.phone) +
+          row('Email', lead.email) +
+          row('Address', lead.address) +
+          (lead.message ? `<br/>“${escapeHtml(lead.message)}”` : ''),
+      ) +
+      (tel ? button({ href: `tel:${tel}`, label: `Call ${lead.name}`, accent, accentFg }) : '') +
+      `<tr><td style="font-size:13px;line-height:1.5;color:#46566A;">— Crewcraft, for ${escapeHtml(businessName)}. Speed wins these — call while it’s hot.</td></tr>`,
+  );
+}
+
+interface LeadAutoReplyArgs {
+  businessName: string;
+  leadName: string;
+  phone: string | null;
+  accent: string;
+  accentFg: string;
+}
+
+/** To the homeowner, instantly: we got your request. */
+export function leadAutoReplyEmailHtml({
+  businessName,
+  leadName,
+  phone,
+  accent,
+  accentFg,
+}: LeadAutoReplyArgs): string {
+  const hi = leadName ? `Hi ${escapeHtml(leadName)},` : 'Hi,';
+  return emailShell(
+    heading('We got your request') +
+      paragraph(
+        `${hi}<br/><br/>
+        Thanks for reaching out to <strong>${escapeHtml(businessName)}</strong> — your request is
+        in and we'll contact you as soon as possible.`,
+      ) +
+      (phone
+        ? paragraph(
+            `If it's urgent, call us directly at <strong>${escapeHtml(phone)}</strong>.`,
+          )
+        : '') +
+      signoff(businessName),
+  );
+}
+
+// ── Tomorrow's jobs digest (scheduling cron) ────────────────────────────
+
+interface JobsDigestArgs {
+  businessName: string;
+  jobs: { title: string; customer: string | null; address: string | null; time: string }[];
+  scheduleUrl: string;
+  accent: string;
+  accentFg: string;
+}
+
+export function jobsDigestEmailHtml({ businessName, jobs, scheduleUrl, accent, accentFg }: JobsDigestArgs): string {
+  const rows = jobs
+    .map(
+      (j) =>
+        `<strong>${escapeHtml(j.time)}</strong> — ${escapeHtml(j.title)}` +
+        (j.customer ? ` · ${escapeHtml(j.customer)}` : '') +
+        (j.address ? `<br/><span style="color:#46566A;">${escapeHtml(j.address)}</span>` : ''),
+    )
+    .join('<br/><br/>');
+  return emailShell(
+    heading(`Tomorrow: ${jobs.length} ${jobs.length === 1 ? 'job' : 'jobs'}`) +
+      paragraph(rows) +
+      button({ href: scheduleUrl, label: 'Open the schedule', accent, accentFg }) +
+      `<tr><td style="font-size:13px;line-height:1.5;color:#46566A;">— Crewcraft, for ${escapeHtml(businessName)}</td></tr>`,
+  );
 }

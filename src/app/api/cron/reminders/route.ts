@@ -4,12 +4,15 @@ import { appUrl, REMINDER_AFTER_DAYS, REMINDER_MAX, REVIEW_ASK_WINDOW_DAYS } fro
 import { sendAppEmail } from '@/lib/email/send';
 import {
   invoiceReminderEmailHtml,
+  jobsDigestEmailHtml,
   reminderEmailHtml,
   reviewRequestEmailHtml,
+  serviceReminderEmailHtml,
 } from '@/lib/email/templates';
+import { pruneRateEvents } from '@/lib/rate-limit';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getTheme } from '@/lib/trades';
-import type { Business, Estimate } from '@/lib/types';
+import type { Business, Estimate, Job, Permit, ServiceReminder } from '@/lib/types';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -201,6 +204,172 @@ export async function GET(request: NextRequest) {
     console.error('Review-Getter sweep skipped:', err);
   }
 
+  // 4. Seasonal tune-up reminders (service_reminders, migration 0010) —
+  // email the customer, then roll next_due forward by the cadence.
+  let tuneUpsSent = 0;
+  try {
+    const { data: dueRows, error: dueErr } = await admin
+      .from('service_reminders')
+      .select('*')
+      .eq('enabled', true)
+      .lte('next_due', today)
+      .limit(100);
+    if (dueErr) throw dueErr;
+
+    for (const r of (dueRows ?? []) as ServiceReminder[]) {
+      const { data: biz } = await admin
+        .from('businesses')
+        .select('*')
+        .eq('user_id', r.user_id)
+        .single();
+      if (!biz) continue;
+      const business = biz as Business;
+      const theme = getTheme(business.trade);
+      try {
+        await sendAppEmail({
+          to: r.customer_email,
+          fromName: business.name,
+          subject: `Time for your seasonal tune-up — ${business.name}`,
+          html: serviceReminderEmailHtml({
+            businessName: business.name,
+            customerName: r.customer_name,
+            phone: business.phone,
+            accent: theme.accent,
+            accentFg: theme.accentFg,
+          }),
+        });
+        const next = new Date(`${r.next_due}T00:00:00Z`);
+        next.setUTCMonth(next.getUTCMonth() + (r.cadence_months || 6));
+        await admin
+          .from('service_reminders')
+          .update({ last_sent_at: new Date().toISOString(), next_due: next.toISOString().slice(0, 10) })
+          .eq('id', r.id);
+        tuneUpsSent += 1;
+      } catch (err) {
+        console.error(`Tune-up reminder failed for ${r.id}:`, err);
+      }
+    }
+  } catch (err) {
+    console.error('Tune-up sweep skipped:', err);
+  }
+
+  // 5. Tomorrow's jobs digest to the contractor (jobs, migration 0010).
+  let digestsSent = 0;
+  try {
+    const from = new Date(Date.now() + 12 * 3_600_000).toISOString();
+    const to = new Date(Date.now() + 36 * 3_600_000).toISOString();
+    const { data: jobRows, error: jobsErr } = await admin
+      .from('jobs')
+      .select('*')
+      .eq('status', 'scheduled')
+      .is('reminder_sent_at', null)
+      .gte('starts_at', from)
+      .lt('starts_at', to)
+      .limit(200);
+    if (jobsErr) throw jobsErr;
+
+    const byUser = new Map<string, Job[]>();
+    for (const j of (jobRows ?? []) as Job[]) {
+      byUser.set(j.user_id, [...(byUser.get(j.user_id) ?? []), j]);
+    }
+    for (const [userId, userJobs] of byUser) {
+      const { data: biz } = await admin
+        .from('businesses')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+      if (!biz?.email) continue;
+      const business = biz as Business;
+      const theme = getTheme(business.trade);
+      try {
+        await sendAppEmail({
+          to: business.email as string,
+          fromName: 'Toolbelt',
+          subject: `Tomorrow: ${userJobs.length} ${userJobs.length === 1 ? 'job' : 'jobs'}`,
+          html: jobsDigestEmailHtml({
+            businessName: business.name,
+            jobs: userJobs.map((j) => ({
+              title: j.title,
+              customer: j.customer_name,
+              address: j.address,
+              time: new Date(j.starts_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+            })),
+            scheduleUrl: `${appUrl()}/apps/schedule`,
+            accent: theme.accent,
+            accentFg: theme.accentFg,
+          }),
+        });
+        const now = new Date().toISOString();
+        await admin
+          .from('jobs')
+          .update({ reminder_sent_at: now })
+          .in('id', userJobs.map((j) => j.id));
+        digestsSent += 1;
+      } catch (err) {
+        console.error(`Jobs digest failed for user ${userId}:`, err);
+      }
+    }
+  } catch (err) {
+    console.error('Jobs digest sweep skipped:', err);
+  }
+
+  // 6. Inspection-tomorrow reminders (permits, migration 0010) — to the contractor.
+  let inspectionNudges = 0;
+  try {
+    const tomorrow = new Date(Date.now() + 24 * 3_600_000).toISOString().slice(0, 10);
+    const { data: permRows, error: permErr } = await admin
+      .from('permits')
+      .select('*')
+      .eq('inspection_date', tomorrow)
+      .is('reminder_sent_at', null)
+      .limit(100);
+    if (permErr) throw permErr;
+
+    for (const p of (permRows ?? []) as Permit[]) {
+      const { data: biz } = await admin
+        .from('businesses')
+        .select('*')
+        .eq('user_id', p.user_id)
+        .single();
+      if (!biz?.email) continue;
+      const business = biz as Business;
+      const theme = getTheme(business.trade);
+      try {
+        await sendAppEmail({
+          to: business.email as string,
+          fromName: 'Toolbelt',
+          subject: `Inspection tomorrow — ${p.job_name}`,
+          html: jobsDigestEmailHtml({
+            businessName: business.name,
+            jobs: [
+              {
+                title: `Inspection: ${p.job_name}${p.permit_no ? ` (#${p.permit_no})` : ''}`,
+                customer: p.jurisdiction,
+                address: null,
+                time: 'Tomorrow',
+              },
+            ],
+            scheduleUrl: `${appUrl()}/apps/permits`,
+            accent: theme.accent,
+            accentFg: theme.accentFg,
+          }),
+        });
+        await admin
+          .from('permits')
+          .update({ reminder_sent_at: new Date().toISOString() })
+          .eq('id', p.id);
+        inspectionNudges += 1;
+      } catch (err) {
+        console.error(`Inspection reminder failed for ${p.id}:`, err);
+      }
+    }
+  } catch (err) {
+    console.error('Inspection sweep skipped:', err);
+  }
+
+  // housekeeping: keep the rate-limit table small (migration 0009)
+  await pruneRateEvents();
+
   return NextResponse.json({
     ok: true,
     estimates: dueEstimates.length,
@@ -209,5 +378,8 @@ export async function GET(request: NextRequest) {
     failed: errors.length,
     reviewsSent,
     reviewsFailed,
+    tuneUpsSent,
+    digestsSent,
+    inspectionNudges,
   });
 }

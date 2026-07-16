@@ -36,6 +36,7 @@ export interface Business {
   payment_instructions: string | null; // e.g. "Zelle to (555) 123-4567"
   auto_invoice: boolean; // on acceptance, create + email the invoice automatically
   auto_review_request: boolean; // on invoice paid, email the review ask automatically (cron)
+  lead_token: string; // unguessable token for the public storm/emergency lead page
   stripe_account_id: string | null; // Connect: the contractor's own Stripe account
   stripe_charges_enabled: boolean; // Connect: cached "can take payments" status
   stripe_customer_id: string | null;
@@ -146,4 +147,78 @@ export interface GeneratedTier extends GeneratedEstimate {
 
 export interface GeneratedTiers {
   tiers: GeneratedTier[];
+}
+
+// ── App tables (migration 0010) ─────────────────────────────────────────
+
+export type JobStatus = 'scheduled' | 'done' | 'canceled';
+
+export interface Job {
+  id: string;
+  user_id: string;
+  estimate_id: string | null;
+  title: string;
+  customer_name: string | null;
+  address: string | null;
+  starts_at: string;
+  duration_min: number;
+  notes: string | null;
+  status: JobStatus;
+  reminder_sent_at: string | null;
+  created_at: string;
+}
+
+export interface EquipmentItem {
+  id: string;
+  user_id: string;
+  customer_name: string;
+  label: string;
+  brand: string | null;
+  model: string | null;
+  serial: string | null;
+  filter_size: string | null;
+  refrigerant: string | null;
+  installed_year: number | null;
+  notes: string | null;
+  created_at: string;
+}
+
+export type PermitStatus = 'applied' | 'issued' | 'inspection' | 'closed';
+
+export interface Permit {
+  id: string;
+  user_id: string;
+  estimate_id: string | null;
+  job_name: string;
+  jurisdiction: string | null;
+  permit_no: string | null;
+  status: PermitStatus;
+  inspection_date: string | null;
+  reminder_sent_at: string | null;
+  notes: string | null;
+  created_at: string;
+}
+
+export interface ServiceReminder {
+  id: string;
+  user_id: string;
+  customer_name: string;
+  customer_email: string;
+  cadence_months: number;
+  next_due: string;
+  enabled: boolean;
+  last_sent_at: string | null;
+  created_at: string;
+}
+
+export interface Lead {
+  id: string;
+  user_id: string;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  address: string | null;
+  message: string | null;
+  source: string;
+  created_at: string;
 }

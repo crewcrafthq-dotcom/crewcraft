@@ -1,9 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import {
-  ArrowRight,
   BookOpen,
-  CalendarClock,
   FileText,
   PartyPopper,
   Receipt,
@@ -137,36 +135,27 @@ export default async function DashboardPage({
         <p className="mt-1.5 text-ink-soft">The whole belt, one screen. Pick a tool.</p>
       </header>
 
-      {/* the paperwork pipeline */}
+      {/* the paperwork pipeline — compact tiles, no status chatter */}
       <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-mute">
         Run the business
       </h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {core.map((app) => {
           const Icon = app.icon;
           return (
             <Link
               key={app.name}
               href={app.href}
-              className="group block animate-fade-up rounded-2xl border border-hairline bg-paper-800 p-5 shadow-card card-interactive"
+              className="group flex items-start gap-3 rounded-xl border border-hairline bg-paper-800 p-4 shadow-card transition duration-150 hover:-translate-y-0.5 hover:border-accent/50"
             >
-              <div className="flex items-start justify-between">
-                <span className="grid h-12 w-12 place-items-center rounded-xl bg-accent text-accent-fg shadow-accent">
-                  <Icon className="h-6 w-6" />
-                </span>
-                <span className="rounded-full bg-accent/10 px-2.5 py-1 text-xs font-semibold text-accent-bright">
-                  Live
-                </span>
-              </div>
-              <h3 className="mt-4 text-lg font-bold text-ink">{app.name}</h3>
-              <p className="mt-1 text-sm text-ink-soft">{app.desc}</p>
-              <div className="mt-4 flex items-center justify-between border-t border-hairline pt-3 text-sm">
-                <span className="text-ink-mute">{app.meta}</span>
-                <span className="inline-flex items-center gap-1 font-semibold text-accent-bright">
-                  Open
-                  <ArrowRight className="h-4 w-4 transition duration-150 group-hover:translate-x-0.5" />
-                </span>
-              </div>
+              <span className="grid h-9 w-9 flex-none place-items-center rounded-lg bg-accent/10 text-accent-bright">
+                <Icon className="h-5 w-5" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm font-bold text-ink">{app.name}</span>
+                <span className="mt-0.5 block text-xs leading-relaxed text-ink-soft">{app.desc}</span>
+                <span className="mt-1 block text-[11px] text-ink-mute">{app.meta}</span>
+              </span>
             </Link>
           );
         })}
@@ -176,32 +165,20 @@ export default async function DashboardPage({
       <h2 className="mb-3 mt-8 text-sm font-semibold uppercase tracking-wide text-ink-mute">
         Built for {tradeLabel}
       </h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {mine.map((tool) => (
           <Link
             key={tool.href}
             href={tool.href!}
-            className="group block rounded-2xl border border-hairline bg-paper-800 p-5 shadow-card card-interactive"
+            className="group flex items-start gap-3 rounded-xl border border-hairline bg-paper-800 p-4 shadow-card transition duration-150 hover:-translate-y-0.5 hover:border-accent/50"
           >
-            <div className="flex items-start justify-between">
-              <span className="grid h-12 w-12 place-items-center rounded-xl bg-accent text-accent-fg shadow-accent">
-                <ToolIcon icon={tool.icon} className="h-6 w-6" />
-              </span>
-              <span className="rounded-full bg-accent/10 px-2.5 py-1 text-xs font-semibold text-accent-bright">
-                Live
-              </span>
-            </div>
-            <h3 className="mt-4 text-lg font-bold text-ink">{tool.name}</h3>
-            <p className="mt-1 text-sm text-ink-soft">{tool.tagline}</p>
-            <div className="mt-4 flex items-center justify-between border-t border-hairline pt-3 text-sm">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-ink-mute">
-                {tool.kind === 'automation' ? 'Automation' : 'App'}
-              </span>
-              <span className="inline-flex items-center gap-1 font-semibold text-accent-bright">
-                Open
-                <ArrowRight className="h-4 w-4 transition duration-150 group-hover:translate-x-0.5" />
-              </span>
-            </div>
+            <span className="grid h-9 w-9 flex-none place-items-center rounded-lg bg-accent/10 text-accent-bright">
+              <ToolIcon icon={tool.icon} className="h-5 w-5" />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-sm font-bold text-ink">{tool.name}</span>
+              <span className="mt-0.5 block text-xs leading-relaxed text-ink-soft">{tool.tagline}</span>
+            </span>
           </Link>
         ))}
       </div>
@@ -238,36 +215,26 @@ export default async function DashboardPage({
       <h2 className="mb-3 mt-8 text-sm font-semibold uppercase tracking-wide text-ink-mute">
         On the way
       </h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {upcoming.map((tool) => (
           <div
             key={tool.name}
-            className="rounded-2xl border border-dashed border-hairline bg-paper-800/50 p-5"
+            className="flex items-start gap-3 rounded-xl border border-dashed border-hairline bg-paper-800/50 p-4"
           >
-            <div className="flex items-start justify-between">
-              <span className="grid h-12 w-12 place-items-center rounded-xl bg-paper-700 text-ink-mute">
-                <ToolIcon icon={tool.icon} className="h-6 w-6" />
+            <span className="grid h-9 w-9 flex-none place-items-center rounded-lg bg-paper-700 text-ink-mute">
+              <ToolIcon icon={tool.icon} className="h-5 w-5" />
+            </span>
+            <span className="min-w-0">
+              <span className="flex items-center gap-2">
+                <span className="text-sm font-bold text-ink-soft">{tool.name}</span>
+                <span className="rounded-full bg-paper-700 px-2 py-0.5 text-[10px] font-semibold text-ink-mute">
+                  {tool.status === 'next' ? 'Next' : 'Planned'}
+                </span>
               </span>
-              <span className="rounded-full bg-paper-700 px-2.5 py-1 text-xs font-semibold text-ink-mute">
-                {tool.status === 'next' ? 'Coming next' : 'Planned'}
-              </span>
-            </div>
-            <h3 className="mt-4 text-lg font-bold text-ink-soft">{tool.name}</h3>
-            <p className="mt-1 text-sm text-ink-mute">{tool.tagline}</p>
+              <span className="mt-0.5 block text-xs text-ink-mute">{tool.tagline}</span>
+            </span>
           </div>
         ))}
-        <div className="rounded-2xl border border-dashed border-hairline bg-paper-800/50 p-5">
-          <div className="flex items-start justify-between">
-            <span className="grid h-12 w-12 place-items-center rounded-xl bg-paper-700 text-ink-mute">
-              <CalendarClock className="h-6 w-6" />
-            </span>
-            <span className="rounded-full bg-paper-700 px-2.5 py-1 text-xs font-semibold text-ink-mute">
-              Soon
-            </span>
-          </div>
-          <h3 className="mt-4 text-lg font-bold text-ink-soft">Scheduling</h3>
-          <p className="mt-1 text-sm text-ink-mute">Book the job and keep your week straight.</p>
-        </div>
       </div>
 
       <p className="mt-6 text-sm text-ink-mute">

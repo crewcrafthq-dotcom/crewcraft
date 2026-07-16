@@ -26,8 +26,8 @@ steps (Supabase / Stripe / Vercel) click-by-click, and paste full SQL contents
 - **Next.js 14** (App Router) + TypeScript + Tailwind, deployed on **Vercel**
 - **Supabase** — Postgres + RLS, password & magic-link auth, storage (logos).
   Migrations in `supabase/migrations/` are applied **manually** in the SQL
-  editor (0001–0007 are live; 0008 pending as of 2026-07-16). New schema = new
-  numbered migration file, and
+  editor (0001–0008 are live; 0009 rate-limits + 0010 app tables pending as of
+  2026-07-16). New schema = new numbered migration file, and
   tell the owner to run it.
 - **Anthropic** — `AI_MODEL` in `src/lib/config.ts` (server-only key) for
   line-item generation, incl. photo (vision) and Good/Better/Best tier modes
@@ -102,7 +102,22 @@ Plan Builder (presets in `src/lib/app-presets.ts` → draft estimate via
 `src/app/apps/actions.ts`, same free-tier gate as /estimates/new), Material
 Order Sheet (printable materials list), Supplement Drafter (AI letter via
 `/api/ai/supplement`), Photo Report Builder (client-side branded PDF —
-photos never uploaded). Desktop app chrome is a sidebar (`AppSidebar`,
+photos never uploaded), and — behind migration 0010 (all fail soft with a
+"run migration 0010" notice until applied) — Scheduling (`/apps/schedule`,
+agenda + evening "tomorrow's jobs" digest via cron), Equipment & Filter Log
+(`/apps/equipment`), Permit Tracker (`/apps/permits`, day-before inspection
+email), Seasonal Tune-Up Reminders (`/apps/service-reminders`, cron emails
+customer + rolls next_due forward), Storm/Emergency Lead Page
+(`/apps/lead-page` manager + public `/r/[lead_token]` form → instant
+auto-reply + lead email + inbox; honeypot + per-IP rate limit). Cron
+`/api/cron/reminders` now runs 6 passes, each guarded so one failing pass
+never kills the rest.
+
+**Security (July 2026):** password login goes through `/api/auth/login` with
+DB-backed rate limiting (`rate_events`, migration 0009 — fails OPEN if the
+table is missing); AI routes have a per-user daily cap (`AI_DAILY_LIMIT`);
+security headers in next.config; review/payment links validated http(s) and
+escaped in email hrefs. Desktop app chrome is a sidebar (`AppSidebar`,
 data-driven from `liveTradeTools()` in `src/lib/marketing.ts`); mobile stays
 top-bar. Brand positioning is **platform-first** ("software tools for
 contractors"), not estimates-first.

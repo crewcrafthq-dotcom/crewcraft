@@ -109,7 +109,7 @@ export const APP_LINEUP: ToolItem[] = [
   { name: 'Toolbelt Voice', tagline: 'Dictate the job — the mic lives right in the estimate builder.', status: 'live', icon: 'voice', kind: 'app', href: '/estimates' },
   { name: 'Toolbelt Supplements', tagline: 'Insurance supplement letters, drafted in a minute.', status: 'live', icon: 'supplements', kind: 'app', href: '/apps/supplements' },
   { name: 'Review-Getter', tagline: 'Invoice paid → review ask sent, automatically. Or one tap — your call.', status: 'live', icon: 'reviews', kind: 'automation' },
-  { name: 'Toolbelt Scheduling', tagline: 'Book the job, keep the week straight.', status: 'next', icon: 'scheduling', kind: 'app' },
+  { name: 'Toolbelt Scheduling', tagline: 'A clean agenda + tomorrow’s jobs emailed to you every evening.', status: 'live', icon: 'scheduling', kind: 'app', href: '/apps/schedule' },
 ];
 
 export interface TradeSectionContent {
@@ -141,8 +141,8 @@ export const TRADE_SECTIONS: Record<Trade, TradeSectionContent> = {
       { name: 'Estimate Builder', tagline: 'Type the changeout, send the branded quote.', status: 'live', icon: 'estimates', kind: 'app', href: '/estimates' },
       { name: 'Maintenance Plan Builder', tagline: 'Turn one-off tune-ups into recurring revenue.', status: 'live', icon: 'maintenance', kind: 'app', href: '/apps/maintenance-plan' },
       { name: 'Follow-up Engine', tagline: 'Unanswered quotes get a nudge — automatically.', status: 'live', icon: 'followup', kind: 'automation' },
-      { name: 'Seasonal Tune-Up Reminders', tagline: '“Time for your spring check” goes out by itself — and books the calendar.', status: 'planned', icon: 'reminders', kind: 'automation' },
-      { name: 'Equipment & Filter Log', tagline: 'Every unit you’ve touched: model, serial, filter size, refrigerant.', status: 'planned', icon: 'log', kind: 'app' },
+      { name: 'Seasonal Tune-Up Reminders', tagline: '“Time for your spring check” emails itself — and reschedules itself too.', status: 'live', icon: 'reminders', kind: 'automation', href: '/apps/service-reminders' },
+      { name: 'Equipment & Filter Log', tagline: 'Every unit you’ve touched: model, serial, filter size, refrigerant.', status: 'live', icon: 'log', kind: 'app', href: '/apps/equipment' },
     ],
   },
   plumbing: {
@@ -157,8 +157,8 @@ export const TRADE_SECTIONS: Record<Trade, TradeSectionContent> = {
     tools: [
       { name: 'Estimate Builder', tagline: 'Three sentences in the garage → a quote in their inbox.', status: 'live', icon: 'estimates', kind: 'app', href: '/estimates' },
       { name: 'Water Heater Quote Pack', tagline: 'Tank vs tankless, good-better-best, side by side.', status: 'live', icon: 'waterheater', kind: 'app', href: '/apps/water-heater' },
-      { name: 'After-Hours Auto-Reply', tagline: '2am “my pipe burst” texts get an instant answer with your emergency rate.', status: 'planned', icon: 'afterhours', kind: 'automation' },
-      { name: 'Permit Tracker', tagline: 'Which job is waiting on which permit — without the sticky notes.', status: 'planned', icon: 'permits', kind: 'app' },
+      { name: 'Emergency Lead Page', tagline: '2am “my pipe burst” requests get an instant reply — while you sleep.', status: 'live', icon: 'afterhours', kind: 'automation', href: '/apps/lead-page' },
+      { name: 'Permit Tracker', tagline: 'Which job is waiting on which permit — with day-before inspection reminders.', status: 'live', icon: 'permits', kind: 'app', href: '/apps/permits' },
       { name: 'Review-Getter', tagline: 'Paid invoices turn into review asks automatically — flip it on in Settings.', status: 'live', icon: 'reviews', kind: 'automation' },
     ],
   },
@@ -175,7 +175,7 @@ export const TRADE_SECTIONS: Record<Trade, TradeSectionContent> = {
       { name: 'Estimate Builder', tagline: 'Describe the panel swap, send the branded quote.', status: 'live', icon: 'estimates', kind: 'app', href: '/estimates' },
       { name: 'Load Calc Helper', tagline: 'A quick service-load sanity check before you commit to a number.', status: 'live', icon: 'loadcalc', kind: 'app', href: '/apps/load-calc' },
       { name: 'Follow-up Engine', tagline: 'Quotes chase themselves so you can stay on the tools.', status: 'live', icon: 'followup', kind: 'automation' },
-      { name: 'Permit & Inspection Tracker', tagline: 'Every job’s permit status and inspection date, with reminders.', status: 'planned', icon: 'permits', kind: 'automation' },
+      { name: 'Permit & Inspection Tracker', tagline: 'Every job’s permit status and inspection date, with reminders.', status: 'live', icon: 'permits', kind: 'app', href: '/apps/permits' },
       { name: 'Good-Better-Best Options', tagline: 'One job, three option tiers, one tap.', status: 'live', icon: 'options', kind: 'app', href: '/estimates' },
     ],
   },
@@ -193,7 +193,7 @@ export const TRADE_SECTIONS: Record<Trade, TradeSectionContent> = {
       { name: 'Material Order Sheet', tagline: 'Estimate → supplier order list, no re-typing at the counter.', status: 'live', icon: 'materials', kind: 'app', href: '/apps/order-sheet' },
       { name: 'Supplement Drafter', tagline: 'Insurance supplement letters, drafted in a minute instead of at midnight.', status: 'live', icon: 'supplements', kind: 'app', href: '/apps/supplements' },
       { name: 'Photo Report Builder', tagline: 'Roof photos into a clean, captioned PDF the homeowner trusts.', status: 'live', icon: 'photos', kind: 'app', href: '/apps/photo-report' },
-      { name: 'Storm Response Pack', tagline: 'Hail hits: instant auto-replies and a landing page for the flood of calls.', status: 'planned', icon: 'storm', kind: 'automation' },
+      { name: 'Storm Response Pack', tagline: 'Hail hits: share your storm link — every lead gets an instant reply.', status: 'live', icon: 'storm', kind: 'automation', href: '/apps/lead-page' },
     ],
   },
 };

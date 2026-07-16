@@ -28,6 +28,7 @@ const business: Business = {
   payment_instructions: null,
   auto_invoice: false,
   auto_review_request: false,
+  lead_token: 'lead-token',
   stripe_account_id: null,
   stripe_charges_enabled: false,
   stripe_customer_id: null,

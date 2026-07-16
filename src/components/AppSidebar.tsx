@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   BookOpen,
+  CalendarClock,
   CreditCard,
   FileText,
   LayoutGrid,
@@ -23,6 +24,7 @@ const CORE = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid, exact: true },
   { href: '/estimates', label: 'Estimates', icon: FileText },
   { href: '/invoices', label: 'Invoices', icon: Receipt },
+  { href: '/apps/schedule', label: 'Schedule', icon: CalendarClock },
   { href: '/customers', label: 'Customers', icon: Users2 },
   { href: '/analytics', label: 'Analytics', icon: TrendingUp },
   { href: '/pricebook', label: 'Price Book', icon: BookOpen },

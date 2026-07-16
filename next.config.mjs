@@ -13,6 +13,21 @@ const nextConfig = {
       { protocol: 'https', hostname: '*.supabase.co' },
     ],
   },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          // No page here has a reason to live inside someone else's iframe.
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          // Microphone stays unlisted (voice dictation needs it).
+          { key: 'Permissions-Policy', value: 'camera=(), geolocation=(), usb=()' },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

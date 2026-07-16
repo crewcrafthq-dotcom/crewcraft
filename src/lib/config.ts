@@ -21,6 +21,13 @@ export const REMINDER_MAX = 2;
  */
 export const REVIEW_ASK_WINDOW_DAYS = 14;
 
+/**
+ * AI calls allowed per user per day (generate + supplement combined) —
+ * generous for real quoting, a wall for runaway scripts hammering the
+ * Anthropic bill.
+ */
+export const AI_DAILY_LIMIT = 60;
+
 /** Invoices default to net-14. */
 export const INVOICE_DUE_DAYS = 14;
 

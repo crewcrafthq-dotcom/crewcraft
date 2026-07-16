@@ -61,9 +61,16 @@ export async function writeBusinessFromForm(formData: FormData): Promise<WriteRe
   };
 
   // Get-paid + review settings only exist on the settings form (not onboarding)
-  // — write them only when the form actually carried them.
+  // — write them only when the form actually carried them. Links must be real
+  // http(s) URLs: they're rendered into customer emails, so no javascript: or
+  // other schemes ever get stored.
   for (const key of ['review_link', 'payment_link', 'payment_instructions'] as const) {
-    if (formData.has(key)) fields[key] = str(formData, key);
+    if (!formData.has(key)) continue;
+    const value = str(formData, key);
+    if (value && key !== 'payment_instructions' && !/^https?:\/\//i.test(value)) {
+      return { ok: false, error: 'Links need to start with http:// or https://.' };
+    }
+    fields[key] = value;
   }
   // Checkboxes: a sentinel field marks the form as carrying them, since an
   // unchecked box submits nothing at all.

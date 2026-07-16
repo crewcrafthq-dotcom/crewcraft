@@ -2,7 +2,8 @@ import Anthropic from '@anthropic-ai/sdk';
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { getSession } from '@/lib/auth';
-import { AI_MODEL } from '@/lib/config';
+import { AI_DAILY_LIMIT, AI_MODEL } from '@/lib/config';
+import { checkRateLimit, recordRateEvent } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
@@ -21,6 +22,16 @@ export async function POST(request: NextRequest) {
   }
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json({ error: 'AI isn’t set up yet.' }, { status: 503 });
+  }
+
+  // Shares the same daily AI budget as the estimate generator.
+  const aiKey = `ai:${user.id}`;
+  const { allowed } = await checkRateLimit(aiKey, AI_DAILY_LIMIT, 24 * 60);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'You’ve hit today’s AI limit — it resets tomorrow.' },
+      { status: 429 },
+    );
   }
 
   let body: Record<string, unknown>;
@@ -81,6 +92,7 @@ supplemental payment for the listed items. Rules:
       .join('\n')
       .trim();
     if (!letter) throw new Error('empty completion');
+    await recordRateEvent(aiKey);
     return NextResponse.json({ letter });
   } catch (err) {
     console.error('AI supplement failed:', err);

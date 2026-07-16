@@ -17,6 +17,7 @@ export default function robots(): MetadataRoute.Robots {
         '/api/',
         '/auth/',
         '/e/',
+        '/r/',
       ],
     },
     sitemap: 'https://crewcraftapp.com/sitemap.xml',

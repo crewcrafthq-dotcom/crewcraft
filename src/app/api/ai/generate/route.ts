@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { getSession } from '@/lib/auth';
-import { AI_MAX_PHOTOS } from '@/lib/config';
+import { AI_DAILY_LIMIT, AI_MAX_PHOTOS } from '@/lib/config';
+import { checkRateLimit, recordRateEvent } from '@/lib/rate-limit';
 import {
   AiParseError,
   generateEstimate,
@@ -28,6 +29,16 @@ export async function POST(request: NextRequest) {
   const { user, business } = await getSession();
   if (!user || !business) {
     return NextResponse.json({ error: 'You need to sign in again.' }, { status: 401 });
+  }
+
+  // Per-user daily cap — protects the Anthropic bill from runaway scripts.
+  const aiKey = `ai:${user.id}`;
+  const { allowed } = await checkRateLimit(aiKey, AI_DAILY_LIMIT, 24 * 60);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'You’ve hit today’s AI limit — it resets tomorrow. Add line items by hand for now.' },
+      { status: 429 },
+    );
   }
 
   let body: { jobDescription?: unknown; photos?: unknown; tiers?: unknown };
@@ -74,6 +85,7 @@ export async function POST(request: NextRequest) {
     const result = body?.tiers === true
       ? await generateEstimateTiers(args)
       : await generateEstimate(args);
+    await recordRateEvent(aiKey);
     return NextResponse.json(result);
   } catch (err) {
     if (err instanceof AiParseError) {
