@@ -172,6 +172,25 @@ export function BusinessForm({ action, initial, submitLabel, extended }: Props) 
                 </span>
               </span>
             </label>
+            <input type="hidden" name="auto_review_request_present" value="1" />
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-hairline bg-paper-850 p-4">
+              <input
+                type="checkbox"
+                name="auto_review_request"
+                defaultChecked={Boolean(initial?.auto_review_request)}
+                className="mt-0.5 h-5 w-5 accent-[rgb(var(--accent))]"
+              />
+              <span>
+                <span className="block text-sm font-semibold text-ink">
+                  Auto-ask for a review when an invoice is paid
+                </span>
+                <span className="mt-0.5 block text-sm text-ink-mute">
+                  Within a day of an invoice being marked paid, the customer gets your review link
+                  by email — once per job, only if they have an email on file. Needs the review
+                  link above.
+                </span>
+              </span>
+            </label>
           </fieldset>
         ) : null}
 

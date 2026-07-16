@@ -35,6 +35,7 @@ export interface Business {
   payment_link: string | null; // e.g. a Stripe Payment Link
   payment_instructions: string | null; // e.g. "Zelle to (555) 123-4567"
   auto_invoice: boolean; // on acceptance, create + email the invoice automatically
+  auto_review_request: boolean; // on invoice paid, email the review ask automatically (cron)
   stripe_account_id: string | null; // Connect: the contractor's own Stripe account
   stripe_charges_enabled: boolean; // Connect: cached "can take payments" status
   stripe_customer_id: string | null;

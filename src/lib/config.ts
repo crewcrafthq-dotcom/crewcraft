@@ -14,6 +14,13 @@ export const FREE_ESTIMATE_LIMIT = 3;
 export const REMINDER_AFTER_DAYS = 3;
 export const REMINDER_MAX = 2;
 
+/**
+ * Review-Getter auto-ask: only invoices paid within this window get the
+ * automatic review email — so flipping the toggle on never blasts a backlog
+ * of old customers.
+ */
+export const REVIEW_ASK_WINDOW_DAYS = 14;
+
 /** Invoices default to net-14. */
 export const INVOICE_DUE_DAYS = 14;
 

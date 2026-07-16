@@ -26,7 +26,8 @@ steps (Supabase / Stripe / Vercel) click-by-click, and paste full SQL contents
 - **Next.js 14** (App Router) + TypeScript + Tailwind, deployed on **Vercel**
 - **Supabase** — Postgres + RLS, password & magic-link auth, storage (logos).
   Migrations in `supabase/migrations/` are applied **manually** in the SQL
-  editor (0001–0006 are live). New schema = new numbered migration file, and
+  editor (0001–0007 are live; 0008 pending as of 2026-07-16). New schema = new
+  numbered migration file, and
   tell the owner to run it.
 - **Anthropic** — `AI_MODEL` in `src/lib/config.ts` (server-only key) for
   line-item generation, incl. photo (vision) and Good/Better/Best tier modes
@@ -88,7 +89,11 @@ checkout for deposits/balances with webhook auto-mark-paid
 (`estimates.deposit_paid_at`) · follow-up reminders (manual + daily cron:
 quiet estimates and overdue invoices, max 2, per-document toggle) · Customers
 (derived CRM) · Analytics (win rate, quoted vs won) · review-request emails
-(`businesses.review_link`) · get-paid fallbacks (`payment_link`,
+(`businesses.review_link`; manual from the share panel AND auto after an
+invoice is paid when `businesses.auto_review_request` is on — cron pass 3 in
+`/api/cron/reminders`, idempotent via `review_requested_at`, only invoices
+paid within `REVIEW_ASK_WINDOW_DAYS`, needs migration 0008) · get-paid
+fallbacks (`payment_link`,
 `payment_instructions`) · voice dictation in the estimate builder
 (`VoiceButton`, Web Speech API, renders nothing when unsupported) · trade
 tools under `/apps/*`: Load Calc Helper (NEC 220.82-style,
@@ -116,7 +121,6 @@ ad copy in `docs/ads/*.md`. SEO playbook: `docs/SEO-GUIDE.md`. Legal pages:
 ## Roadmap / open seams
 
 - **Scheduling** — the one "Soon" card on the dashboard
-- **Toolbelt Voice** — voice-to-estimate; the job-description box is the seam
-- **Toolbelt Supplements** — roofing insurance supplements
-- Known gaps: AI photos aren't stored/shown on estimates; review requests are
-  manual-only (no auto-send after paid).
+- Known gaps: AI photos aren't stored/shown on estimates; the
+  `auto_review_request` self-heal retry in `business-write.ts` can be removed
+  once migration 0008 is confirmed applied.

@@ -108,7 +108,7 @@ export const APP_LINEUP: ToolItem[] = [
   { name: 'Price Book', tagline: 'Your real rates and materials — the AI prices every draft with them.', status: 'live', icon: 'pricebook', kind: 'app', href: '/pricebook' },
   { name: 'Toolbelt Voice', tagline: 'Dictate the job — the mic lives right in the estimate builder.', status: 'live', icon: 'voice', kind: 'app', href: '/estimates' },
   { name: 'Toolbelt Supplements', tagline: 'Insurance supplement letters, drafted in a minute.', status: 'live', icon: 'supplements', kind: 'app', href: '/apps/supplements' },
-  { name: 'Review-Getter', tagline: 'One tap when the job’s done — the review ask emails itself.', status: 'live', icon: 'reviews', kind: 'app' },
+  { name: 'Review-Getter', tagline: 'Invoice paid → review ask sent, automatically. Or one tap — your call.', status: 'live', icon: 'reviews', kind: 'automation' },
   { name: 'Toolbelt Scheduling', tagline: 'Book the job, keep the week straight.', status: 'next', icon: 'scheduling', kind: 'app' },
 ];
 
@@ -159,7 +159,7 @@ export const TRADE_SECTIONS: Record<Trade, TradeSectionContent> = {
       { name: 'Water Heater Quote Pack', tagline: 'Tank vs tankless, good-better-best, side by side.', status: 'live', icon: 'waterheater', kind: 'app', href: '/apps/water-heater' },
       { name: 'After-Hours Auto-Reply', tagline: '2am “my pipe burst” texts get an instant answer with your emergency rate.', status: 'planned', icon: 'afterhours', kind: 'automation' },
       { name: 'Permit Tracker', tagline: 'Which job is waiting on which permit — without the sticky notes.', status: 'planned', icon: 'permits', kind: 'app' },
-      { name: 'Review-Getter', tagline: 'One tap when the job’s done — the review ask lands in their inbox.', status: 'live', icon: 'reviews', kind: 'app' },
+      { name: 'Review-Getter', tagline: 'Paid invoices turn into review asks automatically — flip it on in Settings.', status: 'live', icon: 'reviews', kind: 'automation' },
     ],
   },
   electrical: {

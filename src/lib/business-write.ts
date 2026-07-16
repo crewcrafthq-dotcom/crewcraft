@@ -65,10 +65,13 @@ export async function writeBusinessFromForm(formData: FormData): Promise<WriteRe
   for (const key of ['review_link', 'payment_link', 'payment_instructions'] as const) {
     if (formData.has(key)) fields[key] = str(formData, key);
   }
-  // Checkbox: a sentinel field marks the form as carrying it, since an
+  // Checkboxes: a sentinel field marks the form as carrying them, since an
   // unchecked box submits nothing at all.
   if (formData.has('auto_invoice_present')) {
     fields.auto_invoice = formData.get('auto_invoice') === 'on';
+  }
+  if (formData.has('auto_review_request_present')) {
+    fields.auto_review_request = formData.get('auto_review_request') === 'on';
   }
 
   const { data: existing } = await supabase
@@ -77,14 +80,30 @@ export async function writeBusinessFromForm(formData: FormData): Promise<WriteRe
     .eq('user_id', user.id)
     .maybeSingle();
 
+  // Self-heal for the window before migration 0008 runs: if the write fails
+  // and carried auto_review_request, retry without it so every other setting
+  // still saves. Remove once the column is live everywhere.
+  const withoutAutoReview = (row: Record<string, unknown>) => {
+    const { auto_review_request: _skip, ...rest } = row;
+    return rest;
+  };
+
   if (existing) {
     const patch = logoUrl ? { ...fields, logo_url: logoUrl } : fields;
-    const { error } = await supabase.from('businesses').update(patch).eq('user_id', user.id);
+    let { error } = await supabase.from('businesses').update(patch).eq('user_id', user.id);
+    if (error && 'auto_review_request' in patch) {
+      ({ error } = await supabase
+        .from('businesses')
+        .update(withoutAutoReview(patch))
+        .eq('user_id', user.id));
+    }
     if (error) return { ok: false, error: 'Could not save. Try again.' };
   } else {
-    const { error } = await supabase
-      .from('businesses')
-      .insert({ user_id: user.id, ...fields, logo_url: logoUrl ?? null });
+    const row = { user_id: user.id, ...fields, logo_url: logoUrl ?? null };
+    let { error } = await supabase.from('businesses').insert(row);
+    if (error && 'auto_review_request' in row) {
+      ({ error } = await supabase.from('businesses').insert(withoutAutoReview(row)));
+    }
     if (error) return { ok: false, error: 'Could not save. Try again.' };
   }
 

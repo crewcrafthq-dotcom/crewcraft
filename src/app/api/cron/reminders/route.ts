@@ -1,8 +1,12 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { appUrl, REMINDER_AFTER_DAYS, REMINDER_MAX } from '@/lib/config';
+import { appUrl, REMINDER_AFTER_DAYS, REMINDER_MAX, REVIEW_ASK_WINDOW_DAYS } from '@/lib/config';
 import { sendAppEmail } from '@/lib/email/send';
-import { invoiceReminderEmailHtml, reminderEmailHtml } from '@/lib/email/templates';
+import {
+  invoiceReminderEmailHtml,
+  reminderEmailHtml,
+  reviewRequestEmailHtml,
+} from '@/lib/email/templates';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getTheme } from '@/lib/trades';
 import type { Business, Estimate } from '@/lib/types';
@@ -11,11 +15,15 @@ export const runtime = 'nodejs';
 export const maxDuration = 60;
 
 /**
- * Daily follow-up sweep (Vercel Cron → vercel.json). Two chases, same rules
- * (at most REMINDER_MAX nudges, quiet-window REMINDER_AFTER_DAYS, per-document
- * reminders_enabled toggle, customer email required):
- *   1. estimates that were sent and got no answer;
- *   2. invoices past their due date and not paid.
+ * Daily follow-up sweep (Vercel Cron → vercel.json). Three passes:
+ *   1. estimates that were sent and got no answer (at most REMINDER_MAX
+ *      nudges, quiet-window REMINDER_AFTER_DAYS, per-document
+ *      reminders_enabled toggle, customer email required);
+ *   2. invoices past their due date and not paid (same rules);
+ *   3. Review-Getter: invoices paid in the last REVIEW_ASK_WINDOW_DAYS whose
+ *      business opted in (auto_review_request + review_link) get the review
+ *      ask emailed once — review_requested_at is the idempotency stamp, and
+ *      an ask already sent from the source estimate suppresses it.
  * Auth: Vercel sends `Authorization: Bearer ${CRON_SECRET}` automatically.
  */
 export async function GET(request: NextRequest) {
@@ -118,11 +126,88 @@ export async function GET(request: NextRequest) {
     }
   }
 
+  // 3. Review-Getter — freshly paid invoices for opted-in businesses.
+  // Guarded so a failure here (e.g. migration 0008 not applied yet) never
+  // takes down the reminder passes above.
+  let reviewsSent = 0;
+  let reviewsFailed = 0;
+  try {
+    const paidCutoff = new Date(
+      Date.now() - REVIEW_ASK_WINDOW_DAYS * 24 * 60 * 60 * 1000,
+    ).toISOString();
+    const { data: paidRows, error: paidErr } = await admin
+      .from('estimates')
+      .select('*')
+      .eq('kind', 'invoice')
+      .eq('status', 'paid')
+      .is('review_requested_at', null)
+      .not('customer_email', 'is', null)
+      .gte('paid_at', paidCutoff)
+      .limit(100);
+    if (paidErr) throw paidErr;
+
+    for (const inv of (paidRows ?? []) as Estimate[]) {
+      const { data: biz, error: bizErr } = await admin
+        .from('businesses')
+        .select('*')
+        .eq('user_id', inv.user_id)
+        .single();
+      if (bizErr) throw bizErr; // e.g. auto_review_request column missing pre-migration
+      const business = biz as Business;
+      if (!business.auto_review_request || !business.review_link) continue;
+
+      // Don't ask twice for the same job: skip when the ask already went out
+      // from the source estimate's share panel.
+      if (inv.source_estimate_id) {
+        const { data: src } = await admin
+          .from('estimates')
+          .select('review_requested_at')
+          .eq('id', inv.source_estimate_id)
+          .maybeSingle();
+        if (src?.review_requested_at) {
+          await admin
+            .from('estimates')
+            .update({ review_requested_at: src.review_requested_at })
+            .eq('id', inv.id);
+          continue;
+        }
+      }
+
+      const theme = getTheme(business.trade);
+      try {
+        await sendAppEmail({
+          to: inv.customer_email as string,
+          fromName: business.name,
+          subject: `How did we do? — ${business.name}`,
+          html: reviewRequestEmailHtml({
+            businessName: business.name,
+            customerName: inv.customer_name,
+            reviewUrl: business.review_link,
+            accent: theme.accent,
+            accentFg: theme.accentFg,
+          }),
+        });
+        await admin
+          .from('estimates')
+          .update({ review_requested_at: new Date().toISOString() })
+          .eq('id', inv.id);
+        reviewsSent += 1;
+      } catch (err) {
+        console.error(`Auto review ask failed for invoice ${inv.id}:`, err);
+        reviewsFailed += 1;
+      }
+    }
+  } catch (err) {
+    console.error('Review-Getter sweep skipped:', err);
+  }
+
   return NextResponse.json({
     ok: true,
     estimates: dueEstimates.length,
     invoices: dueInvoices.length,
     sent,
     failed: errors.length,
+    reviewsSent,
+    reviewsFailed,
   });
 }
