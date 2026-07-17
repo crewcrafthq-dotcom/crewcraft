@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 /** Page routes that require a logged-in contractor. */
 const AUTHED_PREFIXES = [
+  '/admin',
   '/dashboard',
   '/estimates',
   '/invoices',
