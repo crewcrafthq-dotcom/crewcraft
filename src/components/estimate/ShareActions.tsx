@@ -71,8 +71,18 @@ export function ShareActions({ estimate, hasCustomerEmail, hasReviewLink, saveNo
     setBusy('download');
     const ok = await saveNow();
     setBusy(null);
-    if (ok) window.open(`/api/estimates/${estimate.id}/pdf`, '_blank');
-    else toast('Save failed — try again.', 'error');
+    if (!ok) {
+      toast('Save failed — try again.', 'error');
+      return;
+    }
+    // Navigate an anchor instead of window.open — mobile browsers block
+    // popups opened after an await, which made this button do nothing.
+    const a = document.createElement('a');
+    a.href = `/api/estimates/${estimate.id}/pdf?download=1`;
+    a.download = '';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   }
 
   async function send() {
