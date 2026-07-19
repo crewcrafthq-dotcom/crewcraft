@@ -229,7 +229,8 @@ export default async function PublicEstimatePage({ params }: { params: { token: 
 
         <div className="mb-8">
           <a
-            href={`/api/public/${estimate.public_token}/pdf`}
+            href={`/api/public/${estimate.public_token}/pdf?download=1`}
+            download
             className={buttonClasses('secondary', 'md')}
           >
             Download PDF
