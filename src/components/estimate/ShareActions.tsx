@@ -69,20 +69,37 @@ export function ShareActions({ estimate, hasCustomerEmail, hasReviewLink, saveNo
 
   async function download() {
     setBusy('download');
-    const ok = await saveNow();
-    setBusy(null);
-    if (!ok) {
-      toast('Save failed — try again.', 'error');
-      return;
+    try {
+      const ok = await saveNow();
+      if (!ok) {
+        toast('Save failed — try again.', 'error');
+        return;
+      }
+      // Fetch the PDF and save it as a blob — URL navigation gets treated as
+      // "preview in a tab" by mobile Safari, and window.open was popup-blocked.
+      const res = await fetch(`/api/estimates/${estimate.id}/pdf?download=1`);
+      if (!res.ok) {
+        toast('Could not build the PDF. Try again.', 'error');
+        return;
+      }
+      const blob = await res.blob();
+      const name =
+        res.headers.get('content-disposition')?.match(/filename="([^"]+)"/)?.[1] ??
+        (invoice ? 'invoice.pdf' : 'estimate.pdf');
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 10_000);
+      toast('PDF saved to your downloads.');
+    } catch {
+      toast('Could not build the PDF. Try again.', 'error');
+    } finally {
+      setBusy(null);
     }
-    // Navigate an anchor instead of window.open — mobile browsers block
-    // popups opened after an await, which made this button do nothing.
-    const a = document.createElement('a');
-    a.href = `/api/estimates/${estimate.id}/pdf?download=1`;
-    a.download = '';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
   }
 
   async function send() {
