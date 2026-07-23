@@ -78,8 +78,8 @@ export default function PrivacyPage() {
       <LegalSection title="Your rights">
         <p>
           You can export or delete your data at any time — email{' '}
-          <a href="mailto:hello@crewcraftapp.com" className="font-medium text-ink underline">
-            hello@crewcraftapp.com
+          <a href="mailto:support@crewcraftapp.com" className="font-medium text-ink underline">
+            support@crewcraftapp.com
           </a>{' '}
           from your account address and we’ll handle it within 30 days. Deleting your account
           removes your business profile, estimates, and logo from our systems (payment records

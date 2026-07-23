@@ -38,10 +38,10 @@ export function LegalPage({
 
       <p className="mt-12 border-t border-hairline pt-6 text-sm text-ink-mute">
         Questions? Email{' '}
-        <a href="mailto:hello@crewcraftapp.com" className="font-medium text-ink-soft underline">
-          hello@crewcraftapp.com
+        <a href="mailto:support@crewcraftapp.com" className="font-medium text-ink-soft underline">
+          support@crewcraftapp.com
         </a>
-        {' '}— a person answers.
+        {' '}— a person answers, within 24 hours.
       </p>
     </main>
   );

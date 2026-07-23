@@ -6,18 +6,19 @@ const PRODUCT = [
   { label: 'Watch the demo', href: '#demo' },
   { label: 'Apps & automations', href: '#apps' },
   { label: 'Pricing', href: '#pricing' },
+  { label: 'Changelog', href: '/changelog' },
   { label: 'Log in', href: '/login' },
 ];
 const TRADES = [
-  { label: 'HVAC', href: '#hvac' },
-  { label: 'Plumbing', href: '#plumbing' },
-  { label: 'Electrical', href: '#electrical' },
-  { label: 'Roofing', href: '#roofing' },
+  { label: 'HVAC', href: '/for/hvac' },
+  { label: 'Plumbing', href: '/for/plumbing' },
+  { label: 'Electrical', href: '/for/electrical' },
+  { label: 'Roofing', href: '/for/roofing' },
 ];
 const COMPANY = [
-  { label: 'Contact', href: 'mailto:hello@crewcraftapp.com' },
-  { label: 'How it works', href: '#how' },
-  { label: 'Why Toolbelt', href: '#why' },
+  { label: 'About', href: '/about' },
+  { label: 'Security', href: '/security' },
+  { label: 'Support', href: 'mailto:support@crewcraftapp.com' },
   { label: 'Privacy', href: '/privacy' },
   { label: 'Terms', href: '/terms' },
 ];
