@@ -36,7 +36,7 @@ export function AppLineup() {
             <p className="mt-1 text-ink-soft">{flagship.tagline}</p>
           </div>
         </div>
-        <StartFreeButton size="md" label="Start free" className="w-full sm:w-auto" />
+        <StartFreeButton size="md" className="w-full sm:w-auto" />
       </div>
 
       {/* the rest of the live belt */}

@@ -39,7 +39,7 @@ export default function AdsLayout({ children }: { children: React.ReactNode }) {
             <Link href="/terms" className="transition hover:text-ink-soft">
               Terms
             </Link>
-            <a href="mailto:hello@crewcraftapp.com" className="transition hover:text-ink-soft">
+            <a href="mailto:support@crewcraftapp.com" className="transition hover:text-ink-soft">
               Contact
             </a>
           </div>

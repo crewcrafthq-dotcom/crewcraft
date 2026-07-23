@@ -60,13 +60,22 @@ export function TradeSections() {
                       ))}
                     </ul>
 
-                    <Link
-                      href="/login?mode=signup"
-                      className="group mt-6 inline-flex items-center gap-1.5 font-semibold text-accent-bright transition hover:brightness-110"
-                    >
-                      Quote your next {trade === 'hvac' ? 'HVAC' : theme.label.toLowerCase()} job — free
-                      <ArrowRight className="h-4 w-4 transition duration-150 group-hover:translate-x-0.5" />
-                    </Link>
+                    <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
+                      <Link
+                        href="/login?mode=signup"
+                        className="group inline-flex items-center gap-1.5 font-semibold text-accent-bright transition hover:brightness-110"
+                      >
+                        Quote your next {trade === 'hvac' ? 'HVAC' : theme.label.toLowerCase()} job — free
+                        <ArrowRight className="h-4 w-4 transition duration-150 group-hover:translate-x-0.5" />
+                      </Link>
+                      <Link
+                        href={`/for/${trade}`}
+                        className="group inline-flex items-center gap-1.5 text-sm font-medium text-ink-soft transition hover:text-ink"
+                      >
+                        The full {theme.label} page
+                        <ArrowRight className="h-3.5 w-3.5 transition duration-150 group-hover:translate-x-0.5" />
+                      </Link>
+                    </div>
                   </div>
 
                   {/* the trade's belt */}

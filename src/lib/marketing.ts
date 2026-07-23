@@ -198,6 +198,191 @@ export const TRADE_SECTIONS: Record<Trade, TradeSectionContent> = {
   },
 };
 
+export interface TradePageContent {
+  /** <title> for /for/[trade] — keyword-first, brand-last. */
+  metaTitle: string;
+  metaDescription: string;
+  /** H1 — deliberately different wording than the landing section headline. */
+  h1: string;
+  intro: string;
+  /** The trade's named kit — same concept per trade, its own name. */
+  kitName: string;
+  steps: { title: string; body: string }[];
+  faq: { q: string; a: string }[];
+}
+
+/**
+ * Standalone per-trade pages at /for/[trade] — the SEO version of the landing
+ * sections. Same product, each trade in its own words: different headline,
+ * steps, kit name, and FAQ so no two pages read like a find-and-replace.
+ */
+export const TRADE_PAGES: Record<Trade, TradePageContent> = {
+  hvac: {
+    metaTitle: 'HVAC Estimating Software & Apps for Contractors',
+    metaDescription:
+      'HVAC estimating software that quotes changeouts in a minute. AI line items, branded PDFs, e-sign, deposits, tune-up reminders and an equipment log — $29/mo flat.',
+    h1: 'HVAC estimating software that quotes the changeout in a minute',
+    intro:
+      'Describe the job the way you’d tell your helper — “3-ton condenser and coil, reconnect the lineset, haul off the old unit” — and Toolbelt drafts the labor and materials, prices it from your rates, and sends a branded estimate the homeowner can e-sign and pay a deposit on. From the driveway, before the competition calls back.',
+    kitName: 'The Changeout Kit',
+    steps: [
+      {
+        title: 'Say the job',
+        body: 'Type it or dictate it from the truck. Snap the data plate and the old unit if it’s easier — the AI reads photos too.',
+      },
+      {
+        title: 'Check the numbers',
+        body: 'Line items come pre-priced from your price book. Tweak the condenser price, add a line for the crane, done.',
+      },
+      {
+        title: 'Send it before you leave',
+        body: 'The homeowner gets a branded link — they e-sign, pay the deposit through your Stripe, and the invoice creates itself.',
+      },
+    ],
+    faq: [
+      {
+        q: 'Does it handle repairs and maintenance, or just changeouts?',
+        a: 'All of it. Capacitors, blower motors, refrigerant charges, tune-ups — the AI knows how HVAC work splits into labor and materials, and your price book keeps the numbers yours.',
+      },
+      {
+        q: 'Can it sell maintenance plans?',
+        a: 'Yes — the Maintenance Plan Builder turns your tune-up visits into a recurring plan estimate, and Seasonal Tune-Up Reminders email your customers when it’s time and roll the next date forward automatically.',
+      },
+      {
+        q: 'What about equipment records?',
+        a: 'The Equipment & Filter Log keeps every unit you’ve touched — model, serial, filter size, refrigerant — so the truck roll starts with answers, not attic archaeology.',
+      },
+      {
+        q: 'Do I have to switch software?',
+        a: 'No. Most HVAC contractors keep their dispatch or accounting software and use Toolbelt for quoting, e-sign, and getting paid. It’s $29/mo flat, and the first 3 estimates are free with no card.',
+      },
+    ],
+  },
+  plumbing: {
+    metaTitle: 'Plumbing Estimate & Invoice App for Contractors',
+    metaDescription:
+      'Plumbing estimating app: water heaters, repipes and service calls quoted from your phone. Branded PDFs, e-sign, deposits, permit tracking, 2am lead auto-replies. Free to try.',
+    h1: 'The plumbing estimate app that prices the job from the garage',
+    intro:
+      'Water heater swaps, repipes, “while you’re here” service calls — type three sentences and Toolbelt writes the estimate: itemized labor and materials at your rates, on a branded PDF, with an e-sign link and a deposit button wired to your own Stripe. The homeowner has a number before they’ve finished googling what it should cost.',
+    kitName: 'The Service Truck Pack',
+    steps: [
+      {
+        title: 'Describe it in the driveway',
+        body: '“40-gallon gas water heater in the garage, haul off the old one.” Typed or dictated — plumber English, not software English.',
+      },
+      {
+        title: 'Pick tank or tankless — or offer both',
+        body: 'The Water Heater Quote Pack builds good-better-best options side by side, priced from your book, in one tap.',
+      },
+      {
+        title: 'Get the yes and the deposit',
+        body: 'They e-sign on their phone, the deposit hits your Stripe, the invoice creates itself, and quiet quotes get chased automatically.',
+      },
+    ],
+    faq: [
+      {
+        q: 'Can it quote water heaters with options?',
+        a: 'That’s its favorite job. The Water Heater Quote Pack presets tank vs tankless in good-better-best tiers, so the homeowner picks a lane instead of shopping your single number around.',
+      },
+      {
+        q: 'What happens when a pipe bursts at 2am?',
+        a: 'Your Emergency Lead Page takes the request, sends the customer an instant reply with your real availability, and emails you the lead — you decide in the morning whether it was worth waking up for.',
+      },
+      {
+        q: 'Does it track permits?',
+        a: 'Yes — the Permit Tracker keeps every job’s permit status and inspection date, and emails you the day before an inspection so nothing gets red-tagged for a no-show.',
+      },
+      {
+        q: 'What does it cost?',
+        a: '3 estimates free, no credit card. After that it’s $29/mo flat — unlimited estimates, invoices, e-sign, payments, and every app on this page. Cancel anytime.',
+      },
+    ],
+  },
+  electrical: {
+    metaTitle: 'Electrical Estimating Software for Contractors',
+    metaDescription:
+      'Electrical estimating software for panel swaps, EV chargers and remodels. AI line items, a load calc helper, permit tracking, e-sign and deposits — $29/mo flat, free to try.',
+    h1: 'Electrical estimating software with the load calc on the same belt',
+    intro:
+      'Panel upgrades, EV chargers, remodel rough-ins — describe the scope and Toolbelt drafts the estimate with your labor rate and material prices, runs a service-load sanity check when you need one, and sends a branded PDF the customer can e-sign and put a deposit on. Quoted before the ladder’s back on the truck.',
+    kitName: 'The Panel Pack',
+    steps: [
+      {
+        title: 'Scope it in plain English',
+        body: '“100A to 200A service, bring grounding up to code, coordinate the permit.” The AI itemizes it the way an electrician would.',
+      },
+      {
+        title: 'Sanity-check the load',
+        body: 'The Load Calc Helper runs an NEC 220.82-style check so the number you commit to is one you can defend at inspection.',
+      },
+      {
+        title: 'Offer three ways to say yes',
+        body: 'Good-better-best options in one tap — the 200A panel, the panel plus surge protection, the whole-home package. E-sign, deposit, done.',
+      },
+    ],
+    faq: [
+      {
+        q: 'Does the load calc replace my engineering?',
+        a: 'No — it’s a fast NEC 220.82-style sanity check so you don’t quote a service that won’t pass. Your stamped calcs stay your stamped calcs; this keeps the estimate honest before you commit.',
+      },
+      {
+        q: 'Can it quote EV charger installs?',
+        a: 'Yes, with the load assumptions spelled out in writing on the estimate — which is exactly what saves the callback when the panel’s already tight.',
+      },
+      {
+        q: 'How does it handle permits and inspections?',
+        a: 'The Permit & Inspection Tracker keeps each job’s permit status and inspection date and emails you the day before, so the inspector never waits in an empty driveway.',
+      },
+      {
+        q: 'Is my pricing exposed to the AI?',
+        a: 'Your price book prices your estimates, and your data stays yours — it’s never used to train AI models, and every line the AI drafts is a suggestion you can change. The math is computed, never guessed.',
+      },
+    ],
+  },
+  roofing: {
+    metaTitle: 'Roofing Estimate Software for Contractors',
+    metaDescription:
+      'Roofing estimate software for tear-offs, storm scopes and supplements. Photo reports, insurance supplement letters, material order sheets, e-sign and deposits. Free to try.',
+    h1: 'Roofing estimate software built for the paperwork trade',
+    intro:
+      'Roofing runs on documents — estimates by the square, photo evidence, supplement letters, material orders. Toolbelt writes all of them. Describe the tear-off, attach the roof photos, and send a branded estimate the homeowner e-signs on their phone; the supplement letter and the supplier order sheet come off the same job.',
+    kitName: 'The Storm Kit',
+    steps: [
+      {
+        title: 'Scope it by the square',
+        body: '“22 squares architectural, new flashing, 2 sheets of decking.” The AI breaks out tear-off, install, and materials at your prices.',
+      },
+      {
+        title: 'Document it with photos',
+        body: 'The Photo Report Builder turns roof photos into a captioned, branded PDF — proof the homeowner and the adjuster both trust. Photos stay on your phone, never uploaded.',
+      },
+      {
+        title: 'Win the claim, order the materials',
+        body: 'The Supplement Drafter writes the insurance letter in a minute, and the Material Order Sheet turns the estimate into a supplier list — no re-typing at the counter.',
+      },
+    ],
+    faq: [
+      {
+        q: 'Does it help with insurance work?',
+        a: 'Yes — storm scopes itemized so they hold up next to an adjuster’s, photo reports for evidence, and AI-drafted supplement letters when the first offer comes in short.',
+      },
+      {
+        q: 'What happens when a storm hits?',
+        a: 'You share your Storm Response link — every homeowner who fills it out gets an instant reply, you get the lead by email, and the list lives in your inbox ordered by street. First truck there wins the block.',
+      },
+      {
+        q: 'Where do the roof photos go?',
+        a: 'For photo reports, nowhere — the PDF is built on your device and the photos are never uploaded to our servers. What you shoot stays yours.',
+      },
+      {
+        q: 'Can homeowners pay a deposit online?',
+        a: 'Yes. The estimate link carries an e-sign button and, once accepted, a deposit button wired to your own Stripe account. Money goes straight to you; the invoice marks itself paid.',
+      },
+    ],
+  },
+};
+
 /**
  * Every live, linkable trade tool across all four trades (deduped) — feeds the
  * app sidebar and the dashboard's cross-trade section. Estimate Builder is
