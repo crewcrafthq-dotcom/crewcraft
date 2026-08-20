@@ -40,9 +40,9 @@ const poppins = localFont({
   display: 'swap',
 });
 
-const TITLE = 'Toolbelt by Crewcraft — Software Tools for Contractors';
+const TITLE = 'Toolbelt by Crewcraft — AI Estimate Software for Contractors';
 const DESCRIPTION =
-  'Estimates, invoices, e-sign, payments, follow-ups, customers — the whole paperwork side of a trade business in one flat-price toolbelt. Built for HVAC, plumbing, electrical & roofing. 3 free estimates, no credit card.';
+  'AI estimate software for HVAC, plumbing, electrical & roofing contractors. Branded estimates in 60 seconds, e-sign, invoices, online payments, follow-ups — one flat-price toolbelt. 3 free estimates, no credit card.';
 
 export const metadata: Metadata = {
   // Makes every relative URL (canonical, OG image) absolute against the live domain.

@@ -1,0 +1,34 @@
+# Toolbelt by Crewcraft
+
+> AI estimate software for HVAC, plumbing, electrical, and roofing contractors.
+> Describe a job in plain English (or attach job-site photos) and Toolbelt drafts
+> an itemized, branded estimate the homeowner can e-sign and pay a deposit on
+> online. Invoices create themselves, payments reconcile automatically through
+> the contractor's own Stripe account, and quiet quotes are followed up
+> automatically. Free plan: 3 estimates, no credit card. Pro: $29/month flat,
+> everything included, no per-user fees, no contracts.
+
+Toolbelt is built and run by a single founder and is mobile-first — contractors
+use it from the truck. Beyond estimates it includes: invoices, a follow-up
+engine, a derived customer CRM, win-rate analytics, a price book,
+Good/Better/Best pricing options, automated review requests, scheduling with an
+evening jobs digest, seasonal tune-up reminders, an equipment & filter log, a
+permit & inspection tracker, water-heater quote packs, an electrical load-calc
+helper, material order sheets, insurance supplement letters, client-side photo
+reports, and a storm/emergency lead page with instant auto-replies.
+
+## Main pages
+
+- [Home](https://crewcraftapp.com/): product overview, live demo, pricing, FAQ
+- [HVAC](https://crewcraftapp.com/for/hvac): HVAC estimating software and tools
+- [Plumbing](https://crewcraftapp.com/for/plumbing): plumbing estimate & invoice app
+- [Electrical](https://crewcraftapp.com/for/electrical): electrical estimating software
+- [Roofing](https://crewcraftapp.com/for/roofing): roofing estimates, supplements, photo reports
+- [About](https://crewcraftapp.com/about): who builds Toolbelt and why
+- [Security](https://crewcraftapp.com/security): how payments and data are protected
+- [Changelog](https://crewcraftapp.com/changelog): dated list of everything shipped
+- [Privacy](https://crewcraftapp.com/privacy) · [Terms](https://crewcraftapp.com/terms) · [Cookies](https://crewcraftapp.com/cookies)
+
+## Contact
+
+- Support: support@crewcraftapp.com (answered by the founder within 24 hours)

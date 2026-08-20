@@ -121,8 +121,8 @@ export default async function DashboardPage({
           <TriangleAlert className="h-5 w-5 flex-none text-bad" />
           <p className="text-sm text-ink-soft">
             That estimate didn’t save — give it another try. If it keeps happening, email{' '}
-            <a href="mailto:hello@crewcraftapp.com" className="font-semibold text-ink underline">
-              hello@crewcraftapp.com
+            <a href="mailto:support@crewcraftapp.com" className="font-semibold text-ink underline">
+              support@crewcraftapp.com
             </a>
             .
           </p>
@@ -240,7 +240,7 @@ export default async function DashboardPage({
       <p className="mt-6 text-sm text-ink-mute">
         More tools are on the way — built for the trades, not for spreadsheets. Want one bumped up
         the list?{' '}
-        <a href="mailto:hello@crewcraftapp.com" className="font-medium text-ink-soft underline hover:text-ink">
+        <a href="mailto:support@crewcraftapp.com" className="font-medium text-ink-soft underline hover:text-ink">
           Tell us.
         </a>
       </p>
