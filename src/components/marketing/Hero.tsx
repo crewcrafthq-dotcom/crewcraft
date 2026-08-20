@@ -1,17 +1,25 @@
 import Link from 'next/link';
 import { Eye, Zap } from 'lucide-react';
 
+import { cn } from '@/lib/cn';
+
 import { BeforeAfter } from './BeforeAfter';
 import { WatchDemoButton } from './DemoModal';
 import { MobileMenu } from './MobileMenu';
 import { StartFreeButton, TrustLine } from './StartFree';
 import { ToolbeltLockup } from './ToolbeltLockup';
 
-const NAV = [
+/**
+ * Top nav. `lgOnly` items are dropped from the desktop row between md and lg,
+ * where six links + Log in + Start free no longer fit on one line; the mobile
+ * menu always shows the full list.
+ */
+const NAV: { label: string; href: string; lgOnly?: boolean }[] = [
   { label: 'How it works', href: '#how' },
   { label: 'Your trade', href: '#trades' },
   { label: 'Apps', href: '#apps' },
   { label: 'Pricing', href: '#pricing' },
+  { label: 'Field Guide', href: '/blog', lgOnly: true },
   { label: 'FAQ', href: '#faq' },
 ];
 
@@ -41,7 +49,10 @@ export function Hero() {
               <Link
                 key={n.href}
                 href={n.href}
-                className="nav-underline rounded-lg px-3 py-2 text-sm font-medium text-ink-soft transition hover:text-ink"
+                className={cn(
+                  'nav-underline rounded-lg px-3 py-2 text-sm font-medium text-ink-soft transition hover:text-ink',
+                  n.lgOnly && 'hidden lg:inline-flex',
+                )}
               >
                 {n.label}
               </Link>

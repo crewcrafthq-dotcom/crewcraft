@@ -18,9 +18,35 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+// The article list as structured data — lets search and AI crawlers see the
+// whole Field Guide from the index page. Built from BLOG_POSTS, so it always
+// matches the cards below.
+const JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': 'https://crewcraftapp.com/blog',
+  name: 'The Field Guide — Toolbelt by Crewcraft',
+  description:
+    'Practical guides for HVAC, plumbing, electrical and roofing contractors: estimating, pricing, deposits, follow-ups, and getting paid.',
+  publisher: { '@id': 'https://crewcraftapp.com/#org' },
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: BLOG_POSTS.map(({ meta }, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: `https://crewcraftapp.com/blog/${meta.slug}`,
+      name: meta.title,
+    })),
+  },
+};
+
 export default function BlogIndexPage() {
   return (
     <div className="overflow-x-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+      />
       <header className="mx-auto flex max-w-4xl items-center justify-between gap-3 px-5 py-5 sm:px-6">
         <Link href="/" aria-label="Toolbelt by Crewcraft — home">
           <ToolbeltLockup />

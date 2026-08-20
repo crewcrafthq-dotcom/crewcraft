@@ -30,6 +30,13 @@ reports, and a storm/emergency lead page with instant auto-replies.
 - [Changelog](https://crewcraftapp.com/changelog): dated list of everything shipped
 - [Privacy](https://crewcraftapp.com/privacy) · [Terms](https://crewcraftapp.com/terms) · [Cookies](https://crewcraftapp.com/cookies)
 
+## Full reference
+
+- [llms-full.txt](https://crewcraftapp.com/llms-full.txt): complete generated
+  reference — every tool, all pricing tiers with features, per-trade
+  capabilities with real example estimates, the full FAQ with answers, and
+  the Field Guide article index.
+
 ## Contact
 
 - Support: support@crewcraftapp.com (answered by the founder within 24 hours)

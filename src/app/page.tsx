@@ -20,10 +20,11 @@ import { TradeSelector } from '@/components/marketing/TradeSelector';
 import { TryItDemo } from '@/components/marketing/TryItDemo';
 import { WhyToolbelt } from '@/components/marketing/WhyToolbelt';
 import { getSession } from '@/lib/auth';
+import { FAQ } from '@/lib/marketing';
 
 export const dynamic = 'force-dynamic';
 
-// Structured data: Organization + WebSite. Google requires an aggregateRating
+// Structured data: Organization + WebSite + FAQPage. Google requires an aggregateRating
 // or review on SoftwareApplication for it to validate — we refuse to fake one,
 // so that block stays out until real ratings exist (Capterra/Trustpilot). When
 // they do, reintroduce SoftwareApplication with the real aggregateRating.
@@ -37,6 +38,9 @@ const JSON_LD = {
       url: 'https://crewcraftapp.com',
       logo: 'https://crewcraftapp.com/icon-512.png',
       email: 'support@crewcraftapp.com',
+      // The parent brand's site — our most relevant, fully-controlled entity link.
+      sameAs: ['https://crewcraft.ai'],
+      founder: { '@type': 'Person', name: 'Stefan' },
     },
     {
       '@type': 'WebSite',
@@ -46,6 +50,17 @@ const JSON_LD = {
       description:
         'AI estimate software for HVAC, plumbing, electrical & roofing contractors — estimates, e-sign, invoices, online payments and follow-ups at one flat price.',
       publisher: { '@id': 'https://crewcraftapp.com/#org' },
+    },
+    // The FAQ section, verbatim — FAQs are what AI answers cite, and the
+    // schema must always match the visible content (it reuses the same data).
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://crewcraftapp.com/#faq',
+      mainEntity: FAQ.map(({ q, a }) => ({
+        '@type': 'Question',
+        name: q,
+        acceptedAnswer: { '@type': 'Answer', text: a },
+      })),
     },
   ],
 };

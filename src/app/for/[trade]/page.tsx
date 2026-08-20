@@ -10,6 +10,8 @@ import { ToolbeltLockup } from '@/components/marketing/ToolbeltLockup';
 import { ToolIcon } from '@/components/ToolIcon';
 import { TradeIcon } from '@/components/TradeIcon';
 import { TradeTheme } from '@/components/TradeTheme';
+import { BLOG_POSTS } from '@/content/blog';
+import { shortDate } from '@/lib/format';
 import { TRADE_PAGES, TRADE_SECTIONS } from '@/lib/marketing';
 import { getTheme } from '@/lib/trades';
 import { TRADES, type Trade } from '@/lib/types';
@@ -43,6 +45,9 @@ export default function TradePage({ params }: { params: { trade: string } }) {
   const section = TRADE_SECTIONS[trade];
   const theme = getTheme(trade);
   const others = TRADES.filter((t) => t !== trade);
+  // This trade's Field Guide articles plus the all-trades ones — internal
+  // links both ways (guide posts link back here via their trade tag).
+  const guides = BLOG_POSTS.filter(({ meta }) => !meta.trade || meta.trade === trade).slice(0, 3);
 
   const faqJsonLd = {
     '@context': 'https://schema.org',
@@ -179,6 +184,33 @@ export default function TradePage({ params }: { params: { trade: string } }) {
             ))}
           </div>
         </section>
+
+        {/* from the Field Guide — internal links into the trade's articles */}
+        {guides.length > 0 ? (
+          <section className="mx-auto max-w-3xl px-5 pb-12 sm:px-6 sm:pb-16">
+            <p className="eyebrow">From the Field Guide</p>
+            <h2 className="mt-2 text-2xl font-bold text-ink sm:text-3xl">
+              How the pros write it up
+            </h2>
+            <div className="mt-6 grid gap-3">
+              {guides.map(({ meta }) => (
+                <Link
+                  key={meta.slug}
+                  href={`/blog/${meta.slug}`}
+                  className="group flex items-center justify-between gap-3 rounded-xl border border-hairline bg-paper-800 p-4 transition hover:border-accent/40"
+                >
+                  <span>
+                    <span className="block font-semibold text-ink">{meta.title}</span>
+                    <span className="mt-0.5 block text-xs text-ink-mute">
+                      {meta.topic} · {shortDate(meta.published)} · {meta.readingMinutes} min read
+                    </span>
+                  </span>
+                  <ArrowRight className="h-4 w-4 flex-none text-ink-mute transition duration-150 group-hover:translate-x-0.5 group-hover:text-accent-bright" />
+                </Link>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         {/* final CTA + other trades */}
         <section className="bg-paper-850">
