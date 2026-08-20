@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, CreditCard, LogOut, Settings } from 'lucide-react';
+import { ChevronDown, Compass, CreditCard, LogOut, Settings } from 'lucide-react';
 
 import { cn } from '@/lib/cn';
 import { createClient } from '@/lib/supabase/client';
@@ -64,6 +64,9 @@ export function AccountMenu({ name }: { name: string }) {
           </MenuLink>
           <MenuLink href="/billing" icon={CreditCard}>
             Billing & plan
+          </MenuLink>
+          <MenuLink href="/blog" icon={Compass}>
+            Field Guide
           </MenuLink>
           <div className="my-1 h-px bg-hairline" />
           <button
