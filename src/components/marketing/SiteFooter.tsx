@@ -6,6 +6,7 @@ const PRODUCT = [
   { label: 'Watch the demo', href: '#demo' },
   { label: 'Apps & automations', href: '#apps' },
   { label: 'Pricing', href: '#pricing' },
+  { label: 'Field Guide', href: '/blog' },
   { label: 'Changelog', href: '/changelog' },
   { label: 'Log in', href: '/login' },
 ];
