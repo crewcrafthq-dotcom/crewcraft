@@ -8,6 +8,7 @@ online payments through the contractor's own Stripe, automatic follow-ups.
 Pricing: Free plan (3 estimates, no credit card); Pro $29/month flat.
 Contact: support@crewcraftapp.com
 More detail: https://crewcraftapp.com/llms.txt
+Full reference: https://crewcraftapp.com/llms-full.txt
 
 # Public marketing pages may be read and cited with attribution.
 # Do not crawl authenticated app routes (/dashboard, /estimates, /api, /e/, /r/).
