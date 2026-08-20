@@ -1,0 +1,97 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+
+import { StartFreeButton, TrustLine } from '@/components/marketing/StartFree';
+import { SiteFooter } from '@/components/marketing/SiteFooter';
+import { ToolbeltLockup } from '@/components/marketing/ToolbeltLockup';
+import { TradeIcon } from '@/components/TradeIcon';
+import { BLOG_POSTS } from '@/content/blog';
+import { getTheme } from '@/lib/trades';
+import { shortDate } from '@/lib/format';
+
+export const metadata: Metadata = {
+  title: 'Field Guide — estimating, pricing & getting paid in the trades',
+  description:
+    'Practical guides for HVAC, plumbing, electrical and roofing contractors: what winning estimates include, how to price jobs, deposits, follow-ups, and getting paid.',
+  alternates: { canonical: '/blog' },
+  robots: { index: true, follow: true },
+};
+
+export default function BlogIndexPage() {
+  return (
+    <div className="overflow-x-hidden">
+      <header className="mx-auto flex max-w-4xl items-center justify-between gap-3 px-5 py-5 sm:px-6">
+        <Link href="/" aria-label="Toolbelt by Crewcraft — home">
+          <ToolbeltLockup />
+        </Link>
+        <StartFreeButton size="md" label="Start free" withArrow={false} />
+      </header>
+
+      <main className="mx-auto max-w-4xl px-5 pb-16 sm:px-6">
+        <div className="pb-10 pt-6">
+          <p className="eyebrow">The Field Guide</p>
+          <h1 className="mt-2 text-3xl font-bold leading-tight text-ink sm:text-4xl">
+            Estimating, pricing, and getting paid — written for the trades.
+          </h1>
+          <p className="mt-3 max-w-2xl text-lg text-ink-soft">
+            No fluff, no recycled marketing advice. Practical guides on the paperwork side of
+            contracting, from the team building{' '}
+            <Link href="/" className="font-medium text-accent-bright underline">
+              Toolbelt
+            </Link>
+            .
+          </p>
+        </div>
+
+        <div className="grid gap-5">
+          {BLOG_POSTS.map(({ meta }) => (
+            <Link
+              key={meta.slug}
+              href={`/blog/${meta.slug}`}
+              className="group rounded-2xl border border-hairline bg-paper-800 p-5 shadow-card transition hover:border-accent/40 sm:p-6"
+            >
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold uppercase tracking-wide text-ink-mute">
+                {meta.trade ? (
+                  <span className="inline-flex items-center gap-1.5 text-accent-bright">
+                    <TradeIcon trade={meta.trade} className="h-3.5 w-3.5" />
+                    {getTheme(meta.trade).label}
+                  </span>
+                ) : null}
+                <span>{meta.topic}</span>
+                <span>·</span>
+                <span>{shortDate(meta.published)}</span>
+                <span>·</span>
+                <span>{meta.readingMinutes} min read</span>
+              </div>
+              <h2 className="mt-2 text-xl font-bold leading-snug text-ink sm:text-2xl">
+                {meta.title}
+              </h2>
+              <p className="mt-1.5 text-ink-soft">{meta.description}</p>
+              <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-bright">
+                Read the guide
+                <ArrowRight className="h-4 w-4 transition duration-150 group-hover:translate-x-0.5" />
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-12 rounded-2xl border border-hairline bg-paper-850 p-6 text-center sm:p-8">
+          <h2 className="text-2xl font-bold uppercase text-ink">
+            Reading about better estimates is the slow way.
+          </h2>
+          <p className="mx-auto mt-2 max-w-xl text-ink-soft">
+            Toolbelt writes them for you — describe the job, send a branded, e-signable estimate
+            with a deposit button, in about a minute.
+          </p>
+          <div className="mt-5 flex justify-center">
+            <StartFreeButton />
+          </div>
+          <TrustLine className="mt-4 text-center" />
+        </div>
+      </main>
+
+      <SiteFooter />
+    </div>
+  );
+}

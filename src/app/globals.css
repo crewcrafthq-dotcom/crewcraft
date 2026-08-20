@@ -244,3 +244,62 @@
   .anim-before { display: none; }
   .anim-after { animation: none !important; opacity: 1; transform: none; }
 }
+
+/* ── Field Guide (blog) article typography ─────────────────────────────────
+   Posts are plain semantic HTML inside <article class="post-prose">; the
+   styling lives here so post files stay readable prose, not className soup. */
+.post-prose {
+  color: rgb(var(--ink-soft));
+  line-height: 1.75;
+}
+.post-prose h2 {
+  margin: 2.25rem 0 0.75rem;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  font-weight: 700;
+  color: rgb(var(--ink));
+}
+.post-prose h3 {
+  margin: 1.75rem 0 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: rgb(var(--ink));
+}
+.post-prose p { margin: 0.9rem 0; }
+.post-prose strong { color: rgb(var(--ink)); font-weight: 600; }
+.post-prose a {
+  color: rgb(var(--accent-bright));
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.post-prose ul, .post-prose ol { margin: 0.9rem 0; padding-left: 1.4rem; }
+.post-prose ul { list-style: disc; }
+.post-prose ol { list-style: decimal; }
+.post-prose li { margin: 0.35rem 0; }
+.post-prose li::marker { color: rgb(var(--accent)); }
+.post-prose table {
+  width: 100%;
+  margin: 1.25rem 0;
+  border-collapse: collapse;
+  font-size: 0.925rem;
+}
+.post-prose th {
+  text-align: left;
+  font-weight: 700;
+  color: rgb(var(--ink));
+  border-bottom: 2px solid var(--hairline-strong);
+  padding: 0.5rem 0.75rem 0.5rem 0;
+}
+.post-prose td {
+  border-bottom: 1px solid var(--hairline);
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  vertical-align: top;
+}
+.post-prose blockquote {
+  margin: 1.25rem 0;
+  border-left: 3px solid rgb(var(--accent));
+  padding: 0.25rem 0 0.25rem 1rem;
+  color: rgb(var(--ink));
+  font-weight: 500;
+}

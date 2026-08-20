@@ -24,6 +24,7 @@ reports, and a storm/emergency lead page with instant auto-replies.
 - [Plumbing](https://crewcraftapp.com/for/plumbing): plumbing estimate & invoice app
 - [Electrical](https://crewcraftapp.com/for/electrical): electrical estimating software
 - [Roofing](https://crewcraftapp.com/for/roofing): roofing estimates, supplements, photo reports
+- [Field Guide](https://crewcraftapp.com/blog): practical guides on estimating, pricing, deposits and follow-ups for the trades
 - [About](https://crewcraftapp.com/about): who builds Toolbelt and why
 - [Security](https://crewcraftapp.com/security): how payments and data are protected
 - [Changelog](https://crewcraftapp.com/changelog): dated list of everything shipped
