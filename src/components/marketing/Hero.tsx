@@ -64,21 +64,20 @@ export function Hero() {
           <div className="min-w-0 animate-fade-up">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent-bright">
               <span className="h-1.5 w-1.5 flex-none rounded-full bg-accent" />
-              Built for contractors
-              <span className="hidden sm:inline"> — HVAC · Plumbing · Electrical · Roofing</span>
+              Toolbelt — software for contractors
             </span>
 
-            <h1 className="mt-5 text-[2.9rem] font-bold uppercase leading-[0.95] text-ink sm:text-6xl lg:text-[4.5rem]">
-              Every tool the{' '}
+            <h1 className="mt-5 text-[2.9rem] font-bold uppercase leading-[0.95] text-ink sm:text-6xl lg:text-[4.2rem]">
               <span className="bg-gradient-to-r from-accent to-accent-bright bg-clip-text text-transparent">
-                paperwork
+                AI estimate software
               </span>{' '}
-              side of your business needs.
+              for HVAC, plumbing, electrical &amp; roofing.
             </h1>
 
             <p className="mt-5 max-w-md text-lg leading-relaxed text-ink-soft">
-              Estimates in 60 seconds, e-signed online, invoiced automatically, paid through your
-              Stripe, followed up without you — fourteen live tools on one belt, one flat price.
+              Describe the job in plain English — Toolbelt drafts a branded estimate in 60 seconds,
+              gets it e-signed online, invoices it automatically, takes payment through your Stripe,
+              and follows up without you. Fourteen live tools on one belt, one flat price.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">

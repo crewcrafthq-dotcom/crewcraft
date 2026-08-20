@@ -20,5 +20,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/security`, changeFrequency: 'monthly', priority: 0.4 },
     { url: `${base}/privacy`, changeFrequency: 'yearly', priority: 0.2 },
     { url: `${base}/terms`, changeFrequency: 'yearly', priority: 0.2 },
+    { url: `${base}/cookies`, changeFrequency: 'yearly', priority: 0.2 },
   ];
 }

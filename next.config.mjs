@@ -13,6 +13,19 @@ const nextConfig = {
       { protocol: 'https', hostname: '*.supabase.co' },
     ],
   },
+  async redirects() {
+    return [
+      // One canonical host. www serving the full site as a duplicate is what
+      // Semrush flagged as "canonical to another page" ×14 and doubled the
+      // low-text-ratio list — every www URL now 308s to the apex domain.
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.crewcraftapp.com' }],
+        destination: 'https://crewcraftapp.com/:path*',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

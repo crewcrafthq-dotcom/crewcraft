@@ -21,6 +21,7 @@ const COMPANY = [
   { label: 'Support', href: 'mailto:support@crewcraftapp.com' },
   { label: 'Privacy', href: '/privacy' },
   { label: 'Terms', href: '/terms' },
+  { label: 'Cookies', href: '/cookies' },
 ];
 
 export function SiteFooter() {

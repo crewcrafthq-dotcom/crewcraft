@@ -23,7 +23,10 @@ import { getSession } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
-// Structured data so Google understands this is a SaaS product with pricing.
+// Structured data: Organization + WebSite. Google requires an aggregateRating
+// or review on SoftwareApplication for it to validate — we refuse to fake one,
+// so that block stays out until real ratings exist (Capterra/Trustpilot). When
+// they do, reintroduce SoftwareApplication with the real aggregateRating.
 const JSON_LD = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -33,22 +36,16 @@ const JSON_LD = {
       name: 'Crewcraft',
       url: 'https://crewcraftapp.com',
       logo: 'https://crewcraftapp.com/icon-512.png',
+      email: 'support@crewcraftapp.com',
     },
     {
-      '@type': 'SoftwareApplication',
+      '@type': 'WebSite',
+      '@id': 'https://crewcraftapp.com/#website',
       name: 'Toolbelt by Crewcraft',
-      applicationCategory: 'BusinessApplication',
-      operatingSystem: 'Web',
       url: 'https://crewcraftapp.com',
       description:
-        'The contractor’s toolbelt: AI estimates, e-sign, invoices, online payments, follow-ups, customers and analytics — one flat price. Built for HVAC, plumbing, electrical & roofing.',
+        'AI estimate software for HVAC, plumbing, electrical & roofing contractors — estimates, e-sign, invoices, online payments and follow-ups at one flat price.',
       publisher: { '@id': 'https://crewcraftapp.com/#org' },
-      offers: [
-        { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD' },
-        { '@type': 'Offer', name: 'Founding', price: '19', priceCurrency: 'USD' },
-        { '@type': 'Offer', name: 'Pro Monthly', price: '29', priceCurrency: 'USD' },
-        { '@type': 'Offer', name: 'Pro Annual', price: '288', priceCurrency: 'USD' },
-      ],
     },
   ],
 };
