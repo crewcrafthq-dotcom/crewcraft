@@ -65,7 +65,9 @@ export async function POST(request: NextRequest) {
       allow_promotion_codes: true,
       client_reference_id: user.id,
       subscription_data: { metadata: { user_id: user.id } },
-      success_url: `${appUrl()}/dashboard?upgraded=1`,
+      // The plan rides back on the URL so the dashboard can report a real
+      // purchase value to Meta instead of an unvalued conversion.
+      success_url: `${appUrl()}/dashboard?upgraded=1&plan=${priceKey}`,
       cancel_url: `${appUrl()}/billing`,
     });
 

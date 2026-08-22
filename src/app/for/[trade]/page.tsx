@@ -7,6 +7,7 @@ import { StartFreeButton, TrustLine } from '@/components/marketing/StartFree';
 import { EstimatePreview } from '@/components/marketing/EstimatePreview';
 import { SiteFooter } from '@/components/marketing/SiteFooter';
 import { ToolbeltLockup } from '@/components/marketing/ToolbeltLockup';
+import { MetaEvent } from '@/components/MetaEvent';
 import { ToolIcon } from '@/components/ToolIcon';
 import { TradeIcon } from '@/components/TradeIcon';
 import { TradeTheme } from '@/components/TradeTheme';
@@ -64,6 +65,10 @@ export default function TradePage({ params }: { params: { trade: string } }) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <MetaEvent
+        event="ViewContent"
+        params={{ content_name: `for-${trade}`, content_category: 'trade-page' }}
       />
       <div className="overflow-x-hidden">
         {/* slim header — logo home, login, one CTA */}

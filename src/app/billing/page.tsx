@@ -5,6 +5,7 @@ import { AppShell } from '@/components/AppShell';
 import { Card } from '@/components/ui/Card';
 import { getSession } from '@/lib/auth';
 import { isPaidStatus } from '@/lib/config';
+import { MetaEvent } from '@/components/MetaEvent';
 import { PRICING_TIERS } from '@/lib/marketing';
 import { ManageBillingButton, UpgradeButton } from './buttons';
 
@@ -27,6 +28,7 @@ export default async function BillingPage({
 
   return (
     <AppShell trade={business.trade} businessName={business.name} width="narrow">
+      <MetaEvent event="ViewContent" params={{ content_name: 'pricing', content_category: 'billing' }} />
       <p className="eyebrow">Plan</p>
       <h1 className="mt-1 text-display-sm font-bold text-ink">{paid ? 'Your plan' : 'Go Pro'}</h1>
 

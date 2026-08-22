@@ -3,7 +3,7 @@
 import { useEffect, useSyncExternalStore } from 'react';
 import { PlayCircle, X } from 'lucide-react';
 import { cn } from '@/lib/cn';
-import { trackEvent } from '@/lib/analytics';
+import { trackEvent, trackMeta } from '@/lib/analytics';
 
 // Tiny module store so any trigger (hero button, footer link) can open the one
 // modal that's mounted at the page root. Same pattern as the toast store.
@@ -21,6 +21,9 @@ export function openDemo() {
   emit();
   // demo opens are the strongest engagement signal on the page
   trackEvent('watch_demo');
+  // Meta's Lead event: asking to see the product demo is the strongest
+  // pre-signup intent signal this site has (there is no email-capture form).
+  trackMeta('Lead', { content_name: 'watch_demo' });
 }
 function closeDemo() {
   open = false;
