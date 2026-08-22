@@ -5,6 +5,7 @@ import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toast';
+import { MetaPixel } from '@/components/MetaPixel';
 import { ServiceWorker } from '@/components/ServiceWorker';
 
 // Google Ads conversion tracking (gtag.js). The base tag lets Google detect the
@@ -113,6 +114,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Toaster />
         <ServiceWorker />
         <Analytics />
+        <MetaPixel />
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}
           strategy="afterInteractive"

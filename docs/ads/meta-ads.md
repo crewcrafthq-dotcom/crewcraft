@@ -17,7 +17,7 @@ https://crewcraftapp.com/lp/meta?utm_source=meta&utm_medium=paid&utm_campaign={{
 | Setting | Value | Why |
 | --- | --- | --- |
 | Objective | Sales (conversion: Sign-up) — fallback: Leads | Optimizes for people who actually sign up, not clickers |
-| Conversion event | Pixel `SignUp` (fire on /onboarding) | Note: only the Google tag is installed today — add the Meta Pixel before scaling spend |
+| Conversion event | Pixel `CompleteRegistration` (fires on /onboarding) | Pixel `1779561509895094` is live on the site — nothing to install |
 | Budget to start | $20–30/day, one campaign, Advantage+ audience | Enough data to exit learning in ~1 week |
 | Placements | Advantage+ (auto) | Meta finds cheap reels/stories inventory |
 | Audience seed | Interests: HVAC, plumbing, electrician, roofing, general contractor, ServiceTitan, Jobber, Housecall Pro + job title where available. Age 25–55. | The tools they already use are the strongest signal |
@@ -99,7 +99,11 @@ https://crewcraftapp.com/lp/meta?utm_source=meta&utm_medium=paid&utm_campaign={{
 
 ## Measurement
 
-1. Install the **Meta Pixel** (base + `SignUp` event on /onboarding — mirror of
-   the Google `SignupConversion` component, ~10 lines; ask Claude to add it).
+1. The **Meta Pixel is live** — pixel `1779561509895094`, base code on every
+   page plus Meta's standard `CompleteRegistration` event on /onboarding. It
+   ships with the deploy; no dashboard step needed. Verify any time in Events
+   Manager → **Test events** (enter crewcraftapp.com and browse — PageView
+   should appear within seconds). In Ads Manager, pick
+   **CompleteRegistration** as the campaign's conversion event.
 2. Judge creative on **cost per signup**, not CPC. Kill an ad after ~$40 spend
    with zero signups; scale the winner +20%/every 3 days.
