@@ -1,4 +1,7 @@
+'use client';
+
 import Script from 'next/script';
+import { usePathname } from 'next/navigation';
 
 // Meta (Facebook) Pixel base code. The live pixel id is hardcoded like the
 // Google Ads id in layout.tsx — a pixel id is a public identifier (it ships in
@@ -8,8 +11,18 @@ import Script from 'next/script';
 // the Google tag. Standard fbq snippet, loaded after hydration like gtag.
 const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || '1779561509895094';
 
+/**
+ * Routes belonging to the CONTRACTOR's customers, not to Crewcraft prospects:
+ * the public estimate a homeowner e-signs, and the storm/emergency lead form
+ * their leads fill in. Tracking homeowners would teach Meta to find more
+ * homeowners — the opposite of who these ads are for — so the pixel sits out.
+ */
+const CUSTOMER_ROUTES = ['/e/', '/r/'];
+
 export function MetaPixel() {
+  const pathname = usePathname();
   if (!PIXEL_ID) return null;
+  if (CUSTOMER_ROUTES.some((p) => pathname?.startsWith(p))) return null;
   return (
     <>
       <Script id="meta-pixel" strategy="afterInteractive">

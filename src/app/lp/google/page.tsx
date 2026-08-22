@@ -4,6 +4,7 @@ import { Check, CircleDollarSign, FileText, Mail, Smartphone, Sparkles, X, Zap }
 import { EstimatePreview } from '@/components/marketing/EstimatePreview';
 import { StartFreeButton, TrustLine } from '@/components/marketing/StartFree';
 import { StickyCtaBar } from '@/components/marketing/StickyCtaBar';
+import { MetaEvent } from '@/components/MetaEvent';
 import { TradeIcon } from '@/components/TradeIcon';
 import { TradeTheme } from '@/components/TradeTheme';
 import { cn } from '@/lib/cn';
@@ -43,6 +44,7 @@ const COMPARE: { row: string; toolbelt: boolean | string; crm: boolean | string;
 export default function GoogleAdPage() {
   return (
     <>
+      <MetaEvent event="ViewContent" params={{ content_name: 'lp-google', content_category: 'ad-landing' }} />
       <main>
         {/* message-matched hero */}
         <section className="relative overflow-hidden">

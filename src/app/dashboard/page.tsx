@@ -11,8 +11,10 @@ import {
 } from 'lucide-react';
 
 import { AppShell } from '@/components/AppShell';
+import { MetaEvent } from '@/components/MetaEvent';
 import { ToolIcon } from '@/components/ToolIcon';
 import { getSession } from '@/lib/auth';
+import { PLAN_VALUE_USD, type PlanKey } from '@/lib/config';
 import { buildCustomers, type CustomerDoc } from '@/lib/customers';
 import { money } from '@/lib/format';
 import { liveTradeTools, TRADE_SECTIONS } from '@/lib/marketing';
@@ -24,7 +26,7 @@ export const dynamic = 'force-dynamic';
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: { upgraded?: string; error?: string };
+  searchParams: { upgraded?: string; error?: string; plan?: string };
 }) {
   const { user, business } = await getSession();
   if (!user) redirect('/login');
@@ -97,6 +99,12 @@ export default async function DashboardPage({
   ];
 
   const tradeLabel = getTheme(business.trade).label;
+  // Paid conversion: Stripe sends the plan back on the success URL, so the
+  // value events carry the amount actually charged. Both fire once per browser.
+  const planKey = searchParams.plan as PlanKey | undefined;
+  const paidValue = planKey ? PLAN_VALUE_USD[planKey] : undefined;
+  const justUpgraded = searchParams.upgraded === '1';
+
   const tools = liveTradeTools();
   const mine = tools.filter((t) => t.trade === business.trade);
   const others = tools.filter((t) => t.trade !== business.trade);
@@ -104,7 +112,22 @@ export default async function DashboardPage({
 
   return (
     <AppShell trade={business.trade} businessName={business.name}>
-      {searchParams.upgraded === '1' ? (
+      {justUpgraded && paidValue !== undefined ? (
+        <>
+          <MetaEvent
+            event="Subscribe"
+            params={{ value: paidValue, currency: 'USD', predicted_ltv: paidValue }}
+            once={`cc-meta-subscribe-${planKey}`}
+          />
+          <MetaEvent
+            event="Purchase"
+            params={{ value: paidValue, currency: 'USD', content_name: planKey! }}
+            once={`cc-meta-purchase-${planKey}`}
+          />
+        </>
+      ) : null}
+
+      {justUpgraded ? (
         <div className="mb-6 flex items-center gap-3 rounded-2xl border border-accent/40 bg-accent/10 p-4 animate-fade-up">
           <span className="grid h-10 w-10 flex-none place-items-center rounded-xl bg-accent text-accent-fg">
             <PartyPopper className="h-5 w-5" />

@@ -2,6 +2,8 @@
 
 import { useEffect } from 'react';
 
+import { trackMeta } from '@/lib/analytics';
+
 declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void;
@@ -40,10 +42,8 @@ export function SignupConversion() {
       },
     );
 
-    fire(
-      () => typeof window.fbq === 'function',
-      () => window.fbq!('track', 'CompleteRegistration'),
-    );
+    // Meta's primary optimization event for this account.
+    trackMeta('CompleteRegistration', undefined, 'cc-meta-registration');
   }, []);
 
   return null;

@@ -5,6 +5,7 @@ import { BeforeAfter } from '@/components/marketing/BeforeAfter';
 import { DemoModal, WatchDemoButton } from '@/components/marketing/DemoModal';
 import { StartFreeButton, TrustLine } from '@/components/marketing/StartFree';
 import { StickyCtaBar } from '@/components/marketing/StickyCtaBar';
+import { MetaEvent } from '@/components/MetaEvent';
 import { TradeIcon } from '@/components/TradeIcon';
 import { TRADE_CONTENT } from '@/lib/marketing';
 import { getTheme } from '@/lib/trades';
@@ -37,6 +38,7 @@ const STEPS = [
 export default function MetaAdPage() {
   return (
     <>
+      <MetaEvent event="ViewContent" params={{ content_name: 'lp-meta', content_category: 'ad-landing' }} />
       <main>
         {/* hook */}
         <section className="relative overflow-hidden">

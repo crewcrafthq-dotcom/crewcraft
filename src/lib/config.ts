@@ -46,6 +46,17 @@ export const STRIPE_PRICES = {
 
 export type PlanKey = keyof typeof STRIPE_PRICES;
 
+/**
+ * First-charge amount per plan, in whole USD — what Meta/Google receive as the
+ * conversion value. Annual reports the full $288 billed today, not the $24/mo
+ * it works out to, so reported ad value matches money actually taken.
+ */
+export const PLAN_VALUE_USD: Record<PlanKey, number> = {
+  proMonthly: 29,
+  proAnnual: 288,
+  founding: 19,
+};
+
 /** Pricing copy shown on the billing page. $29/mo is the anchor (§6). */
 export const PRICING = {
   proMonthly: { label: 'Pro — monthly', price: '$29', cadence: '/mo', priceKey: 'proMonthly' as PlanKey },
