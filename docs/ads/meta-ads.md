@@ -17,7 +17,7 @@ https://crewcraftapp.com/lp/meta?utm_source=meta&utm_medium=paid&utm_campaign={{
 | Setting | Value | Why |
 | --- | --- | --- |
 | Objective | Sales (conversion: Sign-up) — fallback: Leads | Optimizes for people who actually sign up, not clickers |
-| Conversion event | Pixel `CompleteRegistration` (fires on /onboarding) | Installed in the app — just set `NEXT_PUBLIC_META_PIXEL_ID` in Vercel (see Measurement) |
+| Conversion event | Pixel `CompleteRegistration` (fires on /onboarding) | Pixel `1779561509895094` is live on the site — nothing to install |
 | Budget to start | $20–30/day, one campaign, Advantage+ audience | Enough data to exit learning in ~1 week |
 | Placements | Advantage+ (auto) | Meta finds cheap reels/stories inventory |
 | Audience seed | Interests: HVAC, plumbing, electrician, roofing, general contractor, ServiceTitan, Jobber, Housecall Pro + job title where available. Age 25–55. | The tools they already use are the strongest signal |
@@ -99,13 +99,11 @@ https://crewcraftapp.com/lp/meta?utm_source=meta&utm_medium=paid&utm_campaign={{
 
 ## Measurement
 
-1. The **Meta Pixel is installed in the code** (base code on every page +
-   Meta's standard `CompleteRegistration` event on /onboarding). To turn it on:
-   Meta Events Manager → Data sources → your Pixel → Settings → copy the
-   numeric **Pixel ID**, then Vercel → your project → Settings → Environment
-   Variables → add `NEXT_PUBLIC_META_PIXEL_ID` = that number (Production) →
-   Redeploy. Verify with Events Manager → Test events while loading the site.
-   In Ads Manager, pick **CompleteRegistration** as the campaign's conversion
-   event.
+1. The **Meta Pixel is live** — pixel `1779561509895094`, base code on every
+   page plus Meta's standard `CompleteRegistration` event on /onboarding. It
+   ships with the deploy; no dashboard step needed. Verify any time in Events
+   Manager → **Test events** (enter crewcraftapp.com and browse — PageView
+   should appear within seconds). In Ads Manager, pick
+   **CompleteRegistration** as the campaign's conversion event.
 2. Judge creative on **cost per signup**, not CPC. Kill an ad after ~$40 spend
    with zero signups; scale the winner +20%/every 3 days.

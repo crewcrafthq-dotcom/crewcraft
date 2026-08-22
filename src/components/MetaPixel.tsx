@@ -1,10 +1,12 @@
 import Script from 'next/script';
 
-// Meta (Facebook) Pixel base code — renders nothing until
-// NEXT_PUBLIC_META_PIXEL_ID is set, so local/dev and forks stay pixel-free.
-// The SignUp conversion is fired by SignupConversion on /onboarding, mirroring
+// Meta (Facebook) Pixel base code. The live pixel id is hardcoded like the
+// Google Ads id in layout.tsx — a pixel id is a public identifier (it ships in
+// the page source of every site running one), not a secret. NEXT_PUBLIC_META_
+// PIXEL_ID overrides it, so a fork or a test pixel needs no code change.
+// CompleteRegistration is fired by SignupConversion on /onboarding, mirroring
 // the Google tag. Standard fbq snippet, loaded after hydration like gtag.
-const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || '1779561509895094';
 
 export function MetaPixel() {
   if (!PIXEL_ID) return null;
