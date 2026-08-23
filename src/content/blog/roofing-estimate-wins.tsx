@@ -3,6 +3,7 @@ import type { PostMeta } from './types';
 export const meta: PostMeta = {
   slug: 'roofing-estimate-that-wins-and-survives-the-adjuster',
   title: 'How to write a roofing estimate that wins the job — and survives the adjuster',
+  metaTitle: 'Roofing Estimates That Survive the Adjuster',
   description:
     'Squares, waste factor, decking allowances, photo documentation, and supplement-ready scope language — the roofing estimate as a legal and sales document.',
   published: '2026-08-20',

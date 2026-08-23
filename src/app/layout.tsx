@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next';
 import { Barlow_Condensed, Inter } from 'next/font/google';
-import localFont from 'next/font/local';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
@@ -29,28 +28,23 @@ const barlow = Barlow_Condensed({
   display: 'swap',
 });
 
-// Poppins stays available (matches the TTFs the PDF embeds).
-const poppins = localFont({
-  src: [
-    { path: '../../public/fonts/Poppins-Regular.ttf', weight: '400', style: 'normal' },
-    { path: '../../public/fonts/Poppins-Medium.ttf', weight: '500', style: 'normal' },
-    { path: '../../public/fonts/Poppins-SemiBold.ttf', weight: '600', style: 'normal' },
-    { path: '../../public/fonts/Poppins-Bold.ttf', weight: '700', style: 'normal' },
-  ],
-  variable: '--font-poppins',
-  display: 'swap',
-});
+// Poppins is NOT declared here on purpose. It is a PDF-only face: the renderer
+// registers the TTFs straight off disk in src/lib/pdf/fonts.ts, and no CSS on
+// the site ever asks for it. Declaring it with next/font made every page
+// preload ~460 KB of TTF that nothing rendered — the single biggest slice of
+// page weight on the marketing pages. Web UI is Inter + Barlow Condensed only.
 
 const TITLE = 'Toolbelt by Crewcraft — AI Estimate Software for Contractors';
 const DESCRIPTION =
-  'AI estimate software for HVAC, plumbing, electrical & roofing contractors. Branded estimates in 60 seconds, e-sign, invoices, online payments, follow-ups — one flat-price toolbelt. 3 free estimates, no credit card.';
+  'AI estimate software for HVAC, plumbing, electrical and roofing contractors. Branded estimates in 60 seconds — e-signed, invoiced, paid online. 3 free, no card.';
 
 export const metadata: Metadata = {
   // Makes every relative URL (canonical, OG image) absolute against the live domain.
   metadataBase: new URL('https://crewcraftapp.com'),
   title: {
     default: TITLE,
-    template: '%s · Toolbelt by Crewcraft',
+    // Short suffix: every child title has to fit Google's ~60 char cut-off.
+    template: '%s · Toolbelt',
   },
   description: DESCRIPTION,
   applicationName: 'Toolbelt by Crewcraft',
@@ -100,7 +94,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable} ${barlow.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${barlow.variable}`} suppressHydrationWarning>
       <body className="min-h-screen font-sans">
         {/* Apply the saved theme before first paint — no light/dark flash. */}
         <Script id="theme-init" strategy="beforeInteractive">

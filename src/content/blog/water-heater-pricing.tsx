@@ -3,6 +3,7 @@ import type { PostMeta } from './types';
 export const meta: PostMeta = {
   slug: 'how-plumbers-price-water-heater-replacement',
   title: 'How plumbers price a water heater replacement — the full breakdown',
+  metaTitle: 'How Plumbers Price a Water Heater Swap',
   description:
     'Everything that belongs in a water heater quote: labor, the unit, code items, haul-off, permits — and how to present tank vs. tankless without losing the job.',
   published: '2026-08-20',

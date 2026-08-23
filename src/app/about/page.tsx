@@ -5,7 +5,7 @@ import { LegalPage, LegalSection } from '@/components/LegalPage';
 export const metadata: Metadata = {
   title: 'About Toolbelt',
   description:
-    'Toolbelt by Crewcraft is contractor software built and run by one founder — estimates, invoices, payments and follow-ups for HVAC, plumbing, electrical and roofing pros.',
+    'Toolbelt by Crewcraft is contractor software built and run by one founder: estimates, invoices, payments and follow-ups for the trades. Who builds it, and why.',
   alternates: { canonical: '/about' },
   robots: { index: true, follow: true },
 };

@@ -18,13 +18,13 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   const post = getPost(params.slug);
   if (!post) return {};
   return {
-    title: post.meta.title,
+    title: post.meta.metaTitle ?? post.meta.title,
     description: post.meta.description,
     alternates: { canonical: `/blog/${post.meta.slug}` },
     robots: { index: true, follow: true },
     openGraph: {
       type: 'article',
-      title: post.meta.title,
+      title: post.meta.metaTitle ?? post.meta.title,
       description: post.meta.description,
       publishedTime: post.meta.published,
     },

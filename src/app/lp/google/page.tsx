@@ -19,7 +19,7 @@ import { TRADES } from '@/lib/types';
  * exact prices, objections handled, no mystery. Noindex via the /lp layout.
  */
 export const metadata: Metadata = {
-  title: 'Contractor Estimate Software — Branded Quotes in 60 Seconds',
+  title: 'Contractor Estimate Software — Quotes in 60s',
   description:
     'Estimate software for HVAC, plumbing, electrical & roofing contractors. Type the job, get AI line items, send a branded PDF. Free to start, from $19/mo.',
 };

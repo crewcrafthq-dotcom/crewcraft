@@ -3,6 +3,7 @@ import type { PostMeta } from './types';
 export const meta: PostMeta = {
   slug: 'quoting-a-200-amp-panel-upgrade',
   title: 'Quoting a 100A→200A panel upgrade: what belongs in the estimate',
+  metaTitle: 'Quoting a 100A→200A Panel Upgrade',
   description:
     'Load calculations, utility coordination, permits and inspection, grounding updates — how electricians scope a service upgrade estimate that holds up.',
   published: '2026-08-20',

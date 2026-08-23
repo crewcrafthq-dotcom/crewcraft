@@ -11,9 +11,9 @@ import { getTheme } from '@/lib/trades';
 import { shortDate } from '@/lib/format';
 
 export const metadata: Metadata = {
-  title: 'Field Guide — estimating, pricing & getting paid in the trades',
+  title: 'Field Guide: Estimating & Pricing for the Trades',
   description:
-    'Practical guides for HVAC, plumbing, electrical and roofing contractors: what winning estimates include, how to price jobs, deposits, follow-ups, and getting paid.',
+    'Practical guides for HVAC, plumbing, electrical and roofing contractors: what winning estimates include, how to price jobs, and how to get paid.',
   alternates: { canonical: '/blog' },
   robots: { index: true, follow: true },
 };
