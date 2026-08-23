@@ -3,6 +3,7 @@ import type { PostMeta } from './types';
 export const meta: PostMeta = {
   slug: 'why-homeowners-ghost-estimates',
   title: 'Why homeowners ghost your estimates — and the follow-up that fixes it',
+  metaTitle: 'Why Homeowners Ghost Your Estimates',
   description:
     'Silence after a quote usually isn’t a no. What’s actually happening on the homeowner’s side, and a simple two-touch follow-up that recovers stalled jobs.',
   published: '2026-08-20',

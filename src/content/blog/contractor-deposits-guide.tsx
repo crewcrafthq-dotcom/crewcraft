@@ -3,6 +3,7 @@ import type { PostMeta } from './types';
 export const meta: PostMeta = {
   slug: 'contractor-deposits-how-much-to-ask',
   title: 'Deposits: how much to ask for, and how to actually collect one',
+  metaTitle: 'Contractor Deposits: How Much to Ask For',
   description:
     'Typical deposit ranges by job type, the state rules to check first, and why the collection method decides whether you ever see the money.',
   published: '2026-08-20',

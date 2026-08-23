@@ -3,6 +3,7 @@ import type { PostMeta } from './types';
 export const meta: PostMeta = {
   slug: 'what-a-professional-hvac-estimate-includes',
   title: 'What a professional HVAC estimate should include (with a real example)',
+  metaTitle: 'What an HVAC Estimate Should Include',
   description:
     'The line items, scope language, and exclusions that separate a winning HVAC estimate from a number on a napkin — with a full changeout example.',
   published: '2026-08-20',

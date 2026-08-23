@@ -5,7 +5,7 @@ import { LegalPage, LegalSection } from '@/components/LegalPage';
 export const metadata: Metadata = {
   title: 'Security',
   description:
-    'How Toolbelt protects contractor accounts, customer data, and payments: Stripe-handled cards, isolated per-account data, unguessable estimate links, and rate-limited logins.',
+    'How Toolbelt protects contractor accounts, customer data and payments: Stripe handles every card, data is isolated per account, and logins are rate-limited.',
   alternates: { canonical: '/security' },
   robots: { index: true, follow: true },
 };

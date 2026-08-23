@@ -220,7 +220,7 @@ export const TRADE_PAGES: Record<Trade, TradePageContent> = {
   hvac: {
     metaTitle: 'HVAC Estimating Software & Apps for Contractors',
     metaDescription:
-      'HVAC estimating software that quotes changeouts in a minute. AI line items, branded PDFs, e-sign, deposits, tune-up reminders and an equipment log — $29/mo flat.',
+      'HVAC estimating software that quotes changeouts in a minute. AI line items, branded PDFs, e-sign, deposits and tune-up reminders — $29/mo flat.',
     h1: 'HVAC estimating software that quotes the changeout in a minute',
     intro:
       'Describe the job the way you’d tell your helper — “3-ton condenser and coil, reconnect the lineset, haul off the old unit” — and Toolbelt drafts the labor and materials, prices it from your rates, and sends a branded estimate the homeowner can e-sign and pay a deposit on. From the driveway, before the competition calls back.',
@@ -261,7 +261,7 @@ export const TRADE_PAGES: Record<Trade, TradePageContent> = {
   plumbing: {
     metaTitle: 'Plumbing Estimate & Invoice App for Contractors',
     metaDescription:
-      'Plumbing estimating app: water heaters, repipes and service calls quoted from your phone. Branded PDFs, e-sign, deposits, permit tracking, 2am lead auto-replies. Free to try.',
+      'Plumbing estimating app: water heaters, repipes and service calls quoted from your phone. Branded PDFs, e-sign, deposits, permits — $29/mo flat.',
     h1: 'The plumbing estimate app that prices the job from the garage',
     intro:
       'Water heater swaps, repipes, “while you’re here” service calls — type three sentences and Toolbelt writes the estimate: itemized labor and materials at your rates, on a branded PDF, with an e-sign link and a deposit button wired to your own Stripe. The homeowner has a number before they’ve finished googling what it should cost.',
@@ -302,7 +302,7 @@ export const TRADE_PAGES: Record<Trade, TradePageContent> = {
   electrical: {
     metaTitle: 'Electrical Estimating Software for Contractors',
     metaDescription:
-      'Electrical estimating software for panel swaps, EV chargers and remodels. AI line items, a load calc helper, permit tracking, e-sign and deposits — $29/mo flat, free to try.',
+      'Electrical estimating software for panel swaps, EV chargers and remodels. AI line items, load-calc helper, e-sign and deposits — $29/mo flat.',
     h1: 'Electrical estimating software with the load calc on the same belt',
     intro:
       'Panel upgrades, EV chargers, remodel rough-ins — describe the scope and Toolbelt drafts the estimate with your labor rate and material prices, runs a service-load sanity check when you need one, and sends a branded PDF the customer can e-sign and put a deposit on. Quoted before the ladder’s back on the truck.',
@@ -343,7 +343,7 @@ export const TRADE_PAGES: Record<Trade, TradePageContent> = {
   roofing: {
     metaTitle: 'Roofing Estimate Software for Contractors',
     metaDescription:
-      'Roofing estimate software for tear-offs, storm scopes and supplements. Photo reports, insurance supplement letters, material order sheets, e-sign and deposits. Free to try.',
+      'Roofing estimate software for tear-offs, storm scopes and supplements. Photo reports, material order sheets, e-sign and deposits — $29/mo flat.',
     h1: 'Roofing estimate software built for the paperwork trade',
     intro:
       'Roofing runs on documents — estimates by the square, photo evidence, supplement letters, material orders. Toolbelt writes all of them. Describe the tear-off, attach the roof photos, and send a branded estimate the homeowner e-signs on their phone; the supplement letter and the supplier order sheet come off the same job.',
