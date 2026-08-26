@@ -11,6 +11,12 @@ import { ServiceWorker } from '@/components/ServiceWorker';
 // site; the signup conversion event is fired from the post-signup flow.
 const GOOGLE_ADS_ID = 'AW-18291771001';
 
+// Umami — privacy-friendly, cookieless page analytics. The website id is a
+// public identifier (it ships in the page source), so it lives here like the
+// Google Ads id; NEXT_PUBLIC_UMAMI_WEBSITE_ID overrides it for a fork.
+const UMAMI_WEBSITE_ID =
+  process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID || 'ea02467a-d75a-4e6e-a96a-5cfa9487086a';
+
 // Inter for the whole web UI — crisp, technical, premium SaaS feel.
 const inter = Inter({
   subsets: ['latin'],
@@ -119,6 +125,15 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', '${GOOGLE_ADS_ID}');`}
         </Script>
+        {/* Umami. afterInteractive is next/script's equivalent of the `defer`
+            in Umami's snippet: it never blocks first paint, which the font
+            cleanup just bought us. */}
+        <Script
+          id="umami"
+          src="https://cloud.umami.is/script.js"
+          data-website-id={UMAMI_WEBSITE_ID}
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
