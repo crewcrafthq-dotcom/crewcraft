@@ -371,3 +371,70 @@ export function jobsDigestEmailHtml({ businessName, jobs, scheduleUrl, accent, a
       `<tr><td style="font-size:13px;line-height:1.5;color:#46566A;">— Crewcraft, for ${escapeHtml(businessName)}</td></tr>`,
   );
 }
+
+interface TryItEmailArgs {
+  /** What the visitor typed as their company, or a neutral placeholder. */
+  businessName: string;
+  job: string;
+  total: number;
+  signupUrl: string;
+  accent: string; // hex
+  accentFg: string; // hex
+}
+
+/**
+ * The homepage demo estimate, emailed as a PDF. Written to make one point:
+ * this took a sentence, and the real thing carries their logo and rates.
+ */
+export function tryItEstimateEmailHtml({
+  businessName,
+  job,
+  total,
+  signupUrl,
+  accent,
+  accentFg,
+}: TryItEmailArgs): string {
+  return emailShell(
+    heading('Your estimate is attached') +
+      paragraph(
+        `You typed: <em>${escapeHtml(job)}</em><br/><br/>` +
+          `Toolbelt drafted the labor and materials and totalled it at <strong>${money(total)}</strong>. ` +
+          'The PDF is attached.',
+      ) +
+      paragraph(
+        'That one is unbranded and priced at a generic hourly rate. Add your logo, ' +
+          'license and your own rates once, and every estimate after that comes out ' +
+          'in your name — ready for the customer to e-sign and pay a deposit on.',
+      ) +
+      button({ href: signupUrl, label: 'Start free — 3 estimates', accent, accentFg }) +
+      signoff('Toolbelt by Crewcraft'),
+  );
+}
+
+interface TryItLeadArgs {
+  email: string;
+  businessName: string;
+  trade: string;
+  job: string;
+  total: number;
+}
+
+/** Owner heads-up: someone ran the homepage demo and left an email. */
+export function tryItLeadNotifyHtml({
+  email,
+  businessName,
+  trade,
+  job,
+  total,
+}: TryItLeadArgs): string {
+  return emailShell(
+    heading('Homepage demo lead') +
+      paragraph(
+        `<strong>${escapeHtml(email)}</strong><br/>` +
+          `Company: ${escapeHtml(businessName)}<br/>` +
+          `Trade: ${escapeHtml(trade)}<br/>` +
+          `Total: ${money(total)}`,
+      ) +
+      paragraph(`Job they typed:<br/><em>${escapeHtml(job)}</em>`),
+  );
+}

@@ -6,14 +6,16 @@ import { createAdminClient } from '@/lib/supabase/admin';
  * Sliding-window rate limiter backed by the rate_events table (migration
  * 0009). Works across serverless instances, unlike in-memory counters.
  *
- * Fails OPEN when the table is missing or the DB errors: a broken limiter
- * must never lock every customer out of logging in. (Supabase Auth keeps its
- * own per-IP limits underneath as the hard backstop.)
+ * Fails OPEN by default when the table is missing or the DB errors: a broken
+ * limiter must never lock every customer out of logging in. (Supabase Auth
+ * keeps its own per-IP limits underneath as the hard backstop.) Pass
+ * `failClosed` for endpoints where an unlimited fallback costs real money.
  */
 export async function checkRateLimit(
   identifier: string,
   max: number,
   windowMinutes: number,
+  options: { failClosed?: boolean } = {},
 ): Promise<{ allowed: boolean; remaining: number }> {
   try {
     const admin = createAdminClient();
@@ -28,6 +30,10 @@ export async function checkRateLimit(
     return { allowed: used < max, remaining: Math.max(0, max - used) };
   } catch (err) {
     console.warn('rate-limit check skipped (migration 0009 applied?):', err);
+    // Public, unauthenticated endpoints that spend money (the homepage AI
+    // demo) must fail CLOSED — a broken limiter there is an open door to the
+    // Anthropic bill. Logins still fail open, per the note above.
+    if (options.failClosed) return { allowed: false, remaining: 0 };
     return { allowed: true, remaining: max };
   }
 }
