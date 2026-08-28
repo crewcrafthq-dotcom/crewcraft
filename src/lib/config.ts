@@ -44,6 +44,19 @@ export const STRIPE_PRICES = {
   founding: process.env.STRIPE_PRICE_FOUNDING ?? '',
 } as const;
 
+/**
+ * Anonymous homepage demo (/api/public/try-it). An unauthenticated endpoint
+ * that calls Anthropic needs three ceilings: per visitor, per visitor per day
+ * for the emailed PDF, and one across everybody so a bad day can't run up the
+ * bill. All are enforced against rate_events (migration 0009), fail-closed.
+ */
+export const TRY_IT_IP_LIMIT = 5;
+export const TRY_IT_IP_WINDOW_MIN = 60;
+export const TRY_IT_GLOBAL_DAILY_LIMIT = 250;
+export const TRY_IT_PDF_IP_DAILY_LIMIT = 3;
+/** The demo has no price book, so it quotes labor at a plain hourly rate. */
+export const TRY_IT_LABOR_RATE = 95;
+
 export type PlanKey = keyof typeof STRIPE_PRICES;
 
 /**
