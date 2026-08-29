@@ -11,7 +11,7 @@ export function AppLineup() {
       <div className="max-w-2xl">
         <p className="eyebrow">What’s on the belt</p>
         <h2 className="mt-2 text-3xl font-bold leading-tight text-ink sm:text-4xl">
-          Fourteen live tools. One flat price.
+          Eighteen live tools. One flat price.
         </h2>
         <p className="mt-3 text-lg text-ink-soft">
           Apps you use and automations that run for you — the paperwork side of the business,

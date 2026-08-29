@@ -135,7 +135,14 @@ ad copy in `docs/ads/*.md`. SEO playbook: `docs/SEO-GUIDE.md`. Legal pages:
 
 ## Roadmap / open seams
 
-- **Scheduling** — the one "Soon" card on the dashboard
+- **Nothing is "Soon" right now.** Every tool in `APP_LINEUP` and every
+  `TRADE_SECTIONS` belt is `status: 'live'` — Scheduling shipped, so the
+  dashboard's "On the way" list is empty and now hides itself. The next tool
+  added as `'next'`/`'planned'` brings that section back automatically.
+- The live tool count is **18** (deduped by destination — `Toolbelt Voice` and
+  `Good-Better-Best Options` both live inside `/estimates`). The hero and
+  `AppLineup` state that number; re-count with the same dedupe rule before
+  changing it, since it drifted to a stale "Fourteen" once already.
 - Known gaps: AI photos aren't stored/shown on estimates; the
   `auto_review_request` self-heal retry in `business-write.ts` can be removed
   once migration 0008 is confirmed applied.

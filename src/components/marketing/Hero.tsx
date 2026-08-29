@@ -88,7 +88,7 @@ export function Hero() {
             <p className="mt-5 max-w-md text-lg leading-relaxed text-ink-soft">
               Describe the job in plain English — Toolbelt drafts a branded estimate in 60 seconds,
               gets it e-signed online, invoices it automatically, takes payment through your Stripe,
-              and follows up without you. Fourteen live tools on one belt, one flat price.
+              and follows up without you. Eighteen live tools on one belt, one flat price.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
