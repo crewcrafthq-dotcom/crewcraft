@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Script from 'next/script';
 import { ArrowRight } from 'lucide-react';
 
 import { StartFreeButton, TrustLine } from '@/components/marketing/StartFree';
@@ -101,6 +102,22 @@ export default function BlogIndexPage() {
             </Link>
           ))}
         </div>
+
+        {/*
+          Holo AI embed. The third-party script renders its posts into
+          #holo-blog on the client, so it sits BELOW the Field Guide grid
+          rather than replacing it: the Field Guide posts are server-rendered,
+          listed in sitemap.xml and carry BlogPosting JSON-LD, and anything
+          injected here is none of those things. afterInteractive matches how
+          the Google tag, Meta Pixel and Umami load, and guarantees #holo-blog
+          is in the DOM before the script goes looking for it.
+        */}
+        <div id="holo-blog" className="mt-12 empty:mt-0" />
+        <Script
+          id="holo-blog-embed"
+          src="https://prod-api-holo-ai.fly.dev/public/seo/embed/71cca383-71e0-4a95-b67e-0e50623b0782.js"
+          strategy="afterInteractive"
+        />
 
         <div className="mt-12 rounded-2xl border border-hairline bg-paper-850 p-6 text-center sm:p-8">
           <h2 className="text-2xl font-bold uppercase text-ink">
