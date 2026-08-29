@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Script from 'next/script';
 import { ArrowRight } from 'lucide-react';
 
 import { StartFreeButton, TrustLine } from '@/components/marketing/StartFree';
@@ -104,19 +103,30 @@ export default function BlogIndexPage() {
         </div>
 
         {/*
-          Holo AI embed. The third-party script renders its posts into
-          #holo-blog on the client, so it sits BELOW the Field Guide grid
-          rather than replacing it: the Field Guide posts are server-rendered,
-          listed in sitemap.xml and carry BlogPosting JSON-LD, and anything
-          injected here is none of those things. afterInteractive matches how
-          the Google tag, Meta Pixel and Umami load, and guarantees #holo-blog
-          is in the DOM before the script goes looking for it.
+          Holo AI embed, written exactly as the vendor's snippet specifies: a
+          target div plus a plain deferred <script> in the markup.
+
+          This deliberately does NOT use next/script. afterInteractive injects
+          the tag only once hydration is done — which is after DOMContentLoaded
+          has already fired. An embed that renders on a DOMContentLoaded
+          listener (a very common pattern) would then load with a clean 200 and
+          silently draw nothing. A plain deferred script is executed by the
+          browser during parse, before that event, which is the timing the
+          vendor built and tested against.
+
+          Known trade-off: React does not execute script tags it inserts
+          itself, so on an App Router soft navigation into /blog the embed will
+          not run until a real page load. Correct rendering on a direct visit
+          — which is what search traffic does — matters more here.
+
+          It sits BELOW the Field Guide grid rather than replacing it: those
+          posts are server-rendered, listed in sitemap.xml and carry
+          BlogPosting JSON-LD; anything injected here is none of those things.
         */}
         <div id="holo-blog" className="mt-12 empty:mt-0" />
-        <Script
-          id="holo-blog-embed"
+        <script
           src="https://prod-api-holo-ai.fly.dev/public/seo/embed/71cca383-71e0-4a95-b67e-0e50623b0782.js"
-          strategy="afterInteractive"
+          defer
         />
 
         <div className="mt-12 rounded-2xl border border-hairline bg-paper-850 p-6 text-center sm:p-8">
