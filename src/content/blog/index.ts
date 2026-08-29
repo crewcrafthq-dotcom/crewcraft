@@ -16,6 +16,22 @@ import * as free_trials_and_demos_estimating_software from './free-trials-and-de
 import * as integrating_estimating_with_other_tools from './integrating-estimating-with-other-tools';
 import * as software_support_and_adoption_pitfalls from './software-support-and-adoption-pitfalls';
 import * as how_to_read_contractor_software_reviews from './how-to-read-contractor-software-reviews';
+import * as best_estimate_software_for_contractors from './best-estimate-software-for-contractors';
+import * as hvac_estimate_software from './hvac-estimate-software';
+import * as plumbing_estimate_software from './plumbing-estimate-software';
+import * as electrical_estimate_software from './electrical-estimate-software';
+import * as roofing_estimate_software from './roofing-estimate-software';
+import * as ai_estimation_software_for_trades from './ai-estimation-software-for-trades';
+import * as how_to_write_a_plumbing_estimate from './how-to-write-a-plumbing-estimate';
+import * as how_to_write_an_hvac_estimate from './how-to-write-an-hvac-estimate';
+import * as how_to_write_a_roofing_estimate from './how-to-write-a-roofing-estimate';
+import * as how_to_write_an_electrical_estimate from './how-to-write-an-electrical-estimate';
+import * as free_estimate_template_for_contractors from './free-estimate-template-for-contractors';
+import * as send_estimates_from_the_field from './send-estimates-from-the-field';
+import * as estimates_from_the_truck from './estimates-from-the-truck';
+import * as stop_doing_estimates_after_hours from './stop-doing-estimates-after-hours';
+import * as estimate_software_vs_excel_for_contractors from './estimate-software-vs-excel-for-contractors';
+import * as fastest_way_to_send_plumbing_estimates from './fastest-way-to-send-plumbing-estimates';
 
 export interface BlogPost {
   meta: PostMeta;
@@ -40,6 +56,22 @@ export const BLOG_POSTS: BlogPost[] = [
   integrating_estimating_with_other_tools,
   software_support_and_adoption_pitfalls,
   how_to_read_contractor_software_reviews,
+  best_estimate_software_for_contractors,
+  hvac_estimate_software,
+  plumbing_estimate_software,
+  electrical_estimate_software,
+  roofing_estimate_software,
+  ai_estimation_software_for_trades,
+  how_to_write_a_plumbing_estimate,
+  how_to_write_an_hvac_estimate,
+  how_to_write_a_roofing_estimate,
+  how_to_write_an_electrical_estimate,
+  free_estimate_template_for_contractors,
+  send_estimates_from_the_field,
+  estimates_from_the_truck,
+  stop_doing_estimates_after_hours,
+  estimate_software_vs_excel_for_contractors,
+  fastest_way_to_send_plumbing_estimates,
 ].sort((a, b) => (a.meta.published < b.meta.published ? 1 : -1));
 
 export function getPost(slug: string): BlogPost | undefined {
