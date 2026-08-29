@@ -34,6 +34,10 @@ export const PDF_LANGUAGES: PdfLanguage[] = [
   { code: 'tl', label: 'Filipino (Tagalog)', locale: 'fil-PH' },
   { code: 'vi', label: 'Tiếng Việt (Vietnamese)', locale: 'vi-VN' },
   { code: 'ca', label: 'Català (Catalan)', locale: 'ca-ES' },
+  { code: 'so', label: 'Soomaali (Somali)', locale: 'so-SO' },
+  { code: 'tpi', label: 'Tok Pisin', locale: 'tpi-PG' },
+  { code: 'tet', label: 'Tetum', locale: 'tet-TL' },
+  { code: 'ht', label: 'Kreyòl Ayisyen (Haitian Creole)', locale: 'ht-HT' },
 ];
 
 const CODES = new Set(PDF_LANGUAGES.map((l) => l.code));

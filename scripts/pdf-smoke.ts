@@ -123,11 +123,15 @@ async function main() {
   mkdirSync(outDir, { recursive: true });
 
   // English estimate + invoice, plus a Romanian estimate to eyeball localized
-  // labels and diacritic glyphs (ș ț ă â î) — labels only, no AI needed.
+  // labels and diacritic glyphs (ș ț ă â î) — labels only, no AI needed. Haitian
+  // Creole covers the newest language batch (è, ò); Somali/Tok Pisin/Tetum
+  // share the same plain-Latin alphabet so one extra render is enough to catch
+  // a missing-glyph regression across all four.
   const jobs: Array<[string, EstimateWithItems, string]> = [
     ['estimate-smoke.pdf', estimate, 'en'],
     ['invoice-smoke.pdf', invoice, 'en'],
     ['estimate-ro-smoke.pdf', estimate, 'ro'],
+    ['estimate-ht-smoke.pdf', estimate, 'ht'],
     ['estimate-stress-smoke.pdf', stress, 'en'],
   ];
 
