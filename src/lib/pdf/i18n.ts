@@ -213,6 +213,38 @@ export const PDF_STRINGS: Record<string, PdfStrings> = {
     notesTerms: 'Notes i condicions', date: 'Data', number: 'Número', due: 'Venciment', validUntil: 'Vàlid fins',
     acceptedBy: 'Acceptat per', signedOn: 'Signat electrònicament el', paid: 'Pagat', license: 'Llicència', customer: 'Client',
   },
+  so: {
+    estimate: 'Qiimayn', invoice: 'Qaansheeg', preparedFor: 'Loo diyaariyay', scopeOfWork: 'Baaxadda shaqada',
+    labor: 'Shaqada', materials: 'Alaabta', other: 'Kale', description: 'Sharraxaad', qty: 'Tir.',
+    unit: 'Cutub', rate: 'Qiimaha', amount: 'Qadarka', subtotal: 'Wadarta hoose', tax: 'Canshuur', total: 'Wadarta guud',
+    depositDue: 'Dhig la bixin doono', depositReceived: 'Dhig la helay', balanceDue: 'Hadhaaga la bixin doono',
+    notesTerms: 'Faallooyin iyo shuruudo', date: 'Taariikh', number: 'Lambar', due: 'Xilliga dhammaad', validUntil: 'Ansax ilaa',
+    acceptedBy: 'Waa la aqbalay', signedOn: 'Elektaroonik ahaan lagu saxeexay', paid: 'La bixiyay', license: 'Shatiga', customer: 'Macmiil',
+  },
+  tpi: {
+    estimate: 'Estimeit', invoice: 'Invois', preparedFor: 'I redim bilong', scopeOfWork: 'Wok bilong mekim',
+    labor: 'Wok', materials: 'Material', other: 'Arapela', description: 'Toksave long en', qty: 'Namba',
+    unit: 'Yunit', rate: 'Prais long wanwan', amount: 'Total mani', subtotal: 'Smol total', tax: 'Takis', total: 'Bikpela total',
+    depositDue: 'Diposit i mas pe', depositReceived: 'Diposit i kam pinis', balanceDue: 'Mani i stap yet long pe',
+    notesTerms: 'Toksave na kondisen', date: 'De', number: 'Namba', due: 'De bilong pe', validUntil: 'I orait inap long',
+    acceptedBy: 'I orait long', signedOn: 'Sain electronik long', paid: 'Pinis long pe', license: 'Laisens', customer: 'Kastoma',
+  },
+  tet: {
+    estimate: 'Orsamentu', invoice: 'Fatura', preparedFor: 'Prepara ba', scopeOfWork: 'Ámbitu servisu',
+    labor: 'Serbisu', materials: 'Materiál', other: 'Seluk', description: 'Deskrisaun', qty: 'Kuant.',
+    unit: 'Unidade', rate: 'Presu', amount: 'Montante', subtotal: 'Subtotál', tax: 'Taxa', total: 'Total',
+    depositDue: "Depozitu tenke selu", depositReceived: 'Depozitu simu ona', balanceDue: 'Saldu tenke selu',
+    notesTerms: 'Nota no kondisaun', date: 'Data', number: 'Númeru', due: 'Prazu', validUntil: "Válidu to'o",
+    acceptedBy: 'Aseita husi', signedOn: 'Asina eletronikamente iha', paid: 'Selu ona', license: 'Lisensa', customer: 'Kliente',
+  },
+  ht: {
+    estimate: 'Estimasyon', invoice: 'Fakti', preparedFor: 'Prepare pou', scopeOfWork: 'Deskripsyon travay la',
+    labor: 'Men dèv', materials: 'Materyèl', other: 'Lòt bagay', description: 'Deskripsyon', qty: 'Kantite',
+    unit: 'Inite', rate: 'Pri inite', amount: 'Montan', subtotal: 'Soutotal', tax: 'Taks', total: 'Total',
+    depositDue: 'Depo pou peye', depositReceived: 'Depo resevwa', balanceDue: 'Rès pou peye',
+    notesTerms: 'Nòt ak kondisyon', date: 'Dat', number: 'Nimewo', due: 'Dat limit', validUntil: 'Valid jiska',
+    acceptedBy: 'Aksepte pa', signedOn: 'Siyen elektwonikman le', paid: 'Peye', license: 'Lisans', customer: 'Kliyan',
+  },
 };
 
 /** Labels for a language, English as the fallback. */
