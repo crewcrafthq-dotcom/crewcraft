@@ -5,6 +5,7 @@ import { BeforeAfter } from '@/components/marketing/BeforeAfter';
 import { DemoModal, WatchDemoButton } from '@/components/marketing/DemoModal';
 import { StartFreeButton, TrustLine } from '@/components/marketing/StartFree';
 import { StickyCtaBar } from '@/components/marketing/StickyCtaBar';
+import { TryItDemo } from '@/components/marketing/TryItDemo';
 import { MetaEvent } from '@/components/MetaEvent';
 import { TradeIcon } from '@/components/TradeIcon';
 import { TRADE_CONTENT } from '@/lib/marketing';
@@ -85,27 +86,33 @@ export default function MetaAdPage() {
           </div>
         </section>
 
-        {/* how */}
-        <section className="bg-paper-850">
-          <div className="mx-auto max-w-5xl px-5 py-12 sm:px-6 sm:py-16">
-            <h2 className="text-2xl font-bold uppercase text-ink sm:text-3xl">
-              Three sentences. That’s the whole job.
-            </h2>
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
-              {STEPS.map((s, i) => (
-                <div key={s} className="rounded-2xl border border-hairline bg-paper-800 p-5 shadow-card">
-                  <span className="grid h-8 w-8 place-items-center rounded-full bg-accent text-sm font-bold text-accent-fg">
-                    {i + 1}
-                  </span>
-                  <p className="mt-3 text-ink-soft">{s}</p>
-                </div>
-              ))}
-            </div>
-            <p className="mt-5 flex items-center gap-2 text-sm text-ink-mute">
-              <FileText className="h-4 w-4" />
-              Prices are suggestions you control — you own the final number, always.
-            </p>
+        {/*
+          Proof, not a promise. This used to be three static cards describing
+          what the product does; cold interruption traffic has no reason to
+          take that on faith. The live demo lets a stranger type their own job
+          and watch real AI line items come back before being asked for
+          anything — and its email step is the only pre-signup capture on this
+          page, so a visitor who is not ready for an account is no longer a
+          total loss.
+        */}
+        <TryItDemo />
+
+        {/* the three steps, as a caption under the thing they just did */}
+        <section className="mx-auto max-w-5xl px-5 pt-10 sm:px-6">
+          <div className="grid gap-3 sm:grid-cols-3">
+            {STEPS.map((s, i) => (
+              <div key={s} className="rounded-2xl border border-hairline bg-paper-800 p-5 shadow-card">
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-accent text-sm font-bold text-accent-fg">
+                  {i + 1}
+                </span>
+                <p className="mt-3 text-ink-soft">{s}</p>
+              </div>
+            ))}
           </div>
+          <p className="mt-5 flex items-center gap-2 text-sm text-ink-mute">
+            <FileText className="h-4 w-4" />
+            Prices are suggestions you control — you own the final number, always.
+          </p>
         </section>
 
         {/* what it actually does */}
