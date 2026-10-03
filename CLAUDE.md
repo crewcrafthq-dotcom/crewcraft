@@ -116,8 +116,15 @@ never kills the rest.
 **Security (July 2026):** password login goes through `/api/auth/login` with
 DB-backed rate limiting (`rate_events`, migration 0009 — fails OPEN if the
 table is missing); AI routes have a per-user daily cap (`AI_DAILY_LIMIT`);
-security headers in next.config; review/payment links validated http(s) and
-escaped in email hrefs. Desktop app chrome is a sidebar (`AppSidebar`,
+security headers in next.config (incl. HSTS — deliberately `max-age=86400`, no
+`includeSubDomains`/`preload`, so it stays rollback-able; raise once the live
+site has run clean); review/payment links validated http(s) and
+escaped in email hrefs. `/login` is the only page with a credential field and
+is `noindex` + out of the sitemap; in production only, any `*.vercel.app` host
+307s to the apex domain so the branded login form never answers on a non-brand
+hostname (what Search Console's "possible phishing detected on user login"
+report keys off) — preview builds keep their own URL via `VERCEL_ENV`.
+Desktop app chrome is a sidebar (`AppSidebar`,
 data-driven from `liveTradeTools()` in `src/lib/marketing.ts`); mobile stays
 top-bar. Brand positioning is **platform-first** ("software tools for
 contractors"), not estimates-first.
