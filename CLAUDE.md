@@ -140,6 +140,16 @@ ad copy in `docs/ads/*.md`. SEO playbook: `docs/SEO-GUIDE.md`. Legal pages:
 `/privacy`, `/terms`. Google Ads signup conversion fires from `/onboarding`
 (`SignupConversion`) once `NEXT_PUBLIC_GOOGLE_ADS_SIGNUP_LABEL` is set.
 
+**Tags/analytics:** `GoogleTag` (`src/components/GoogleTag.tsx`) loads gtag.js
+ONCE and configures both the Ads id (`AW-…`) and the GA4 measurement id
+(`G-…`) on it — never add a second gtag.js, that's the one thing Google's
+"don't add more than one Google tag" warning is about. Plus Umami (cookieless)
+and Vercel Analytics in layout.tsx, and `MetaPixel`. `GoogleTag` and
+`MetaPixel` both sit out `CUSTOMER_ROUTES = ['/e/', '/r/']`: those URLs carry
+the `public_token` that *is* the access control (rule 2), so tagging them would
+ship capability tokens to Google/Meta and skew every rate with homeowners who
+aren't prospects. Keep any new tag out of those routes too.
+
 ## Roadmap / open seams
 
 - **Scheduling** — the one "Soon" card on the dashboard

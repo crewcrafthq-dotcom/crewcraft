@@ -4,16 +4,14 @@ import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toast';
+import { GoogleTag } from '@/components/GoogleTag';
 import { MetaPixel } from '@/components/MetaPixel';
 import { ServiceWorker } from '@/components/ServiceWorker';
 
-// Google Ads conversion tracking (gtag.js). The base tag lets Google detect the
-// site; the signup conversion event is fired from the post-signup flow.
-const GOOGLE_ADS_ID = 'AW-18291771001';
-
 // Umami — privacy-friendly, cookieless page analytics. The website id is a
 // public identifier (it ships in the page source), so it lives here like the
-// Google Ads id; NEXT_PUBLIC_UMAMI_WEBSITE_ID overrides it for a fork.
+// Google tag ids in GoogleTag.tsx; NEXT_PUBLIC_UMAMI_WEBSITE_ID overrides it
+// for a fork.
 const UMAMI_WEBSITE_ID =
   process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID || 'ea02467a-d75a-4e6e-a96a-5cfa9487086a';
 
@@ -115,16 +113,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ServiceWorker />
         <Analytics />
         <MetaPixel />
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-ads-gtag" strategy="afterInteractive">
-          {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${GOOGLE_ADS_ID}');`}
-        </Script>
+        {/* Google Ads conversions + GA4 analytics, one gtag.js load. Skips the
+            tokenised customer pages — see the component. */}
+        <GoogleTag />
         {/* Umami. afterInteractive is next/script's equivalent of the `defer`
             in Umami's snippet: it never blocks first paint, which the font
             cleanup just bought us. */}
