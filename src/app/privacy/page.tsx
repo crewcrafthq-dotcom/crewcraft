@@ -39,9 +39,11 @@ export default function PrivacyPage() {
             are used only to render and send that estimate on your behalf.
           </li>
           <li>
-            <strong className="text-ink">Usage data</strong> — anonymous page analytics (Vercel
-            Analytics) and, if you arrived from an ad, standard advertising cookies (Google Ads
-            tag) so we know the ad worked.
+            <strong className="text-ink">Usage data</strong> — cookieless page analytics (Umami
+            and Vercel Analytics), plus advertising and analytics measurement (Google Analytics,
+            the Google Ads tag, the Meta Pixel) so we know which ads work. That last group is
+            opt-in in the EU, UK and Switzerland and can be switched off anywhere from our{' '}
+            <a href="/cookies" className="font-medium text-ink underline">cookie policy</a>.
           </li>
         </ul>
       </LegalSection>
@@ -62,16 +64,24 @@ export default function PrivacyPage() {
           <li><strong className="text-ink">Stripe</strong> — payments. Your card number never touches our servers.</li>
           <li><strong className="text-ink">Resend</strong> — sends estimate emails you trigger and account emails.</li>
           <li><strong className="text-ink">Anthropic</strong> — AI drafting of line items from your job description.</li>
-          <li><strong className="text-ink">Vercel</strong> — hosting and anonymous analytics.</li>
-          <li><strong className="text-ink">Google</strong> — ad conversion measurement, only when you arrive via an ad.</li>
+          <li><strong className="text-ink">Vercel</strong> — hosting and cookieless analytics.</li>
+          <li><strong className="text-ink">Umami</strong> — cookieless page analytics.</li>
+          <li><strong className="text-ink">Google</strong> — Analytics and ad conversion measurement.</li>
+          <li><strong className="text-ink">Meta</strong> — ad conversion measurement for Facebook and Instagram ads.</li>
         </ul>
         <p>We never sell your data or your customers’ data to anyone. No exceptions.</p>
       </LegalSection>
 
       <LegalSection title="Cookies">
         <p>
-          We use the cookies needed to keep you logged in, plus the Google Ads tag for ad
-          measurement. No third-party data brokers, no cross-site tracking networks.
+          We use the cookies needed to keep you logged in, plus Google and Meta measurement tags
+          you can refuse or switch off at any time. No third-party data brokers, no cross-site
+          tracking networks. The full list, and the switch, are in the{' '}
+          <a href="/cookies" className="font-medium text-ink underline">cookie policy</a>.
+        </p>
+        <p>
+          Pages your own customers see — the estimate you send them to sign, your lead form —
+          carry no advertising or analytics tags at all.
         </p>
       </LegalSection>
 

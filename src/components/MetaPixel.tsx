@@ -3,6 +3,8 @@
 import Script from 'next/script';
 import { usePathname } from 'next/navigation';
 
+import { useConsent } from '@/lib/use-consent';
+
 // Meta (Facebook) Pixel base code. The live pixel id is hardcoded like the
 // Google Ads id in layout.tsx — a pixel id is a public identifier (it ships in
 // the page source of every site running one), not a secret. NEXT_PUBLIC_META_
@@ -21,8 +23,14 @@ const CUSTOMER_ROUTES = ['/e/', '/r/'];
 
 export function MetaPixel() {
   const pathname = usePathname();
+  const { allowed } = useConsent();
   if (!PIXEL_ID) return null;
   if (CUSTOMER_ROUTES.some((p) => pathname?.startsWith(p))) return null;
+  // Meta has no equivalent of Google's Consent Mode — a loaded pixel has
+  // already phoned home — so in consent regions it must not mount until the
+  // visitor opts in. Outside them `allowed` is true as soon as the region probe
+  // answers, which costs the pixel a couple of hundred milliseconds.
+  if (!allowed) return null;
   return (
     <>
       <Script id="meta-pixel" strategy="afterInteractive">
@@ -37,16 +45,15 @@ s.parentNode.insertBefore(t,s)}(window,document,'script',
 fbq('init', '${PIXEL_ID}');
 fbq('track', 'PageView');`}
       </Script>
-      <noscript>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          height="1"
-          width="1"
-          style={{ display: 'none' }}
-          alt=""
-          src={`https://www.facebook.com/tr?id=${PIXEL_ID}&ev=PageView&noscript=1`}
-        />
-      </noscript>
     </>
   );
 }
+
+/*
+ * Meta's <noscript> tracking <img> used to sit here. It had to go: deciding
+ * whether this visitor needs to opt in requires JavaScript, so a no-JS visitor
+ * can only be handled one of two ways, and firing the pixel at someone whose
+ * region we cannot determine is the wrong one. Costs us PageViews from the
+ * fraction of visitors running no JS, who were never going to sign up anyway
+ * (the whole app needs it).
+ */

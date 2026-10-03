@@ -4,9 +4,11 @@ import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toast';
+import { CookieBanner } from '@/components/CookieBanner';
 import { GoogleTag } from '@/components/GoogleTag';
 import { MetaPixel } from '@/components/MetaPixel';
 import { ServiceWorker } from '@/components/ServiceWorker';
+import { CONSENT_REGIONS, CONSENT_STORAGE_KEY } from '@/lib/consent';
 
 // Umami — privacy-friendly, cookieless page analytics. The website id is a
 // public identifier (it ships in the page source), so it lives here like the
@@ -104,6 +106,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script id="theme-init" strategy="beforeInteractive">
           {`try{if(localStorage.getItem('toolbelt-theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}`}
         </Script>
+        {/* Google Consent Mode v2 defaults. MUST be queued onto dataLayer
+            before gtag.js loads, hence beforeInteractive — once the library has
+            read the queue, a late default is just ignored. Denied by default in
+            the consent regions (the banner's Accept flips it with a `consent`
+            update); granted elsewhere, where the regime is opt-out. A stored
+            choice overrides both, so a decision survives the next page load
+            instead of the default briefly winning. */}
+        <Script id="consent-default" strategy="beforeInteractive">
+          {`window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+(function(){
+var deny={ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied'};
+var grant={ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted',analytics_storage:'granted'};
+var c=null;try{c=localStorage.getItem('${CONSENT_STORAGE_KEY}')}catch(e){}
+if(c==='granted'){gtag('consent','default',grant);return}
+if(c==='denied'){gtag('consent','default',deny);return}
+gtag('consent','default',Object.assign({},deny,{wait_for_update:500,region:${JSON.stringify(CONSENT_REGIONS)}}));
+gtag('consent','default',grant);
+})();`}
+        </Script>
         {/* Scroll-reveal sections must never be a blank page for no-JS visitors/crawlers. */}
         <noscript>
           <style>{`.reveal,.reveal-child{opacity:1 !important;transform:none !important}`}</style>
@@ -116,6 +138,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Google Ads conversions + GA4 analytics, one gtag.js load. Skips the
             tokenised customer pages — see the component. */}
         <GoogleTag />
+        <CookieBanner />
         {/* Umami. afterInteractive is next/script's equivalent of the `defer`
             in Umami's snippet: it never blocks first paint, which the font
             cleanup just bought us. */}

@@ -150,6 +150,22 @@ the `public_token` that *is* the access control (rule 2), so tagging them would
 ship capability tokens to Google/Meta and skew every rate with homeowners who
 aren't prospects. Keep any new tag out of those routes too.
 
+**Cookie consent (Oct 2026):** `CookieBanner` + `useConsent`
+(`src/lib/use-consent.ts`), constants in `src/lib/consent.ts`. Opt-in only in
+`CONSENT_REGIONS` (EEA + GB + CH) — `/api/public/region` reads Vercel's
+`x-vercel-ip-country` and the client *fetches* it rather than the layout calling
+`headers()`, because `headers()` in the root layout would drop every marketing
+page out of static rendering. Unknown country ⇒ consent required (fail safe).
+Google side is Consent Mode v2: the `consent-default` script in layout.tsx is
+`beforeInteractive` and **must stay that way** — gtag.js ignores defaults queued
+after it loads. A stored choice overrides the region defaults there, so a
+decision survives reload. Meta has no consent mode, so the pixel simply doesn't
+mount without consent, and `setConsent` also calls `fbq('consent','revoke')` to
+stop a pixel already loaded in this page view. Reject must stay as easy as
+accept (no cookie wall, no pre-ticked box, no dismiss-means-yes). `/cookies`
+and `/privacy` describe exactly this — update them together with any tag
+change.
+
 ## Roadmap / open seams
 
 - **Scheduling** — the one "Soon" card on the dashboard
