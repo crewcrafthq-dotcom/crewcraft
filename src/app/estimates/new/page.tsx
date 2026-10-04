@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
 import { countEstimates, getSession } from '@/lib/auth';
-import { FREE_ESTIMATE_LIMIT, isOwnerEmail, isPaidStatus } from '@/lib/config';
+import { FREE_ESTIMATE_LIMIT, hasProAccess, isOwnerEmail } from '@/lib/config';
 import { createClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
@@ -16,7 +16,7 @@ export default async function NewEstimatePage() {
   if (!user) redirect('/login');
   if (!business) redirect('/onboarding');
 
-  if (!isPaidStatus(business.subscription_status) && !isOwnerEmail(user.email)) {
+  if (!hasProAccess(business) && !isOwnerEmail(user.email)) {
     const count = await countEstimates(user.id);
     if (count >= FREE_ESTIMATE_LIMIT) redirect('/billing?reason=limit');
   }

@@ -26,9 +26,11 @@ steps (Supabase / Stripe / Vercel) click-by-click, and paste full SQL contents
 - **Next.js 14** (App Router) + TypeScript + Tailwind, deployed on **Vercel**
 - **Supabase** — Postgres + RLS, password & magic-link auth, storage (logos).
   Migrations in `supabase/migrations/` are applied **manually** in the SQL
-  editor (0001–0008 are live; 0009 rate-limits + 0010 app tables pending as of
-  2026-07-16). New schema = new numbered migration file, and
-  tell the owner to run it.
+  editor. 0001–0010 are live (verified against the project's `information_
+  schema` on 2026-10-04 — `rate_events`, `jobs`, `equipment`, `permits`,
+  `service_reminders` and `leads` all exist); **0011 billing grace is
+  pending**. New schema = new numbered migration file, and tell the owner to
+  run it.
 - **Anthropic** — `AI_MODEL` in `src/lib/config.ts` (server-only key) for
   line-item generation, incl. photo (vision) and Good/Better/Best tier modes
 - **@react-pdf/renderer** — branded estimate/invoice PDFs (Poppins)
@@ -112,6 +114,24 @@ customer + rolls next_due forward), Storm/Emergency Lead Page
 auto-reply + lead email + inbox; honeypot + per-IP rate limit). Cron
 `/api/cron/reminders` now runs 6 passes, each guarded so one failing pass
 never kills the rest.
+
+**Billing / dunning (Oct 2026):** gate features on `hasProAccess(business)`,
+never `isPaidStatus(status)` — the latter counts only `active`/`trialing`, so
+on its own it downgraded a paying contractor the same day their card bounced
+while Stripe was still retrying for two weeks. A `past_due`/`unpaid`
+subscription keeps Pro until `businesses.grace_until` (migration **0011**,
+`PAST_DUE_GRACE_DAYS` = 14, sized to outlast Stripe's retry schedule). The
+webhook sets that deadline **once** per dunning cycle — Stripe fires a failure
+event per retry, and recomputing it each time would roll it forward forever —
+and clears it on `invoice.payment_succeeded`. `invoice.payment_failed` also
+sends the dunning email, on the first and last attempt only
+(`next_payment_attempt === null` means Stripe has given up). `BillingGraceBanner`
+renders inside `AppShell`, so it shows on all 24 app screens; `getSession` is
+React-`cache()`d so that costs no extra query. Everything fails soft before
+0011 is applied: the webhook retries its write without the column, and
+`grace_until` comes back `undefined`, which lands on the old behaviour.
+**The Stripe dashboard must be subscribed to `invoice.payment_failed` and
+`invoice.payment_succeeded`** or none of this fires.
 
 **Security (July 2026):** password login goes through `/api/auth/login` with
 DB-backed rate limiting (`rate_events`, migration 0009 — fails OPEN if the

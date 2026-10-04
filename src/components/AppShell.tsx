@@ -1,5 +1,6 @@
 import { AppHeader } from '@/components/AppHeader';
 import { AppSidebar } from '@/components/AppSidebar';
+import { BillingGraceBanner } from '@/components/BillingGraceBanner';
 import { InstallPrompt } from '@/components/InstallPrompt';
 import { TradeTheme } from '@/components/TradeTheme';
 import { cn } from '@/lib/cn';
@@ -32,6 +33,9 @@ export function AppShell({
             width === 'narrow' ? 'mx-auto w-full max-w-3xl lg:mx-0 lg:max-w-4xl' : '',
           )}
         >
+          {/* Sits above every page's own content, on all 24 screens, because
+              AppShell wraps them all — see BillingGraceBanner. */}
+          <BillingGraceBanner />
           {children}
         </main>
       </div>

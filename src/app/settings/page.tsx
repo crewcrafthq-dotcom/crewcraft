@@ -8,7 +8,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { Card } from '@/components/ui/Card';
 import { buttonClasses } from '@/components/ui/Button';
 import { getSession } from '@/lib/auth';
-import { isOwnerEmail, isPaidStatus } from '@/lib/config';
+import { hasProAccess, isOwnerEmail } from '@/lib/config';
 import { updateBusinessAction } from './actions';
 
 export const dynamic = 'force-dynamic';
@@ -19,7 +19,7 @@ export default async function SettingsPage() {
   if (!business) redirect('/onboarding');
 
   const owner = isOwnerEmail(user.email);
-  const paid = isPaidStatus(business.subscription_status);
+  const paid = hasProAccess(business);
 
   return (
     <AppShell trade={business.trade} businessName={business.name} width="narrow">
