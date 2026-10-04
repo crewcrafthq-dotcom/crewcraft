@@ -1,5 +1,5 @@
 import { ToolIcon } from '@/components/ToolIcon';
-import { APP_LINEUP } from '@/lib/marketing';
+import { APP_LINEUP, extraTradeTools, LIVE_TOOL_COUNT } from '@/lib/marketing';
 import { StartFreeButton } from './StartFree';
 
 export function AppLineup() {
@@ -11,7 +11,7 @@ export function AppLineup() {
       <div className="max-w-2xl">
         <p className="eyebrow">What’s on the belt</p>
         <h2 className="mt-2 text-3xl font-bold leading-tight text-ink sm:text-4xl">
-          Fourteen live tools. One flat price.
+          {LIVE_TOOL_COUNT} live tools. One flat price.
         </h2>
         <p className="mt-3 text-lg text-ink-soft">
           Apps you use and automations that run for you — the paperwork side of the business,
@@ -78,9 +78,10 @@ export function AppLineup() {
         ))}
       </div>
 
+      {/* Derived, so it can't drift from the belt: this list was four tools
+          short and named Supplement Drafter twice (it's carded above). */}
       <p className="mt-6 text-sm text-ink-mute">
-        Plus trade tools live today: Load Calc Helper, Water Heater Quote Pack, Maintenance Plan
-        Builder, Material Order Sheet, Supplement Drafter, Photo Report Builder — every one
+        Plus trade tools live today: {extraTradeTools().map((t) => t.name).join(', ')} — every one
         included in every paid plan.
       </p>
     </section>

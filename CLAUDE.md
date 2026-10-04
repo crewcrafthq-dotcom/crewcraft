@@ -140,6 +140,14 @@ ad copy in `docs/ads/*.md`. SEO playbook: `docs/SEO-GUIDE.md`. Legal pages:
 `/privacy`, `/terms`. Google Ads signup conversion fires from `/onboarding`
 (`SignupConversion`) once `NEXT_PUBLIC_GOOGLE_ADS_SIGNUP_LABEL` is set.
 
+**Never hardcode the tool count.** `LIVE_TOOL_COUNT` and `extraTradeTools()`
+in `src/lib/marketing.ts` derive it from `APP_LINEUP` + `liveTradeTools()`,
+deduped by destination (Toolbelt Voice lives inside `/estimates`; Supplement
+Drafter is the roofing name for Toolbelt Supplements) — currently 18. It had
+drifted to a hardcoded "Fourteen" in the hero and belt heading and a `14` in
+the `Stats` tile, a claim a prospect can sit and count. Adding a tool now
+updates all three.
+
 **Tags/analytics:** `GoogleTag` (`src/components/GoogleTag.tsx`) loads gtag.js
 ONCE and configures both the Ads id (`AW-…`) and the GA4 measurement id
 (`G-…`) on it — never add a second gtag.js, that's the one thing Google's
@@ -168,7 +176,8 @@ change.
 
 ## Roadmap / open seams
 
-- **Scheduling** — the one "Soon" card on the dashboard
+- Scheduling shipped (`/apps/schedule`, live in `APP_LINEUP`); the dashboard's
+  "On the way" section is now whatever a trade still has at `status !== 'live'`
 - Known gaps: AI photos aren't stored/shown on estimates; the
   `auto_review_request` self-heal retry in `business-write.ts` can be removed
   once migration 0008 is confirmed applied.

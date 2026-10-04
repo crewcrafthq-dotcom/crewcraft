@@ -1,8 +1,12 @@
+import { LIVE_TOOL_COUNT } from '@/lib/marketing';
+
 import { StatCounter } from './StatCounter';
 
-// Honest, product-true numbers — not fabricated user counts.
+// Honest, product-true numbers — not fabricated user counts. The tool count is
+// derived from the belt itself (see LIVE_TOOL_COUNT) rather than typed here:
+// this tile claimed 14 while the hero claimed fourteen and the real belt was 18.
 const STATS = [
-  { value: 14, suffix: '', label: 'live tools on the belt' },
+  { value: LIVE_TOOL_COUNT, suffix: '', label: 'live tools on the belt' },
   { value: 60, suffix: 's', label: 'to a finished estimate' },
   { value: 4, suffix: '', label: 'trades supported' },
   { value: 3, suffix: '', label: 'free estimates to start' },
