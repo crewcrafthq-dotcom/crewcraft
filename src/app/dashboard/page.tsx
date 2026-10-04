@@ -234,31 +234,39 @@ export default async function DashboardPage({
         </>
       ) : null}
 
-      {/* honest roadmap */}
-      <h2 className="mb-3 mt-8 text-sm font-semibold uppercase tracking-wide text-ink-mute">
-        On the way
-      </h2>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {upcoming.map((tool) => (
-          <div
-            key={tool.name}
-            className="flex items-start gap-3 rounded-xl border border-dashed border-hairline bg-paper-800/50 p-4"
-          >
-            <span className="grid h-9 w-9 flex-none place-items-center rounded-lg bg-paper-700 text-ink-mute">
-              <ToolIcon icon={tool.icon} className="h-5 w-5" />
-            </span>
-            <span className="min-w-0">
-              <span className="flex items-center gap-2">
-                <span className="text-sm font-bold text-ink-soft">{tool.name}</span>
-                <span className="rounded-full bg-paper-700 px-2 py-0.5 text-[10px] font-semibold text-ink-mute">
-                  {tool.status === 'next' ? 'Next' : 'Planned'}
+      {/*
+        Honest roadmap. Every tool in this trade's belt is live today, so this
+        list is empty — render nothing rather than a heading over a blank grid.
+        It comes back on its own the next time a tool ships as 'next'/'planned'.
+      */}
+      {upcoming.length > 0 ? (
+        <>
+          <h2 className="mb-3 mt-8 text-sm font-semibold uppercase tracking-wide text-ink-mute">
+            On the way
+          </h2>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {upcoming.map((tool) => (
+              <div
+                key={tool.name}
+                className="flex items-start gap-3 rounded-xl border border-dashed border-hairline bg-paper-800/50 p-4"
+              >
+                <span className="grid h-9 w-9 flex-none place-items-center rounded-lg bg-paper-700 text-ink-mute">
+                  <ToolIcon icon={tool.icon} className="h-5 w-5" />
                 </span>
-              </span>
-              <span className="mt-0.5 block text-xs text-ink-mute">{tool.tagline}</span>
-            </span>
+                <span className="min-w-0">
+                  <span className="flex items-center gap-2">
+                    <span className="text-sm font-bold text-ink-soft">{tool.name}</span>
+                    <span className="rounded-full bg-paper-700 px-2 py-0.5 text-[10px] font-semibold text-ink-mute">
+                      {tool.status === 'next' ? 'Next' : 'Planned'}
+                    </span>
+                  </span>
+                  <span className="mt-0.5 block text-xs text-ink-mute">{tool.tagline}</span>
+                </span>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      ) : null}
 
       <p className="mt-6 text-sm text-ink-mute">
         More tools are on the way — built for the trades, not for spreadsheets. Want one bumped up

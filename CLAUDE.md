@@ -196,8 +196,12 @@ change.
 
 ## Roadmap / open seams
 
-- Scheduling shipped (`/apps/schedule`, live in `APP_LINEUP`); the dashboard's
-  "On the way" section is now whatever a trade still has at `status !== 'live'`
+- **Nothing is "Soon" right now.** Every tool in `APP_LINEUP` and every
+  `TRADE_SECTIONS` belt is `status: 'live'` — Scheduling shipped, so the
+  dashboard's "On the way" list is empty and now hides itself. The next tool
+  added as `'next'`/`'planned'` brings that section back automatically.
+- The live tool count no longer needs re-counting by hand: `LIVE_TOOL_COUNT`
+  derives it (see "Never hardcode the tool count" above). It is 18 today.
 - Known gaps: AI photos aren't stored/shown on estimates; the
   `auto_review_request` self-heal retry in `business-write.ts` can be removed
   once migration 0008 is confirmed applied.
