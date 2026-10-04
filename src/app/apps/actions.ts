@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 
 import { countEstimates, getSession } from '@/lib/auth';
 import { getPreset } from '@/lib/app-presets';
-import { FREE_ESTIMATE_LIMIT, isOwnerEmail, isPaidStatus } from '@/lib/config';
+import { FREE_ESTIMATE_LIMIT, hasProAccess, isOwnerEmail } from '@/lib/config';
 import { computeTotals, lineTotal } from '@/lib/estimates';
 import { createClient } from '@/lib/supabase/server';
 
@@ -21,7 +21,7 @@ export async function createEstimateFromPreset(presetId: string): Promise<void> 
   const preset = getPreset(presetId);
   if (!preset) redirect('/dashboard');
 
-  if (!isPaidStatus(business.subscription_status) && !isOwnerEmail(user.email)) {
+  if (!hasProAccess(business) && !isOwnerEmail(user.email)) {
     const count = await countEstimates(user.id);
     if (count >= FREE_ESTIMATE_LIMIT) redirect('/billing?reason=limit');
   }

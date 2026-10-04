@@ -26,9 +26,11 @@ steps (Supabase / Stripe / Vercel) click-by-click, and paste full SQL contents
 - **Next.js 14** (App Router) + TypeScript + Tailwind, deployed on **Vercel**
 - **Supabase** — Postgres + RLS, password & magic-link auth, storage (logos).
   Migrations in `supabase/migrations/` are applied **manually** in the SQL
-  editor (0001–0008 are live; 0009 rate-limits + 0010 app tables pending as of
-  2026-07-16). New schema = new numbered migration file, and
-  tell the owner to run it.
+  editor. 0001–0010 are live (verified against the project's `information_
+  schema` on 2026-10-04 — `rate_events`, `jobs`, `equipment`, `permits`,
+  `service_reminders` and `leads` all exist); **0011 billing grace is
+  pending**. New schema = new numbered migration file, and tell the owner to
+  run it.
 - **Anthropic** — `AI_MODEL` in `src/lib/config.ts` (server-only key) for
   line-item generation, incl. photo (vision) and Good/Better/Best tier modes
 - **@react-pdf/renderer** — branded estimate/invoice PDFs (Poppins)
@@ -113,11 +115,36 @@ auto-reply + lead email + inbox; honeypot + per-IP rate limit). Cron
 `/api/cron/reminders` now runs 6 passes, each guarded so one failing pass
 never kills the rest.
 
+**Billing / dunning (Oct 2026):** gate features on `hasProAccess(business)`,
+never `isPaidStatus(status)` — the latter counts only `active`/`trialing`, so
+on its own it downgraded a paying contractor the same day their card bounced
+while Stripe was still retrying for two weeks. A `past_due`/`unpaid`
+subscription keeps Pro until `businesses.grace_until` (migration **0011**,
+`PAST_DUE_GRACE_DAYS` = 14, sized to outlast Stripe's retry schedule). The
+webhook sets that deadline **once** per dunning cycle — Stripe fires a failure
+event per retry, and recomputing it each time would roll it forward forever —
+and clears it on `invoice.payment_succeeded`. `invoice.payment_failed` also
+sends the dunning email, on the first and last attempt only
+(`next_payment_attempt === null` means Stripe has given up). `BillingGraceBanner`
+renders inside `AppShell`, so it shows on all 24 app screens; `getSession` is
+React-`cache()`d so that costs no extra query. Everything fails soft before
+0011 is applied: the webhook retries its write without the column, and
+`grace_until` comes back `undefined`, which lands on the old behaviour.
+**The Stripe dashboard must be subscribed to `invoice.payment_failed` and
+`invoice.payment_succeeded`** or none of this fires.
+
 **Security (July 2026):** password login goes through `/api/auth/login` with
 DB-backed rate limiting (`rate_events`, migration 0009 — fails OPEN if the
 table is missing); AI routes have a per-user daily cap (`AI_DAILY_LIMIT`);
-security headers in next.config; review/payment links validated http(s) and
-escaped in email hrefs. Desktop app chrome is a sidebar (`AppSidebar`,
+security headers in next.config (incl. HSTS — deliberately `max-age=86400`, no
+`includeSubDomains`/`preload`, so it stays rollback-able; raise once the live
+site has run clean); review/payment links validated http(s) and
+escaped in email hrefs. `/login` is the only page with a credential field and
+is `noindex` + out of the sitemap; in production only, any `*.vercel.app` host
+307s to the apex domain so the branded login form never answers on a non-brand
+hostname (what Search Console's "possible phishing detected on user login"
+report keys off) — preview builds keep their own URL via `VERCEL_ENV`.
+Desktop app chrome is a sidebar (`AppSidebar`,
 data-driven from `liveTradeTools()` in `src/lib/marketing.ts`); mobile stays
 top-bar. Brand positioning is **platform-first** ("software tools for
 contractors"), not estimates-first.
@@ -133,16 +160,48 @@ ad copy in `docs/ads/*.md`. SEO playbook: `docs/SEO-GUIDE.md`. Legal pages:
 `/privacy`, `/terms`. Google Ads signup conversion fires from `/onboarding`
 (`SignupConversion`) once `NEXT_PUBLIC_GOOGLE_ADS_SIGNUP_LABEL` is set.
 
+**Never hardcode the tool count.** `LIVE_TOOL_COUNT` and `extraTradeTools()`
+in `src/lib/marketing.ts` derive it from `APP_LINEUP` + `liveTradeTools()`,
+deduped by destination (Toolbelt Voice lives inside `/estimates`; Supplement
+Drafter is the roofing name for Toolbelt Supplements) — currently 18. It had
+drifted to a hardcoded "Fourteen" in the hero and belt heading and a `14` in
+the `Stats` tile, a claim a prospect can sit and count. Adding a tool now
+updates all three.
+
+**Tags/analytics:** `GoogleTag` (`src/components/GoogleTag.tsx`) loads gtag.js
+ONCE and configures both the Ads id (`AW-…`) and the GA4 measurement id
+(`G-…`) on it — never add a second gtag.js, that's the one thing Google's
+"don't add more than one Google tag" warning is about. Plus Umami (cookieless)
+and Vercel Analytics in layout.tsx, and `MetaPixel`. `GoogleTag` and
+`MetaPixel` both sit out `CUSTOMER_ROUTES = ['/e/', '/r/']`: those URLs carry
+the `public_token` that *is* the access control (rule 2), so tagging them would
+ship capability tokens to Google/Meta and skew every rate with homeowners who
+aren't prospects. Keep any new tag out of those routes too.
+
+**Cookie consent (Oct 2026):** `CookieBanner` + `useConsent`
+(`src/lib/use-consent.ts`), constants in `src/lib/consent.ts`. Opt-in only in
+`CONSENT_REGIONS` (EEA + GB + CH) — `/api/public/region` reads Vercel's
+`x-vercel-ip-country` and the client *fetches* it rather than the layout calling
+`headers()`, because `headers()` in the root layout would drop every marketing
+page out of static rendering. Unknown country ⇒ consent required (fail safe).
+Google side is Consent Mode v2: the `consent-default` script in layout.tsx is
+`beforeInteractive` and **must stay that way** — gtag.js ignores defaults queued
+after it loads. A stored choice overrides the region defaults there, so a
+decision survives reload. Meta has no consent mode, so the pixel simply doesn't
+mount without consent, and `setConsent` also calls `fbq('consent','revoke')` to
+stop a pixel already loaded in this page view. Reject must stay as easy as
+accept (no cookie wall, no pre-ticked box, no dismiss-means-yes). `/cookies`
+and `/privacy` describe exactly this — update them together with any tag
+change.
+
 ## Roadmap / open seams
 
 - **Nothing is "Soon" right now.** Every tool in `APP_LINEUP` and every
   `TRADE_SECTIONS` belt is `status: 'live'` — Scheduling shipped, so the
   dashboard's "On the way" list is empty and now hides itself. The next tool
   added as `'next'`/`'planned'` brings that section back automatically.
-- The live tool count is **18** (deduped by destination — `Toolbelt Voice` and
-  `Good-Better-Best Options` both live inside `/estimates`). The hero and
-  `AppLineup` state that number; re-count with the same dedupe rule before
-  changing it, since it drifted to a stale "Fourteen" once already.
+- The live tool count no longer needs re-counting by hand: `LIVE_TOOL_COUNT`
+  derives it (see "Never hardcode the tool count" above). It is 18 today.
 - Known gaps: AI photos aren't stored/shown on estimates; the
   `auto_review_request` self-heal retry in `business-write.ts` can be removed
   once migration 0008 is confirmed applied.

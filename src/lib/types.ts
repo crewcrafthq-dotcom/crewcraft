@@ -43,6 +43,9 @@ export interface Business {
   stripe_subscription_id: string | null;
   plan: Plan;
   subscription_status: string | null; // Stripe status: active, trialing, canceled, ...
+  // When Pro lapses after a failed renewal. Optional because the column only
+  // exists once migration 0011 has been run — see hasProAccess().
+  grace_until?: string | null;
   created_at: string;
 }
 

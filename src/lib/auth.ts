@@ -1,3 +1,5 @@
+import { cache } from 'react';
+
 import { createClient } from '@/lib/supabase/server';
 import type { Business } from '@/lib/types';
 
@@ -14,8 +16,12 @@ export async function getUser() {
  * The current user plus their business row (one business per user). Either may
  * be null: no user means logged out; a user with no business hasn't finished
  * onboarding yet.
+ *
+ * React-cached, so it's deduped per request: pages already call this, and
+ * AppShell calls it again for the billing banner. Without the cache that would
+ * be a second auth round trip plus a second row read on every single page.
  */
-export async function getSession(): Promise<{
+export const getSession = cache(async function getSession(): Promise<{
   user: Awaited<ReturnType<typeof getUser>>;
   business: Business | null;
 }> {
@@ -33,7 +39,7 @@ export async function getSession(): Promise<{
     .maybeSingle();
 
   return { user, business: (data as Business) ?? null };
-}
+});
 
 /** An estimate the contractor actually used — not an untouched empty draft. */
 export function isUsedEstimate(e: {

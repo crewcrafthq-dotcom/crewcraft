@@ -83,9 +83,58 @@ export function appUrl(): string {
   return url.replace(/\/$/, '');
 }
 
-/** A Stripe subscription that counts as paid. */
+/** A Stripe subscription that counts as paid outright. */
 export function isPaidStatus(status: string | null | undefined): boolean {
   return status === 'active' || status === 'trialing';
+}
+
+/**
+ * How long a contractor keeps Pro after a renewal fails. Stripe's default
+ * retry schedule gives up around day 14, so this runs the grace window
+ * alongside the retries rather than past them: by the time it expires, Stripe
+ * has genuinely stopped trying to collect.
+ */
+export const PAST_DUE_GRACE_DAYS = 14;
+
+/** Stripe statuses where the money hasn't arrived but the customer hasn't left. */
+const DUNNING_STATUSES = ['past_due', 'unpaid'];
+
+export function isDunningStatus(status: string | null | undefined): boolean {
+  return DUNNING_STATUSES.includes(status ?? '');
+}
+
+/**
+ * Does this business have Pro right now?
+ *
+ * Use this for every feature gate — `isPaidStatus` alone would downgrade a
+ * paying contractor the same day their card bounced. A failed renewal keeps
+ * working until `grace_until`, which the Stripe webhook sets on the first
+ * failed invoice.
+ *
+ * `grace_until` is `undefined` rather than `null` until migration 0011 is
+ * applied, which lands on the `isPaidStatus` result — the pre-migration
+ * behaviour, so nothing breaks while the SQL is still waiting to be run.
+ */
+export function hasProAccess(business: {
+  subscription_status: string | null;
+  grace_until?: string | null;
+}): boolean {
+  if (isPaidStatus(business.subscription_status)) return true;
+  if (!isDunningStatus(business.subscription_status)) return false;
+  return graceRemains(business.grace_until);
+}
+
+/** True while `grace_until` is set and still in the future. */
+export function graceRemains(graceUntil: string | null | undefined): boolean {
+  if (!graceUntil) return false;
+  const until = Date.parse(graceUntil);
+  return Number.isFinite(until) && until > Date.now();
+}
+
+/** Whole days left in the grace window — 0 once it's gone. Rounded up. */
+export function graceDaysLeft(graceUntil: string | null | undefined): number {
+  if (!graceRemains(graceUntil)) return 0;
+  return Math.max(1, Math.ceil((Date.parse(graceUntil!) - Date.now()) / 86_400_000));
 }
 
 /**

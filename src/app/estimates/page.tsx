@@ -15,7 +15,7 @@ import { StatusBadge } from '@/components/StatusBadge';
 import { Card } from '@/components/ui/Card';
 import { buttonClasses } from '@/components/ui/Button';
 import { getSession, isUsedEstimate } from '@/lib/auth';
-import { FREE_ESTIMATE_LIMIT, isOwnerEmail, isPaidStatus } from '@/lib/config';
+import { FREE_ESTIMATE_LIMIT, hasProAccess, isOwnerEmail } from '@/lib/config';
 import { money, shortDate } from '@/lib/format';
 import { createClient } from '@/lib/supabase/server';
 import type { Estimate } from '@/lib/types';
@@ -39,7 +39,7 @@ export default async function EstimatesPage() {
 
   const estimates = (data ?? []) as Row[];
   // Owners never see the free-tier banner or the paywall.
-  const paid = isPaidStatus(business.subscription_status) || isOwnerEmail(user.email);
+  const paid = hasProAccess(business) || isOwnerEmail(user.email);
   // Untouched empty drafts don't burn free estimates (matches countEstimates).
   const usedCount = estimates.filter((e) =>
     isUsedEstimate({ status: e.status, total: e.total, customer_name: e.customer_name }),

@@ -14,7 +14,7 @@ import {
 import { AppShell } from '@/components/AppShell';
 import { Card } from '@/components/ui/Card';
 import { getSession } from '@/lib/auth';
-import { isOwnerEmail, isPaidStatus, PRICING } from '@/lib/config';
+import { isDunningStatus, isOwnerEmail, isPaidStatus, PRICING } from '@/lib/config';
 import { money } from '@/lib/format';
 import { createAdminClient } from '@/lib/supabase/admin';
 
@@ -69,7 +69,11 @@ export default async function AdminPage() {
   const senders = new Set(estimates.filter((e) => e.sent_at || e.status !== 'draft').map((e) => e.user_id));
   const activation =
     businesses.length > 0 ? Math.round((senders.size / businesses.length) * 100) : 0;
+  // Still counts only subscriptions actually collecting money — a contractor
+  // inside the dunning grace window has Pro, but hasn't paid, so folding them
+  // in here would quietly inflate MRR.
   const proCount = businesses.filter((b) => isPaidStatus(b.subscription_status)).length;
+  const atRiskCount = businesses.filter((b) => isDunningStatus(b.subscription_status)).length;
   const collected = invoices
     .filter((i) => i.status === 'paid')
     .reduce((s, i) => s + (i.total || 0), 0);
@@ -128,7 +132,11 @@ export default async function AdminPage() {
           icon={CreditCard}
           label="Pro subscribers"
           value={String(proCount)}
-          hint={`≈ ${money(proCount * priceAnchor())} MRR at the anchor price`}
+          hint={
+            atRiskCount > 0
+              ? `≈ ${money(proCount * priceAnchor())} MRR · ${atRiskCount} failing payment`
+              : `≈ ${money(proCount * priceAnchor())} MRR at the anchor price`
+          }
         />
         <Tile
           icon={BadgeCheck}

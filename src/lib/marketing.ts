@@ -402,6 +402,31 @@ export function liveTradeTools(): (ToolItem & { trade: Trade })[] {
   return out;
 }
 
+/** A tool's identity for counting: where it takes you, or its name if nowhere. */
+const toolKey = (t: ToolItem) => t.href ?? `name:${t.name}`;
+
+/**
+ * Live trade tools that AREN'T already shown as a core card — what the belt
+ * section lists under its grid, so nothing is named twice or left out.
+ */
+export function extraTradeTools(): (ToolItem & { trade: Trade })[] {
+  const carded = new Set(APP_LINEUP.filter((a) => a.status === 'live').map(toolKey));
+  return liveTradeTools().filter((t) => !carded.has(toolKey(t)));
+}
+
+/**
+ * How many live tools a subscription actually buys, deduped by destination —
+ * Toolbelt Voice lives inside the estimate builder and Supplement Drafter is
+ * the roofing name for Toolbelt Supplements, so neither is a second tool.
+ *
+ * Derived, never typed by hand: the headline was hardcoded to "Fourteen" and
+ * drifted four tools out of date, which is the kind of claim a prospect can
+ * sit and count. Add a tool and the marketing copy corrects itself.
+ */
+export const LIVE_TOOL_COUNT = new Set(
+  [...APP_LINEUP.filter((a) => a.status === 'live'), ...liveTradeTools()].map(toolKey),
+).size;
+
 export interface PricingTier {
   key: 'free' | 'proMonthly' | 'founding' | 'proAnnual';
   name: string;

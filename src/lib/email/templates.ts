@@ -438,3 +438,54 @@ export function tryItLeadNotifyHtml({
       paragraph(`Job they typed:<br/><em>${escapeHtml(job)}</em>`),
   );
 }
+
+interface PaymentFailedArgs {
+  businessName: string;
+  /** ISO timestamp when Pro lapses, or null if the window couldn't be set. */
+  graceUntil: string | null;
+  /** True on Stripe's last retry — after this, nobody is charging the card again. */
+  isFinal: boolean;
+  billingUrl: string;
+}
+
+/**
+ * Dunning email: the renewal was declined. The tone is deliberately calm —
+ * this is nearly always an expired card, not someone walking away — and the
+ * one thing it has to communicate is that nothing has been switched off yet
+ * and exactly when that changes.
+ */
+export function paymentFailedEmailHtml({
+  businessName,
+  graceUntil,
+  isFinal,
+  billingUrl,
+}: PaymentFailedArgs): string {
+  const deadline = graceUntil ? shortDate(graceUntil) : null;
+  const accent = '#E2703A';
+  const accentFg = '#FFFFFF';
+
+  return emailShell(
+    heading(isFinal ? 'Last try — your card was declined' : 'Your card was declined') +
+      paragraph(
+        `Hi ${escapeHtml(businessName)} — your Toolbelt renewal didn’t go through. ` +
+          'Nine times out of ten it’s a card that expired or a bank blocking a ' +
+          'foreign charge, so it usually takes about a minute to sort out.',
+      ) +
+      paragraph(
+        deadline
+          ? `<strong>Nothing has been switched off.</strong> Your estimates, invoices and ` +
+            `everything on the belt keep working until <strong>${escapeHtml(deadline)}</strong>. ` +
+            (isFinal
+              ? 'This was the last automatic attempt, so the card needs updating before then.'
+              : 'We’ll try the card again automatically before then.')
+          : '<strong>Nothing has been switched off</strong> — update the card and the ' +
+            'renewal goes through on the next attempt.',
+      ) +
+      button({ href: billingUrl, label: 'Update payment method', accent, accentFg }) +
+      paragraph(
+        'Jobs you’ve already quoted, sent or invoiced are safe either way — ' +
+          'nothing is deleted.',
+      ) +
+      signoff('Toolbelt by Crewcraft'),
+  );
+}

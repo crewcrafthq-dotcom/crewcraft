@@ -4,7 +4,7 @@ import { Check, Sparkles } from 'lucide-react';
 import { AppShell } from '@/components/AppShell';
 import { Card } from '@/components/ui/Card';
 import { getSession } from '@/lib/auth';
-import { isPaidStatus } from '@/lib/config';
+import { hasProAccess } from '@/lib/config';
 import { MetaEvent } from '@/components/MetaEvent';
 import { PRICING_TIERS } from '@/lib/marketing';
 import { ManageBillingButton, UpgradeButton } from './buttons';
@@ -24,7 +24,7 @@ export default async function BillingPage({
   if (!user) redirect('/login');
   if (!business) redirect('/onboarding');
 
-  const paid = isPaidStatus(business.subscription_status);
+  const paid = hasProAccess(business);
 
   return (
     <AppShell trade={business.trade} businessName={business.name} width="narrow">
