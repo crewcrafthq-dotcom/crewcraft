@@ -6,7 +6,7 @@ export const meta: PostMeta = {
   metaTitle: 'Contractor Invoice Template',
   description:
     'A free contractor invoice template, line by line: the fields that matter, the ones that cause disputes, and how to send it so paying is a single tap.',
-  published: '2026-09-21',
+  published: '2026-09-20',
   readingMinutes: 5,
   topic: 'Templates',
 };

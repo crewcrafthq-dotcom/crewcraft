@@ -52,6 +52,18 @@ import * as quoting_standby_generator_installs from './quoting-standby-generator
 import * as job_site_photo_documentation from './job-site-photo-documentation';
 import * as scheduling_software_for_contractors from './scheduling-software-for-contractors';
 import * as permit_tracking_for_contractors from './permit-tracking-for-contractors';
+import * as how_to_price_a_service_call from './how-to-price-a-service-call';
+import * as good_better_best_pricing_for_contractors from './good-better-best-pricing-for-contractors';
+import * as how_to_get_more_contractor_leads from './how-to-get-more-contractor-leads';
+import * as contractor_insurance_explained from './contractor-insurance-explained';
+import * as job_costing_for_contractors from './job-costing-for-contractors';
+import * as contractor_website_essentials from './contractor-website-essentials';
+import * as roof_inspection_checklist from './roof-inspection-checklist';
+import * as material_price_increases_and_quoting from './material-price-increases-and-quoting';
+import * as contractor_warranty_terms from './contractor-warranty-terms';
+import * as how_to_respond_to_a_bad_review from './how-to-respond-to-a-bad-review';
+import * as hiring_your_first_employee_in_the_trades from './hiring-your-first-employee-in-the-trades';
+import * as quoting_ev_charger_installs from './quoting-ev-charger-installs';
 
 export interface BlogPost {
   meta: PostMeta;
@@ -112,6 +124,18 @@ export const BLOG_POSTS: BlogPost[] = [
   job_site_photo_documentation,
   scheduling_software_for_contractors,
   permit_tracking_for_contractors,
+  how_to_price_a_service_call,
+  good_better_best_pricing_for_contractors,
+  how_to_get_more_contractor_leads,
+  contractor_insurance_explained,
+  job_costing_for_contractors,
+  contractor_website_essentials,
+  roof_inspection_checklist,
+  material_price_increases_and_quoting,
+  contractor_warranty_terms,
+  how_to_respond_to_a_bad_review,
+  hiring_your_first_employee_in_the_trades,
+  quoting_ev_charger_installs,
 ].sort((a, b) => (a.meta.published < b.meta.published ? 1 : -1));
 
 export function getPost(slug: string): BlogPost | undefined {

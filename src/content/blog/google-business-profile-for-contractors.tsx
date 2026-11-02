@@ -6,7 +6,7 @@ export const meta: PostMeta = {
   metaTitle: 'Google Business Profile: Contractors',
   description:
     'How to set up a Google Business Profile for contractors: the fields that move you up the map pack, what to post, and the mistakes that bury good companies.',
-  published: '2026-10-19',
+  published: '2026-10-18',
   readingMinutes: 7,
   topic: 'Growth',
 };

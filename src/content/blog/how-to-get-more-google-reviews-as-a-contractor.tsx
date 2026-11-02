@@ -6,7 +6,7 @@ export const meta: PostMeta = {
   metaTitle: 'Get More Google Reviews: Contractors',
   description:
     'How to get more Google reviews as a contractor: when to ask, exactly what to say, and the one automatic moment that produces the most five-star replies.',
-  published: '2026-10-15',
+  published: '2026-10-14',
   readingMinutes: 5,
   topic: 'Growth',
 };

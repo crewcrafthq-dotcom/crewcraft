@@ -6,7 +6,7 @@ export const meta: PostMeta = {
   metaTitle: 'How to Invoice as a Contractor',
   description:
     'How to invoice as a contractor: what every invoice needs, when to send it, and the small details that decide whether you get paid this week or next month.',
-  published: '2026-09-17',
+  published: '2026-09-16',
   readingMinutes: 6,
   topic: 'Getting paid',
 };

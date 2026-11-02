@@ -6,7 +6,7 @@ export const meta: PostMeta = {
   metaTitle: 'Permit Tracking for Contractors',
   description:
     'Permit tracking for contractors: how to keep every job’s permit and inspection date visible, and stop finding out at 7am that the inspector is coming.',
-  published: '2026-11-02',
+  published: '2026-10-30',
   readingMinutes: 5,
   topic: 'Workflow',
 };

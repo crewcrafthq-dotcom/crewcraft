@@ -6,7 +6,7 @@ export const meta: PostMeta = {
   metaTitle: 'How to Get Paid Faster: Contractors',
   description:
     'How to get paid faster as a contractor: five changes that move money weeks earlier, from a deposit at signature to a pay button on every single invoice.',
-  published: '2026-10-01',
+  published: '2026-10-02',
   readingMinutes: 6,
   topic: 'Getting paid',
 };

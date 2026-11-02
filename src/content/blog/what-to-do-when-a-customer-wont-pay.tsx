@@ -6,7 +6,7 @@ export const meta: PostMeta = {
   metaTitle: 'When a Customer Won’t Pay: Next Steps',
   description:
     'What to do when a customer won’t pay: the order to work through, what to send and when, and the paperwork that decides whether you ever collect at all.',
-  published: '2026-10-05',
+  published: '2026-10-06',
   readingMinutes: 7,
   topic: 'Getting paid',
 };

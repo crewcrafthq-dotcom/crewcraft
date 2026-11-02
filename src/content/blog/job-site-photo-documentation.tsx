@@ -6,7 +6,7 @@ export const meta: PostMeta = {
   metaTitle: 'Job Site Photo Documentation Guide',
   description:
     'Job site photo documentation that holds up: what to shoot, when, how to caption it, and how to turn a phone full of photos into a report a homeowner trusts.',
-  published: '2026-10-29',
+  published: '2026-10-28',
   readingMinutes: 6,
   topic: 'Workflow',
 };

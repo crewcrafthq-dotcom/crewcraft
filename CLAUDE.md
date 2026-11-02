@@ -158,7 +158,7 @@ source of truth for landing + /billing). Ad landing pages live at `/lp/meta`
 and `/lp/google` (noindex; every ad needs a destination URL) with paste-ready
 ad copy in `docs/ads/*.md`. SEO playbook: `docs/SEO-GUIDE.md`. Legal pages:
 
-**Field Guide (`src/content/blog`, 52 posts).** Adding a post = a file plus an
+**Field Guide (`src/content/blog`, 64 posts).** Adding a post = a file plus an
 import and an array entry in `index.ts`; sitemap, JSON-LD and the index page
 pick it up automatically. Two rules that are easy to break: **one keyword per
 post** — the first 32 posts all target estimates/estimating software and that
@@ -169,6 +169,9 @@ JSX body text must use curly quotes (’ “ ”), because `react/no-unescaped-
 entities` fails the build on straight ones. Budget: `metaTitle` ≤ 49 chars
 (the " · Toolbelt" template eats 11 of Google's 60) and `description` ≤ 160 —
 check the *rendered* HTML, not the source, since two have overrun before.
+Posts from 2026-08-31 to 2026-11-01 run on a strict **every-2-days** cadence
+(32 of them); adding one inside that range means re-spacing the run, not
+doubling up on a date.
 `/privacy`, `/terms`. Google Ads signup conversion fires from `/onboarding`
 (`SignupConversion`) once `NEXT_PUBLIC_GOOGLE_ADS_SIGNUP_LABEL` is set.
 

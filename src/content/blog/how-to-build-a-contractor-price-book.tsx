@@ -6,7 +6,7 @@ export const meta: PostMeta = {
   metaTitle: 'How to Build a Contractor Price Book',
   description:
     'How to build a contractor price book from jobs you already run: what to include, what to leave out, and how to keep it current without a spreadsheet night.',
-  published: '2026-09-07',
+  published: '2026-09-04',
   readingMinutes: 6,
   topic: 'Pricing',
 };

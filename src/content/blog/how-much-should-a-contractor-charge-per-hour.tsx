@@ -6,7 +6,7 @@ export const meta: PostMeta = {
   metaTitle: 'Contractor Hourly Rate: How to Set It',
   description:
     'How much should a contractor charge per hour? Build it from your overhead, real billable hours and the profit you need — not from what the next guy charges.',
-  published: '2026-09-03',
+  published: '2026-09-02',
   readingMinutes: 7,
   topic: 'Pricing',
 };
