@@ -32,6 +32,26 @@ import * as estimates_from_the_truck from './estimates-from-the-truck';
 import * as stop_doing_estimates_after_hours from './stop-doing-estimates-after-hours';
 import * as estimate_software_vs_excel_for_contractors from './estimate-software-vs-excel-for-contractors';
 import * as fastest_way_to_send_plumbing_estimates from './fastest-way-to-send-plumbing-estimates';
+import * as markup_vs_margin_for_contractors from './markup-vs-margin-for-contractors';
+import * as how_much_should_a_contractor_charge_per_hour from './how-much-should-a-contractor-charge-per-hour';
+import * as how_to_build_a_contractor_price_book from './how-to-build-a-contractor-price-book';
+import * as how_to_follow_up_on_an_estimate from './how-to-follow-up-on-an-estimate';
+import * as hvac_fall_tune_up_season from './hvac-fall-tune-up-season';
+import * as how_to_invoice_as_a_contractor from './how-to-invoice-as-a-contractor';
+import * as contractor_invoice_template from './contractor-invoice-template';
+import * as roofing_supplements_after_a_storm from './roofing-supplements-after-a-storm';
+import * as contractor_payment_terms from './contractor-payment-terms';
+import * as how_to_get_paid_faster_as_a_contractor from './how-to-get-paid-faster-as-a-contractor';
+import * as what_to_do_when_a_customer_wont_pay from './what-to-do-when-a-customer-wont-pay';
+import * as change_order_template_for_contractors from './change-order-template-for-contractors';
+import * as hvac_maintenance_plans_recurring_revenue from './hvac-maintenance-plans-recurring-revenue';
+import * as how_to_get_more_google_reviews_as_a_contractor from './how-to-get-more-google-reviews-as-a-contractor';
+import * as google_business_profile_for_contractors from './google-business-profile-for-contractors';
+import * as winter_plumbing_and_frozen_pipe_season from './winter-plumbing-and-frozen-pipe-season';
+import * as quoting_standby_generator_installs from './quoting-standby-generator-installs';
+import * as job_site_photo_documentation from './job-site-photo-documentation';
+import * as scheduling_software_for_contractors from './scheduling-software-for-contractors';
+import * as permit_tracking_for_contractors from './permit-tracking-for-contractors';
 
 export interface BlogPost {
   meta: PostMeta;
@@ -72,6 +92,26 @@ export const BLOG_POSTS: BlogPost[] = [
   stop_doing_estimates_after_hours,
   estimate_software_vs_excel_for_contractors,
   fastest_way_to_send_plumbing_estimates,
+  markup_vs_margin_for_contractors,
+  how_much_should_a_contractor_charge_per_hour,
+  how_to_build_a_contractor_price_book,
+  how_to_follow_up_on_an_estimate,
+  hvac_fall_tune_up_season,
+  how_to_invoice_as_a_contractor,
+  contractor_invoice_template,
+  roofing_supplements_after_a_storm,
+  contractor_payment_terms,
+  how_to_get_paid_faster_as_a_contractor,
+  what_to_do_when_a_customer_wont_pay,
+  change_order_template_for_contractors,
+  hvac_maintenance_plans_recurring_revenue,
+  how_to_get_more_google_reviews_as_a_contractor,
+  google_business_profile_for_contractors,
+  winter_plumbing_and_frozen_pipe_season,
+  quoting_standby_generator_installs,
+  job_site_photo_documentation,
+  scheduling_software_for_contractors,
+  permit_tracking_for_contractors,
 ].sort((a, b) => (a.meta.published < b.meta.published ? 1 : -1));
 
 export function getPost(slug: string): BlogPost | undefined {
