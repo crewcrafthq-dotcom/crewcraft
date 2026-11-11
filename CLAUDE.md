@@ -26,11 +26,11 @@ steps (Supabase / Stripe / Vercel) click-by-click, and paste full SQL contents
 - **Next.js 14** (App Router) + TypeScript + Tailwind, deployed on **Vercel**
 - **Supabase** — Postgres + RLS, password & magic-link auth, storage (logos).
   Migrations in `supabase/migrations/` are applied **manually** in the SQL
-  editor. 0001–0010 are live (verified against the project's `information_
-  schema` on 2026-10-04 — `rate_events`, `jobs`, `equipment`, `permits`,
-  `service_reminders` and `leads` all exist); **0011 billing grace is
-  pending**. New schema = new numbered migration file, and tell the owner to
-  run it.
+  editor. **0001–0011 are all live**, verified against the project's
+  `information_schema` on 2026-11-02: `rate_events`, `jobs`, `equipment`,
+  `permits`, `service_reminders`, `leads` and `businesses.grace_until` all
+  exist. New schema = new numbered migration file, and tell the owner to run
+  it.
 - **Anthropic** — `AI_MODEL` in `src/lib/config.ts` (server-only key) for
   line-item generation, incl. photo (vision) and Good/Better/Best tier modes
 - **@react-pdf/renderer** — branded estimate/invoice PDFs (Poppins)
@@ -127,9 +127,10 @@ and clears it on `invoice.payment_succeeded`. `invoice.payment_failed` also
 sends the dunning email, on the first and last attempt only
 (`next_payment_attempt === null` means Stripe has given up). `BillingGraceBanner`
 renders inside `AppShell`, so it shows on all 24 app screens; `getSession` is
-React-`cache()`d so that costs no extra query. Everything fails soft before
-0011 is applied: the webhook retries its write without the column, and
-`grace_until` comes back `undefined`, which lands on the old behaviour.
+React-`cache()`d so that costs no extra query. The fail-soft path for a missing column (the webhook retries
+its write without `grace_until`) is now belt-and-braces — 0011 is applied —
+but keep it: it is what makes the next schema change safe to deploy ahead of
+the SQL.
 **The Stripe dashboard must be subscribed to `invoice.payment_failed` and
 `invoice.payment_succeeded`** or none of this fires.
 
