@@ -157,7 +157,12 @@ Landing page has per-trade deep-dive sections with anchor ids
 `src/lib/marketing.ts`) and a 4-tier pricing grid (`PRICING_TIERS` — single
 source of truth for landing + /billing). Ad landing pages live at `/lp/meta`
 and `/lp/google` (noindex; every ad needs a destination URL) with paste-ready
-ad copy in `docs/ads/*.md`. SEO playbook: `docs/SEO-GUIDE.md`. Legal pages:
+ad copy in `docs/ads/*.md`. SEO playbook: `docs/SEO-GUIDE.md`. A third-party SEO/AEO/GEO/LLMO skill is vendored at
+`.claude/skills/fire-your-seo-agency/` (MIT, upstream leopard627) — `.gitignore`
+un-ignores `.claude/skills/` only, so local Claude settings stay out. It ships no
+hooks or commands, just instructions; its Naver phase is irrelevant here and
+self-gates. See that directory's `VENDORED.md` for provenance and what it was
+checked for. Legal pages:
 
 **Field Guide (`src/content/blog`, 64 posts).** Adding a post = a file plus an
 import and an array entry in `index.ts`; sitemap, JSON-LD and the index page

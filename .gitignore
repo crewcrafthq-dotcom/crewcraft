@@ -29,8 +29,13 @@ yarn-error.log*
 # vercel
 .vercel
 
-# Claude Code working dir (skills, local settings) — not project source
-.claude/
+# Claude Code working dir — local settings, caches and session state stay out.
+# `.claude/skills/` is the exception: skills committed here load in every
+# session, including the cloud ones where plugins can't be installed.
+# Note the `/*` rather than `/` — git won't descend into an ignored directory,
+# so the negation below only works if the directory itself isn't ignored.
+.claude/*
+!.claude/skills/
 
 # typescript
 *.tsbuildinfo
