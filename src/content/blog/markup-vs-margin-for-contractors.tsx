@@ -9,13 +9,32 @@ export const meta: PostMeta = {
   published: '2026-08-31',
   readingMinutes: 6,
   topic: 'Pricing',
+  faq: [
+    {
+      q: 'What is the difference between markup and margin?',
+      a:
+        'Markup is what you add on top of your cost; margin is what is left out of what the customer pays. A $1,000 job sold at $1,200 carries a 20% markup but a 16.7% margin, because $200 is a fifth of the cost and only a sixth of the price.',
+    },
+    {
+      q: 'What markup do I need for a 30% margin?',
+      a:
+        'A 43% markup. To hit any target margin, divide your cost by (1 minus the margin): $1,000 of cost at a 30% target is 1,000 ÷ 0.70 = $1,429. A 20% margin needs 25% markup, 25% needs 33%, and 40% needs 67%.',
+    },
+    {
+      q: 'Why does discounting hurt so much?',
+      a:
+        'Because a discount comes out of profit, not out of cost. Taking $200 off a $1,200 quote does not cost you a sixth of the job — it wipes out the entire $200 of profit and you work it for nothing.',
+    },
+  ],
 };
 
 export function Body() {
   return (
     <>
       <p>
-        Two contractors quote the same job. Both say they work on “twenty percent.” One ends the
+        A 20% markup is not a 20% margin: add 20% to $1,000 of cost and the $200 you make is a
+        16.7% margin, not a fifth. Two contractors quote the same job and both say they work on
+        “twenty percent.” One ends the
         year with money in the account and one doesn’t. The difference is almost never effort —
         it’s that one of them is using <strong>markup</strong> and thinks it’s{' '}
         <strong>margin</strong>.

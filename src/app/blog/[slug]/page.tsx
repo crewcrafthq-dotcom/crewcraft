@@ -69,6 +69,22 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
           { '@type': 'ListItem', position: 2, name: meta.title },
         ],
       },
+      // FAQPage, only when the post declares questions it actually answers.
+      // Answer engines quote these without the article around them, so they
+      // have to stand alone — and they must match the rendered Q&A below,
+      // which is why both read from the same `meta.faq`.
+      ...(meta.faq?.length
+        ? [
+            {
+              '@type': 'FAQPage',
+              mainEntity: meta.faq.map(({ q, a }) => ({
+                '@type': 'Question',
+                name: q,
+                acceptedAnswer: { '@type': 'Answer', text: a },
+              })),
+            },
+          ]
+        : []),
     ],
   };
 
@@ -114,6 +130,24 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         <article className="post-prose mt-8">
           <Body />
         </article>
+
+        {/* The same Q&A that goes into the FAQPage structured data above.
+            Rendering it is not decoration: markup describing answers the page
+            does not visibly contain is exactly what gets a site's rich results
+            pulled, and it is what makes an AI quoting us verifiable. */}
+        {meta.faq?.length ? (
+          <section className="mt-12 border-t border-hairline pt-8">
+            <h2 className="text-xl font-bold text-ink">Common questions</h2>
+            <dl className="mt-5 space-y-5">
+              {meta.faq.map(({ q, a }) => (
+                <div key={q}>
+                  <dt className="font-semibold text-ink">{q}</dt>
+                  <dd className="mt-1.5 leading-relaxed text-ink-soft">{a}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        ) : null}
 
         {/* the pitch, honestly separated from the article */}
         <div className="mt-12 rounded-2xl border border-hairline bg-paper-850 p-6 sm:p-8">

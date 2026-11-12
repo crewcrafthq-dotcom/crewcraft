@@ -9,14 +9,33 @@ export const meta: PostMeta = {
   published: '2026-10-06',
   readingMinutes: 7,
   topic: 'Getting paid',
+  faq: [
+    {
+      q: 'What should I do when a customer will not pay?',
+      a:
+        'Work in order: confirm the invoice reached the right person and matches the signed estimate, send a friendly reminder at day three, call at day ten, offer a payment plan, then send a formal written demand at around day thirty before considering legal routes.',
+    },
+    {
+      q: 'Should a contractor file a mechanic\'s lien?',
+      a:
+        'It is the strongest tool you have, but the deadlines are short and usually run from your last day on site. Check your state\'s rules before you need them, because missing the window removes the right entirely.',
+    },
+    {
+      q: 'What decides whether a contractor gets paid in a dispute?',
+      a:
+        'Paperwork, not persistence. A signed estimate, signed change orders for anything that grew, dated photos and an invoice that matches usually end it at the reminder stage; without them you are arguing about memory.',
+    },
+  ],
 };
 
 export function Body() {
   return (
     <>
       <p>
-        Most unpaid invoices are not fraud. They are forgetfulness, confusion, cash flow problems,
-        or a dispute nobody told you about. Working through them in the right order recovers the
+        Work it in order: check the invoice actually reached the right person, send a friendly
+        reminder at day three, call at day ten, offer a plan, then send a formal demand at day
+        thirty. Most unpaid invoices are not fraud — they are forgetfulness, confusion, cash flow
+        problems, or a dispute nobody told you about. Working through them in the right order recovers the
         large majority without anything escalating — and the order matters, because every step
         burns a little goodwill you cannot get back.
       </p>

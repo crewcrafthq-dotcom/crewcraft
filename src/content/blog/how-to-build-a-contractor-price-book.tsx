@@ -9,14 +9,33 @@ export const meta: PostMeta = {
   published: '2026-09-04',
   readingMinutes: 6,
   topic: 'Pricing',
+  faq: [
+    {
+      q: 'How many items should a contractor price book have?',
+      a:
+        'Fifteen to twenty entries usually cover about 80% of the work. Pull your last twenty invoices, find the repeats, and price those; anything you quote once a year can stay custom.',
+    },
+    {
+      q: 'Should labour and materials be one price or two?',
+      a:
+        'Two. Material costs move far faster than your labour rate, so if they are baked into one number a supplier price rise quietly eats your margin on every job until someone notices.',
+    },
+    {
+      q: 'How do I keep a price book current?',
+      a:
+        'Update it on contact rather than on a schedule. When the supply house quotes you a new number, change that entry there and then — it takes fifteen seconds, and it is the only review that reliably happens.',
+    },
+  ],
 };
 
 export function Body() {
   return (
     <>
       <p>
-        Most contractors already have a price book. It lives in their head, it changes depending
-        on how the day went, and it cannot be handed to anyone else. Writing it down is the single
+        Pull your last twenty invoices, find the fifteen to twenty jobs that repeat, and write
+        those prices down with labour and materials separated. Most contractors already have a
+        price book — it lives in their head, it changes depending on how the day went, and it
+        cannot be handed to anyone else. Writing it down is the single
         highest-leverage admin job in a small trade business — and it does not take a weekend.
       </p>
 

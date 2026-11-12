@@ -14,7 +14,12 @@ export const metadata: Metadata = {
   title: 'Field Guide: Estimating & Pricing for the Trades',
   description:
     'Practical guides for HVAC, plumbing, electrical and roofing contractors: what winning estimates include, how to price jobs, and how to get paid.',
-  alternates: { canonical: '/blog' },
+  alternates: {
+    canonical: '/blog',
+    // Lets readers and crawlers discover the feed from the index page — a feed
+    // nothing links to is a feed nothing finds.
+    types: { 'application/rss+xml': [{ url: '/feed.xml', title: 'The Field Guide' }] },
+  },
   robots: { index: true, follow: true },
 };
 

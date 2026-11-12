@@ -9,14 +9,32 @@ export const meta: PostMeta = {
   published: '2026-10-16',
   readingMinutes: 5,
   topic: 'Growth',
+  faq: [
+    {
+      q: 'How should a contractor respond to a bad review?',
+      a:
+        'In four sentences: thank them, acknowledge the specific thing that went wrong, say what you did or will do about it, and move the conversation offline with a phone number. Write it for the next hundred readers, not for the reviewer.',
+    },
+    {
+      q: 'Should I reply to a review I think is unfair?',
+      a:
+        'Yes, but never argue. Nobody reading can judge who is right, so a dispute just reads as two people arguing. Never publish customer details, and never use sarcasm.',
+    },
+    {
+      q: 'What can I do about a fake review?',
+      a:
+        'Report it to Google for a policy violation, and in your reply state factually that you have no record of this person as a customer. Removal is inconsistent, so the durable answer is a steady flow of genuine reviews.',
+    },
+  ],
 };
 
 export function Body() {
   return (
     <>
       <p>
-        The one-star review is not written for you. It is written for the next hundred people
-        deciding whether to call you, and so is your reply. Once you see it that way, the right
+        Four sentences: thank them, acknowledge the specific thing, say what you have done about
+        it, and move it to a phone call. The one-star review is not written for you — it is written
+        for the next hundred people deciding whether to call you, and so is your reply. Once you see it that way, the right
         response becomes much easier to write — and much less satisfying.
       </p>
 

@@ -9,14 +9,32 @@ export const meta: PostMeta = {
   published: '2026-09-10',
   readingMinutes: 5,
   topic: 'Winning work',
+  faq: [
+    {
+      q: 'How many times should I follow up on an estimate?',
+      a:
+        'Twice. Send the first nudge on day two or three and the second around day seven to ten, then stop. A third attempt changes nothing except how you look.',
+    },
+    {
+      q: 'What should a follow-up message say?',
+      a:
+        'Give them three easy exits: ask if they have questions, invite a straight no, and offer a specific date. “Just checking in” asks for nothing and gives them nothing to reply to.',
+    },
+    {
+      q: 'Why do contractors lose quotes they should have won?',
+      a:
+        'Most quotes are not lost to a competitor but to a homeowner who meant to reply and got busy. Following up requires remembering on a day you are under a house, which is why the quotes that need chasing are the ones that go quiet.',
+    },
+  ],
 };
 
 export function Body() {
   return (
     <>
       <p>
-        Most quotes are not lost to a competitor. They are lost to a homeowner who meant to reply,
-        got busy, and never did. <strong>How you follow up on an estimate</strong> is worth more
+        Twice: once on day two or three, once around day seven to ten, then stop. Most quotes are
+        not lost to a competitor — they are lost to a homeowner who meant to reply, got busy, and
+        never did. <strong>How you follow up on an estimate</strong> is worth more
         than how you write it, and almost nobody does it twice.
       </p>
 
