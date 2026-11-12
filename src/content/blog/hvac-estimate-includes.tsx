@@ -10,6 +10,23 @@ export const meta: PostMeta = {
   readingMinutes: 6,
   trade: 'hvac',
   topic: 'Estimates',
+  faq: [
+    {
+      q: 'What should a professional HVAC estimate include?',
+      a:
+        'A scope of work in homeowner English, labour and materials separated, an explicit list of what is not included, and the company details that signal a real business — licence, insurance, contact.',
+    },
+    {
+      q: 'Should an HVAC estimate say what is not included?',
+      a:
+        'Yes. The exclusions line prevents more arguments than any amount of detail inside the price, because it settles expectations before the work starts rather than after.',
+    },
+    {
+      q: 'Is it better to quote one price or three options?',
+      a:
+        'Three versions rather than one. At replacement prices a homeowner wants to choose rather than be told, and options move the conversation from “is this too much” to “which one”.',
+    },
+  ],
 };
 
 export function Body() {

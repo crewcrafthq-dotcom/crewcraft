@@ -10,6 +10,23 @@ export const meta: PostMeta = {
   readingMinutes: 6,
   topic: 'How-to',
   trade: 'electrical',
+  faq: [
+    {
+      q: 'What should an electrical estimate include?',
+      a:
+        'Name the job like you would explain it to an apprentice, then split panel, breakers, grounding and labour into separate lines. Write your load assumptions down, put your licence number on the document, and offer tiers where the job allows.',
+    },
+    {
+      q: 'Should a licence number go on an electrical estimate?',
+      a:
+        'Yes. It is expected in most jurisdictions and it quietly signals that you are a real, permitted company — which matters on work an inspector will later sign off.',
+    },
+    {
+      q: 'Why write load assumptions on the quote?',
+      a:
+        'Because the price depends on them. An assumption kept in your head becomes a dispute when the job turns out to need a service upgrade that nobody priced.',
+    },
+  ],
 };
 
 export function Body() {

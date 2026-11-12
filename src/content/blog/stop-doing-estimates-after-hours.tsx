@@ -9,6 +9,23 @@ export const meta: PostMeta = {
   published: '2026-08-29',
   readingMinutes: 6,
   topic: 'FAQ',
+  faq: [
+    {
+      q: 'Why do contractors end up writing estimates at night?',
+      a:
+        'Because the quote is postponed at the job, where all the information is, and reconstructed later from memory at the kitchen table. The evening is where the deferred work lands, not where it starts.',
+    },
+    {
+      q: 'Isn\'t an estimate written on site sloppier?',
+      a:
+        'Generally the opposite. Written while you are still looking at the job it reflects what is actually there, whereas the version typed at 9pm is assembled from notes and recollection.',
+    },
+    {
+      q: 'What actually breaks the after-hours habit?',
+      a:
+        'Writing and sending the quote before you leave the driveway. Deciding to “be more disciplined” does not survive a bad day; removing the step that has to happen later does.',
+    },
+  ],
 };
 
 export function Body() {

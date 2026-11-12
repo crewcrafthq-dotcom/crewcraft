@@ -10,6 +10,23 @@ export const meta: PostMeta = {
   readingMinutes: 6,
   trade: 'electrical',
   topic: 'Estimates',
+  faq: [
+    {
+      q: 'What belongs in a 200A panel upgrade quote?',
+      a:
+        'Start with the load calculation, then price the scope most quotes leave out, explain what the day itself involves for the household, structure the price as options, and put the assumptions in writing.',
+    },
+    {
+      q: 'Do you need a load calculation before quoting a panel upgrade?',
+      a:
+        'Yes, before committing to a number. The calculation is what decides whether this is a straightforward swap or a job that pulls in the utility, and that difference is thousands of dollars.',
+    },
+    {
+      q: 'Why explain the day of the panel upgrade?',
+      a:
+        'Because the homeowner is buying a day without power as well as a panel. Saying how long it is off, and what that means, prevents the complaint that otherwise arrives mid-job.',
+    },
+  ],
 };
 
 export function Body() {

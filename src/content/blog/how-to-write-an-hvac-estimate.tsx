@@ -10,6 +10,23 @@ export const meta: PostMeta = {
   readingMinutes: 6,
   topic: 'How-to',
   trade: 'hvac',
+  faq: [
+    {
+      q: 'What should an HVAC estimate include?',
+      a:
+        'Name the job the way you would say it out loud, split labour from equipment, itemise repairs instead of lumping them, put your assumptions in writing, and end with a way to say yes rather than a callback.',
+    },
+    {
+      q: 'Why break an HVAC price into lines?',
+      a:
+        'Because a single line such as “AC replacement — $2,910” invites price comparison and nothing else. Broken out, the same number reads as a specification the customer can understand.',
+    },
+    {
+      q: 'Should repairs be quoted as carefully as replacements?',
+      a:
+        'Yes. Repairs tend to get the lazy treatment, and a vague repair line is where both margin and trust leak out.',
+    },
+  ],
 };
 
 export function Body() {

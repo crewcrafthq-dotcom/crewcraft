@@ -9,6 +9,23 @@ export const meta: PostMeta = {
   published: '2026-08-29',
   readingMinutes: 6,
   topic: 'Workflow',
+  faq: [
+    {
+      q: 'Can you send an estimate without a laptop?',
+      a:
+        'Yes — describe the job the way you would say it, check the numbers rather than building them from zero, and send from the same screen. The whole sequence works standing up, one-handed.',
+    },
+    {
+      q: 'What does “I\'ll email it tonight” actually cost?',
+      a:
+        'The jobs where someone else quoted first. Urgency fades once the homeowner is no longer standing next to the problem, and a quote that arrives days later competes against ones that did not wait.',
+    },
+    {
+      q: 'Is it faster to photograph the job than describe it?',
+      a:
+        'Often, yes. When the situation is quicker to show than to write, photos replace typing and the draft comes back from the pictures instead.',
+    },
+  ],
 };
 
 export function Body() {
