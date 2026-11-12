@@ -9,6 +9,23 @@ export const meta: PostMeta = {
   published: '2026-08-20',
   readingMinutes: 5,
   topic: 'Getting paid',
+  faq: [
+    {
+      q: 'How much deposit should a contractor ask for?',
+      a:
+        'Size it to your real exposure. Commonly 30–50% on equipment-heavy jobs, and staged draws rather than one lump on larger ones — the deposit is there to cover what you have to buy before you get paid.',
+    },
+    {
+      q: 'Is there a legal limit on contractor deposits?',
+      a:
+        'In several states, yes. Caps are written as a dollar figure or a share of the contract — $1,000 or 10% is a common form — so check your own state\'s rule before you settle on a number.',
+    },
+    {
+      q: 'Where should deposit terms be written?',
+      a:
+        'On the estimate the customer signs, not in a conversation. One line such as “50% deposit schedules the job; balance due on completion” settles it before anyone picks up a tool.',
+    },
+  ],
 };
 
 export function Body() {

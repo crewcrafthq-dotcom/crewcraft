@@ -175,6 +175,13 @@ JSX body text must use curly quotes (’ “ ”), because `react/no-unescaped-
 entities` fails the build on straight ones. Budget: `metaTitle` ≤ 49 chars
 (the " · Toolbelt" template eats 11 of Google's 60) and `description` ≤ 160 —
 check the *rendered* HTML, not the source, since two have overrun before.
+`PostMeta.faq[]` drives both the `FAQPage` JSON-LD and the visible
+“Common questions” block from one source — never emit one without the other,
+since markup asserting answers the page does not show is what gets rich
+results pulled. 23 of 64 posts carry it (the question-shaped ones); an answer
+must restate something the body already argues rather than introduce a new
+claim, so read the post before writing one. `/feed.xml` is generated from
+`BLOG_POSTS` too and needs no upkeep.
 Posts from 2026-08-31 to 2026-11-01 run on a strict **every-2-days** cadence
 (32 of them); adding one inside that range means re-spacing the run, not
 doubling up on a date.

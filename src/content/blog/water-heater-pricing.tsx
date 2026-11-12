@@ -10,6 +10,23 @@ export const meta: PostMeta = {
   readingMinutes: 6,
   trade: 'plumbing',
   topic: 'Pricing',
+  faq: [
+    {
+      q: 'What goes into the price of a water heater replacement?',
+      a:
+        'Four things: the unit itself, labour the customer cannot see, the code items that surprise people, and haul-off, permit and the small stuff. Showing them as separate lines is what defends a price that is higher than the next quote.',
+    },
+    {
+      q: 'Should I quote tank or tankless?',
+      a:
+        'Quote both, side by side, as options rather than as an argument. Letting the homeowner choose between two priced paths converts better than talking them into one.',
+    },
+    {
+      q: 'Does the cheapest water heater quote win?',
+      a:
+        'Usually not — speed wins this job more often than price does. Water heater failures are urgent, and the quote that arrives first is frequently the one that gets accepted.',
+    },
+  ],
 };
 
 export function Body() {

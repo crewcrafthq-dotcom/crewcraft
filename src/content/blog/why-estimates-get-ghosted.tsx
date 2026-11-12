@@ -9,6 +9,23 @@ export const meta: PostMeta = {
   published: '2026-08-20',
   readingMinutes: 5,
   topic: 'Winning work',
+  faq: [
+    {
+      q: 'Why do homeowners ghost estimates?',
+      a:
+        'Silence usually is not rejection. It is a homeowner who meant to reply, got busy and never did — which is why the fix is a follow-up rather than a lower price.',
+    },
+    {
+      q: 'How many times should you follow up on a quote?',
+      a:
+        'Twice. Touch one at around day three, touch two between day seven and ten. Beyond that you are not persuading anyone, you are just visible.',
+    },
+    {
+      q: 'Why automate the follow-up?',
+      a:
+        'Because you will not do it by hand. Following up depends on remembering, on a day spent on other people\'s jobs, so the quotes that most need chasing are the ones that quietly go cold.',
+    },
+  ],
 };
 
 export function Body() {

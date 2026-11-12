@@ -10,6 +10,23 @@ export const meta: PostMeta = {
   readingMinutes: 6,
   topic: 'How-to',
   trade: 'roofing',
+  faq: [
+    {
+      q: 'How should a roofing estimate be priced?',
+      a:
+        'By the square rather than by the project. Square-based pricing is what an adjuster expects to see and what lets you justify the total line by line instead of defending one lump sum.',
+    },
+    {
+      q: 'What should a roofing estimate document?',
+      a:
+        'Photographs, not adjectives. “Significant damage” persuades nobody; a captioned photo of the condition does, with both the adjuster and the homeowner.',
+    },
+    {
+      q: 'Should insurance-covered work be separated from the rest?',
+      a:
+        'Yes. Break out what insurance typically covers versus what it does not, so the homeowner can see which part of the number is theirs before they are surprised by it.',
+    },
+  ],
 };
 
 export function Body() {

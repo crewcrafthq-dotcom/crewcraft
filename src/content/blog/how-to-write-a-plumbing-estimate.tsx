@@ -10,6 +10,23 @@ export const meta: PostMeta = {
   readingMinutes: 6,
   topic: 'How-to',
   trade: 'plumbing',
+  faq: [
+    {
+      q: 'How do you write a plumbing estimate?',
+      a:
+        'Scope the job in one sentence, then break that sentence into priced lines. Keep labour and materials separate, write your assumptions down, give options where tank-versus-tankless applies, and finish with a way to accept that takes seconds.',
+    },
+    {
+      q: 'Should labour and materials be priced separately?',
+      a:
+        'Always. A single combined number invites straight price comparison, while separated lines show the customer what they are actually buying and let you defend each part.',
+    },
+    {
+      q: 'How do you get a plumbing estimate signed the same day?',
+      a:
+        'Make accepting a 30-second action rather than a phone call. If saying yes needs the homeowner to ring you back during working hours, you have added a delay the job may not survive.',
+    },
+  ],
 };
 
 export function Body() {
