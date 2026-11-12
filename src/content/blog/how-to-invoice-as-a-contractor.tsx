@@ -9,14 +9,32 @@ export const meta: PostMeta = {
   published: '2026-09-16',
   readingMinutes: 6,
   topic: 'Getting paid',
+  faq: [
+    {
+      q: 'What has to be on a contractor invoice?',
+      a:
+        'A unique sequential invoice number, your business name and licence number, the customer and the job address as separate fields, a plain description of the work, dates, any deposit shown as a deduction, the balance due, a due date as an actual date, and how to pay.',
+    },
+    {
+      q: 'When should a contractor send an invoice?',
+      a:
+        'The day the job finishes. An invoice that arrives while the customer can still see the work is paid faster than the identical invoice sent a week later; batching them weekly adds about three and a half days to every payment.',
+    },
+    {
+      q: 'Why do invoices get paid late?',
+      a:
+        'Usually the invoice itself: a missing PO number, no due date, a total that does not match the signed estimate, or going to whoever was on site rather than whoever pays the bills.',
+    },
+  ],
 };
 
 export function Body() {
   return (
     <>
       <p>
-        An invoice is not paperwork. It is the last step of the sale, and a surprising share of
-        late payments are caused by the invoice itself — missing a PO number, arriving three weeks
+        Send it the day the job finishes, put the balance and a real due date where they cannot be
+        missed, and make paying it a single tap. An invoice is not paperwork — it is the last step
+        of the sale, and a surprising share of late payments are caused by the invoice itself — missing a PO number, arriving three weeks
         after the work, or asking someone to go and find their chequebook.
       </p>
 

@@ -9,13 +9,32 @@ export const meta: PostMeta = {
   published: '2026-09-28',
   readingMinutes: 6,
   topic: 'Getting paid',
+  faq: [
+    {
+      q: 'What payment terms should a contractor use?',
+      a:
+        'Due on receipt suits residential service work, net 15 is a sensible default for small commercial, and net 30 is often non-negotiable with larger GCs — price for the thirty days of float. Whichever you pick, put an actual date on the invoice rather than the words.',
+    },
+    {
+      q: 'How much deposit should a contractor take?',
+      a:
+        'Commonly 25 to 50% on equipment-heavy work, and little or nothing on straightforward service calls. Check your state\'s rules first — several cap residential deposits by percentage or dollar amount.',
+    },
+    {
+      q: 'Can a contractor charge late fees?',
+      a:
+        'Generally yes where it is disclosed in advance, and 1 to 1.5% a month is typical. State it on the estimate the customer signs, not for the first time on an overdue invoice.',
+    },
+  ],
 };
 
 export function Body() {
   return (
     <>
       <p>
-        Cash flow kills more trade businesses than bad work does. You can be profitable on paper
+        Take a deposit at signature, tie progress payments to milestones the customer can see, and
+        put an actual date on the invoice rather than the words “net 30.” Cash flow kills more trade
+        businesses than bad work does. You can be profitable on paper
         and still be unable to pay the supply house, purely because of when money arrives.{' '}
         <strong>Payment terms</strong> are the lever that fixes that, and they cost nothing to
         change.

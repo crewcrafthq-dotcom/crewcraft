@@ -9,14 +9,32 @@ export const meta: PostMeta = {
   published: '2026-10-14',
   readingMinutes: 5,
   topic: 'Growth',
+  faq: [
+    {
+      q: 'When is the best time to ask for a Google review?',
+      a:
+        'Just after the customer has paid. The work is done, it worked, and nothing is outstanding. Asking before payment feels transactional, and asking a week later misses the moment.',
+    },
+    {
+      q: 'How do I ask for a Google review?',
+      a:
+        'Send the direct review link from your Google Business Profile rather than telling people to search for you. Asking them to find the listing themselves loses about half of the willing ones.',
+    },
+    {
+      q: 'Can I offer a discount for a review?',
+      a:
+        'No. Offering anything in exchange for a review violates Google\'s policies and risks the listing your business depends on. The same goes for only asking happy customers, which is review gating.',
+    },
+  ],
 };
 
 export function Body() {
   return (
     <>
       <p>
-        For a local trade business, Google reviews are the closest thing to free advertising that
-        exists. They decide whether you appear in the map pack, and once you are there they decide
+        Ask immediately after the customer pays, and send the direct review link rather than asking
+        them to search for you — those two changes do most of the work. For a local trade business,
+        Google reviews are the closest thing to free advertising that exists. They decide whether you appear in the map pack, and once you are there they decide
         whether anyone calls you rather than the company above you. Most contractors do excellent
         work and have eleven reviews.
       </p>

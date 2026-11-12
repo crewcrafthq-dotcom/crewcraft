@@ -9,14 +9,33 @@ export const meta: PostMeta = {
   published: '2026-10-02',
   readingMinutes: 6,
   topic: 'Getting paid',
+  faq: [
+    {
+      q: 'How can a contractor get paid faster?',
+      a:
+        'Take the deposit at signature rather than at the start of work, invoice the day you finish, put a payment link on the invoice, send it to whoever actually pays, and automate the overdue reminder. Together these commonly move average days-to-payment from about 30 to under 10.',
+    },
+    {
+      q: 'Is it worth paying card fees to get paid faster?',
+      a:
+        'Usually yes. Card fees are almost always cheaper than two extra weeks of float plus the time spent chasing, because a bank transfer asks the customer to open an app, find the account and type a reference, while a link asks for a thumb.',
+    },
+    {
+      q: 'Should I offer a discount for early payment?',
+      a:
+        'Not as a first move. You would be paying several percent to fix a process problem that costs nothing to fix directly — change the timing and the payment method first, and keep discounts for genuinely slow commercial payers.',
+    },
+  ],
 };
 
 export function Body() {
   return (
     <>
       <p>
-        Getting paid faster is rarely about chasing harder. It is about removing the gaps you
-        built into your own process without noticing — and most shops have four or five of them,
+        Take the deposit at signature, invoice the day you finish, and put a pay button on it —
+        those three alone commonly move average days-to-payment from about thirty to under ten.
+        Getting paid faster is rarely about chasing harder; it is about removing the gaps you built
+        into your own process without noticing — and most shops have four or five of them,
         each worth a few days.
       </p>
 

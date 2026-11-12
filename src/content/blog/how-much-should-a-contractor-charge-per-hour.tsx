@@ -9,14 +9,34 @@ export const meta: PostMeta = {
   published: '2026-09-02',
   readingMinutes: 7,
   topic: 'Pricing',
+  faq: [
+    {
+      q: 'How do I work out my hourly rate?',
+      a:
+        'Add your wage to your annual overhead, divide by the hours you can actually bill, then add your target margin. For example $70,000 wage plus $45,000 overhead over 1,250 billable hours is $92 to break even, or about $131 an hour at a 30% margin.',
+    },
+    {
+      q: 'How many hours a year can a contractor actually bill?',
+      a:
+        'Most one-truck operations bill between 1,100 and 1,400 hours a year, not 2,080. Quoting, driving, supply house runs, cancellations and admin all come out of the total, and using 2,080 is what makes a rate roughly 40% too low.',
+    },
+    {
+      q: 'Should I charge hourly or flat rate?',
+      a:
+        'Either works, but a flat price has to be built from an hourly figure underneath or you are guessing. Homeowners generally prefer a flat number to a running meter, so work out the rate first and then wrap it.',
+    },
+  ],
 };
 
 export function Body() {
   return (
     <>
       <p>
-        The worst way to answer this is the most common one: find out what the shop across town
-        charges and sit a few dollars under it. You have just inherited their overhead, their
+        Most one-truck operations land somewhere between <strong>$95 and $150 an hour</strong>,
+        but the number that matters is yours: your wage plus your overhead, divided by the hours
+        you can actually bill, plus the margin the business needs. The worst way to answer it is
+        the most common one — find out what the shop across town charges and sit a few dollars
+        under it. You have just inherited their overhead, their
         truck payments and their mistakes.{' '}
         <strong>How much a contractor should charge per hour</strong> is arithmetic about your
         business, and it takes about twenty minutes to do properly.

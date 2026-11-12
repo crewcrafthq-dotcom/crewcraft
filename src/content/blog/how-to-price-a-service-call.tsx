@@ -9,14 +9,33 @@ export const meta: PostMeta = {
   published: '2026-09-06',
   readingMinutes: 6,
   topic: 'Pricing',
+  faq: [
+    {
+      q: 'How much should a service call cost?',
+      a:
+        'Most shops charge between $89 and $149 for a service call. Work your own floor from the whole block of time it consumes — drive out, diagnose, fix, write up, drive on — which is often ninety minutes for a job that takes thirty.',
+    },
+    {
+      q: 'What is the difference between a trip charge and a diagnostic fee?',
+      a:
+        'A trip charge pays for getting there and is owed whether or not anything is fixed. A diagnostic fee pays for finding the fault, which on an intermittent problem is most of the value you provide.',
+    },
+    {
+      q: 'Should I waive the service call fee if they approve the repair?',
+      a:
+        'You can, as long as the fee is built into the repair price rather than simply deleted. Never waive the diagnostic on a no-repair visit — that is exactly the call where your expertise was the whole product.',
+    },
+  ],
 };
 
 export function Body() {
   return (
     <>
       <p>
-        A service call is the easiest job to lose money on. Forty minutes of work, ninety minutes
-        of driving, a part off the van, and a number you picked years ago because it sounded
+        Most shops charge <strong>$89 to $149</strong>, and the right number for you comes from the
+        whole block of time the call consumes rather than the minutes spent holding a wrench. A
+        service call is the easiest job to lose money on: forty minutes of work, ninety minutes of
+        driving, a part off the van, and a number you picked years ago because it sounded
         reasonable on the phone.
       </p>
 

@@ -19,4 +19,22 @@ export interface PostMeta {
   trade?: Trade;
   /** Short label shown on the card, e.g. "Pricing" or "Getting paid". */
   topic: string;
+  /**
+   * Questions this post answers outright, emitted as FAQPage structured data
+   * and rendered at the foot of the post.
+   *
+   * Every answer must be true and already supported by the post body —
+   * structured data that says something the visible page doesn't is the
+   * fastest way to lose citation trust (and it breaks Google's own rules).
+   * Answers are written to stand alone, because an answer engine will quote
+   * them without the surrounding article.
+   */
+  faq?: FaqEntry[];
+}
+
+export interface FaqEntry {
+  /** Phrased the way someone would type or say it. */
+  q: string;
+  /** Plain text, no markup. Lead with the answer; 1–3 sentences. */
+  a: string;
 }

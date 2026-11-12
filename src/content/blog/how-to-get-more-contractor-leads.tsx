@@ -9,14 +9,33 @@ export const meta: PostMeta = {
   published: '2026-09-12',
   readingMinutes: 7,
   topic: 'Growth',
+  faq: [
+    {
+      q: 'How can a contractor get more leads without buying them?',
+      a:
+        'Fix conversion first, then build the channels that compound: your Google Business Profile, a steady flow of reviews, past customers, referrals you actually ask for, and relationships with other trades.',
+    },
+    {
+      q: 'Are paid lead services worth it?',
+      a:
+        'They work immediately but they are rented — the phone stops the moment you stop paying. Use paid to fill a specific gap such as a slow month or a new service, not as your foundation.',
+    },
+    {
+      q: 'Why do contractors lose leads they already have?',
+      a:
+        'Unanswered calls, quotes that take two days to go out, and quotes nobody follows up. Homeowners typically contact three or four companies and the first useful response wins a disproportionate share.',
+    },
+  ],
 };
 
 export function Body() {
   return (
     <>
       <p>
-        Lead-buying services are seductive because they work immediately. They are also rented —
-        the moment you stop paying, the phone stops. The channels worth building are the ones that
+        Fix what you already lose first — unanswered calls, slow quotes, quotes nobody chases —
+        then build the channels that keep producing: your Google Business Profile, reviews, past
+        customers, referrals and other trades. Lead-buying services are seductive because they work
+        immediately, but they are rented: the moment you stop paying, the phone stops. The channels worth building are the ones that
         keep producing after you stop feeding them.
       </p>
 
